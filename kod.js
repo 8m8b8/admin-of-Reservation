@@ -23,6 +23,20 @@ var KEY_HOTELS = 'hotels_data';
 var KEY_RESERVATIONS = 'reservations_data';
 var PAGE_SIZE = 20;
 
+var PUBLIC_PAGES = [
+  'index',
+  'Add-client',
+  'add-hotel',
+  'add-tour',
+  'manage-reservations',
+  'edit-reservation',
+  'manage-statistics',
+  'mediator',
+  'SUPPLIER',
+  'payments',
+  'style'
+];
+
 function getSheetOrThrow(sheetName) {
   var sheet = ss.getSheetByName(sheetName);
   if (!sheet) {
@@ -39,7 +53,7 @@ function getSheetOrThrow(sheetName) {
 function doGet(e) {
   // 1. تحديد بيانات افتراضية للزائر (لأننا ألغينا التحقق من الإيميل)
   var userRole = 'guest';      // الدور: زائر
-  var userEmail = '';          // لا يوجد إيميل محفوظ
+  var userEmail = 'guest@ghadatourism.local'; // بريد افتراضي لعمليات التوقيع أو السجلات
   var userName = 'زائر';       // الاسم الافتراضي
 
   // 2. تحديد الصفحة المطلوبة من الرابط
@@ -48,6 +62,9 @@ function doGet(e) {
   var page = (e && e.parameter && e.parameter.page) 
              ? e.parameter.page.toString() 
              : 'index'; 
+  if (page === 'login' || page === 'logout' || PUBLIC_PAGES.indexOf(page) === -1) {
+    page = 'index';
+  }
 
   // 3. محاولة عرض الصفحة
   try {
