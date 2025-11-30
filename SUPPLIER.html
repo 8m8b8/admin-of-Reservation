@@ -268,6 +268,38 @@
             box-shadow: 0 4px 10px rgba(0, 136, 145, 0.3);
             transform: translateY(-2px);
         }
+
+        .filter-panel {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: var(--shadow-light);
+            margin-bottom: 25px;
+        }
+
+        .filter-panel label {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .loading-indicator {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary-dark);
+            font-weight: 600;
+            margin-top: 12px;
+        }
+
+        .loading-indicator.active {
+            display: flex;
+        }
+
+        .loading-indicator .spinner-border {
+            width: 1.6rem;
+            height: 1.6rem;
+        }
         
         /* حقول التاريخ والمقاييس */
         .date-input-group label {
@@ -502,36 +534,44 @@
                     <i class="fas fa-file-export"></i>
                 </button>
             </div>
-            
-            <div class="agency-buttons">
-                <button class="agency-button active">YOUR WORLD TRAVEL</button>
-                <button class="agency-button">GITA</button>
-                <button class="agency-button">FGI</button>
-                <button class="agency-button">OKBA</button>
-            </div>
-
-            <div class="row justify-content-center mb-4">
-                <div class="col-12 col-md-5 date-input-group text-center">
-                    <label>تاريخ الوصول (CHECK-IN)</label>
-                    <input type="date" class="form-control" />
+            <div class="filter-panel">
+                <div class="row g-3 align-items-end">
+                    <div class="col-12 col-md-4">
+                        <label for="supplierFilter">اختر المورد</label>
+                        <select id="supplierFilter" class="form-select" aria-label="مرشح المورد">
+                            <option value="">جاري تحميل الموردين...</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <label for="supplierStartDate">تاريخ الوصول (CHECK-IN)</label>
+                        <input type="date" class="form-control" id="supplierStartDate" />
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <label for="supplierEndDate">تاريخ المغادرة (CHECK-OUT)</label>
+                        <input type="date" class="form-control" id="supplierEndDate" />
+                    </div>
+                    <div class="col-12 col-md-2 d-grid">
+                        <button type="button" class="btn btn-primary" id="applySupplierFilters">تحديث البيانات</button>
+                    </div>
                 </div>
-                <div class="col-12 col-md-5 date-input-group text-center">
-                    <label>تاريخ المغادرة (CHECK-OUT)</label>
-                    <input type="date" class="form-control" />
+                <div id="supplierLoading" class="loading-indicator" aria-live="polite">
+                    <div class="spinner-border text-primary" role="status" aria-hidden="true"></div>
+                    <span>جاري تحميل البيانات...</span>
                 </div>
+                <div id="supplierAlert" class="alert alert-warning mt-3 mb-0 d-none" role="alert"></div>
             </div>
             
             <div class="main-metrics-display">
-                <div class="big-number">458,320 SAR</div>
+                <div class="big-number" id="supplierBigNumber">0</div>
                 
                 <div class="row justify-content-center">
                     <div class="col-12 col-md-5 summary-box">
                         <label>مجموع الإلتزامات</label>
-                        <input type="text" class="form-control" value="000,000 SAR" readonly />
+                        <input type="text" class="form-control" id="obligationsSummaryInput" value="0" readonly />
                     </div>
                     <div class="col-12 col-md-5 summary-box">
                         <label>مجموع المستحقات</label>
-                        <input type="text" class="form-control" value="000,000 SAR" readonly />
+                        <input type="text" class="form-control" id="receivablesSummaryInput" value="0" readonly />
                     </div>
                 </div>
             </div>
@@ -541,7 +581,7 @@
             <div class="table-header">
                 <h3>جدول المستحقات <i class="fas fa-money-bill-wave"></i></h3>
                 <div class="booking-count">
-                    <span>120</span>
+                    <span id="receivablesCount">0</span>
                     عدد الحجوزات
                 </div>
             </div>
@@ -550,37 +590,16 @@
                     <thead>
                         <tr>
                             <th>اسم العميل</th>
-                            <th>الوكيل</th>
+                            <th>الوسيط / المورد</th>
                             <th>تاريخ الدخول</th>
-                            <th>مجموع السعر علينا</th>
-                            <th>العمولة</th>
-                            <th>المبلغ المتبقي</th>
+                            <th>الفندق</th>
+                            <th>قيمة العربون</th>
+                            <th>طريقة تحصيل العربون</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="receivablesTableBody">
                         <tr>
-                            <td>أحمد محمد</td>
-                            <td>YOUR WORLD TRAVEL</td>
-                            <td>2025-01-15</td>
-                            <td>5,000 SAR</td>
-                            <td>500 SAR</td>
-                            <td>4,500 SAR</td>
-                        </tr>
-                        <tr>
-                            <td>سارة علي</td>
-                            <td>GITA</td>
-                            <td>2025-02-20</td>
-                            <td>7,200 SAR</td>
-                            <td>720 SAR</td>
-                            <td>6,480 SAR</td>
-                        </tr>
-                        <tr>
-                            <td>خالد ناصر</td>
-                            <td>FGI</td>
-                            <td>2025-03-05</td>
-                            <td>3,500 SAR</td>
-                            <td>350 SAR</td>
-                            <td>3,150 SAR</td>
+                            <td colspan="6" class="text-center text-muted py-3">جاري التحميل...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -591,7 +610,7 @@
             <div class="table-header">
                 <h3>جدول الإلتزامات <i class="fas fa-handshake"></i></h3>
                 <div class="booking-count">
-                    <span>55</span>
+                    <span id="obligationsCount">0</span>
                     عدد الحجوزات
                 </div>
             </div>
@@ -600,35 +619,339 @@
                     <thead>
                         <tr>
                             <th>اسم العميل</th>
-                            <th>الوكيل</th>
+                            <th>الوسيط / المورد</th>
                             <th>تاريخ الدخول</th>
-                            <th>مجموع السعر علينا</th>
-                            <th>العمولة</th>
+                            <th>الفندق</th>
                             <th>المبلغ المتبقي</th>
+                            <th>طريقة تحصيل المبلغ المتبقي</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="obligationsTableBody">
                         <tr>
-                            <td>نور سامي</td>
-                            <td>YOUR WORLD TRAVEL</td>
-                            <td>2025-01-15</td>
-                            <td>4,200 SAR</td>
-                            <td>420 SAR</td>
-                            <td>3,780 SAR</td>
-                        </tr>
-                        <tr>
-                            <td>ماجد فهد</td>
-                            <td>OKBA</td>
-                            <td>2025-02-20</td>
-                            <td>6,000 SAR</td>
-                            <td>600 SAR</td>
-                            <td>5,400 SAR</td>
+                            <td colspan="6" class="text-center text-muted py-3">جاري التحميل...</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+
+    <script>
+        (function () {
+            const supplierSelect = document.getElementById('supplierFilter');
+            const startInput = document.getElementById('supplierStartDate');
+            const endInput = document.getElementById('supplierEndDate');
+            const applyButton = document.getElementById('applySupplierFilters');
+            const loadingIndicator = document.getElementById('supplierLoading');
+            const alertBox = document.getElementById('supplierAlert');
+            const receivablesBody = document.getElementById('receivablesTableBody');
+            const obligationsBody = document.getElementById('obligationsTableBody');
+            const receivablesCount = document.getElementById('receivablesCount');
+            const obligationsCount = document.getElementById('obligationsCount');
+            const bigNumber = document.getElementById('supplierBigNumber');
+            const receivablesSummaryInput = document.getElementById('receivablesSummaryInput');
+            const obligationsSummaryInput = document.getElementById('obligationsSummaryInput');
+            const hasServer = typeof google !== 'undefined' && google.script && google.script.run;
+
+            function init() {
+                setDefaultDates();
+                attachEvents();
+                if (hasServer) {
+                    loadSuppliers();
+                } else {
+                    showInlineError('تعذر الاتصال بالخادم. يرجى فتح الصفحة من خلال Google Apps Script.');
+                }
+            }
+
+            function attachEvents() {
+                if (applyButton) {
+                    applyButton.addEventListener('click', function (event) {
+                        event.preventDefault();
+                        fetchSupplierData();
+                    });
+                }
+
+                [supplierSelect, startInput, endInput].forEach(function (input) {
+                    if (!input) {
+                        return;
+                    }
+                    input.addEventListener('change', function () {
+                        if (supplierSelect && supplierSelect.value) {
+                            fetchSupplierData();
+                        }
+                    });
+                });
+            }
+
+            function setDefaultDates() {
+                var today = new Date();
+                var firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+                if (startInput) {
+                    startInput.value = formatInputDate(firstDay);
+                }
+                if (endInput) {
+                    endInput.value = formatInputDate(today);
+                }
+            }
+
+            function formatInputDate(date) {
+                if (!(date instanceof Date) || isNaN(date.getTime())) {
+                    return '';
+                }
+                var year = date.getFullYear();
+                var month = String(date.getMonth() + 1).padStart(2, '0');
+                var day = String(date.getDate()).padStart(2, '0');
+                return year + '-' + month + '-' + day;
+            }
+
+            function loadSuppliers() {
+                setLoading(true);
+                clearInlineError();
+                google.script.run
+                    .withSuccessHandler(function (rows) {
+                        populateSupplierSelect(rows || []);
+                        setLoading(false);
+                        if (supplierSelect && supplierSelect.value) {
+                            fetchSupplierData();
+                        } else {
+                            clearTables();
+                        }
+                    })
+                    .withFailureHandler(function (error) {
+                        setLoading(false);
+                        showInlineError('تعذر تحميل قائمة الموردين.');
+                        console.error(error);
+                    })
+                    .getSuppliers();
+            }
+
+            function populateSupplierSelect(rows) {
+                if (!supplierSelect) {
+                    return;
+                }
+                var options = document.createDocumentFragment();
+                var placeholder = document.createElement('option');
+                placeholder.value = '';
+                placeholder.textContent = 'اختر المورد';
+                options.appendChild(placeholder);
+
+                var uniqueNames = Array.from(new Set(
+                    rows.map(function (row) {
+                        if (Array.isArray(row)) {
+                            return (row[0] || '').toString().trim();
+                        }
+                        return (row || '').toString().trim();
+                    }).filter(Boolean)
+                ));
+
+                uniqueNames.forEach(function (name, index) {
+                    var option = document.createElement('option');
+                    option.value = name;
+                    option.textContent = name;
+                    if (index === 0) {
+                        option.selected = true;
+                    }
+                    options.appendChild(option);
+                });
+
+                supplierSelect.innerHTML = '';
+                supplierSelect.appendChild(options);
+            }
+
+            function fetchSupplierData() {
+                if (!hasServer) {
+                    return;
+                }
+                if (!supplierSelect || !supplierSelect.value) {
+                    clearTables();
+                    return;
+                }
+                setLoading(true);
+                clearInlineError();
+                google.script.run
+                    .withSuccessHandler(function (response) {
+                        setLoading(false);
+                        applySupplierResponse(response || {});
+                    })
+                    .withFailureHandler(function (error) {
+                        setLoading(false);
+                        showInlineError('تعذر تحميل بيانات المورد.');
+                        console.error(error);
+                    })
+                    .getSupplierFinancials({
+                        supplier: supplierSelect.value,
+                        startDate: startInput ? startInput.value : '',
+                        endDate: endInput ? endInput.value : ''
+                    });
+            }
+
+            function applySupplierResponse(response) {
+                clearInlineError();
+                var totals = response.totals || {};
+                renderTable(receivablesBody, response.receivables || []);
+                renderTable(obligationsBody, response.obligations || []);
+                if (receivablesCount) {
+                    receivablesCount.textContent = totals.receivablesCount || 0;
+                }
+                if (obligationsCount) {
+                    obligationsCount.textContent = totals.obligationsCount || 0;
+                }
+                updateSummary(totals);
+                if ((!response.receivables || !response.receivables.length) &&
+                    (!response.obligations || !response.obligations.length)) {
+                    showInlineError('لا توجد حجوزات مطابقة لخيارات البحث الحالية.');
+                }
+            }
+
+            function updateSummary(totals) {
+                if (receivablesSummaryInput) {
+                    receivablesSummaryInput.value = formatCurrencyMap(totals.receivablesByCurrency, totals.receivablesTotal);
+                }
+                if (obligationsSummaryInput) {
+                    obligationsSummaryInput.value = formatCurrencyMap(totals.obligationsByCurrency, totals.obligationsTotal);
+                }
+                if (bigNumber) {
+                    var combined = mergeCurrencyMaps(totals.receivablesByCurrency, totals.obligationsByCurrency);
+                    if (Object.keys(combined).length === 0) {
+                        bigNumber.textContent = formatNumber((totals.receivablesTotal || 0) + (totals.obligationsTotal || 0));
+                    } else {
+                        bigNumber.textContent = formatCurrencyMap(combined, (totals.receivablesTotal || 0) + (totals.obligationsTotal || 0));
+                    }
+                }
+            }
+
+            function renderTable(tbody, rows) {
+                if (!tbody) {
+                    return;
+                }
+                if (!rows.length) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-3">لا توجد بيانات</td></tr>';
+                    return;
+                }
+                var fragment = document.createDocumentFragment();
+                rows.forEach(function (row) {
+                    fragment.appendChild(buildRow(row));
+                });
+                tbody.innerHTML = '';
+                tbody.appendChild(fragment);
+            }
+
+            function buildRow(row) {
+                var tr = document.createElement('tr');
+                tr.innerHTML = '' +
+                    '<td>' + escapeHtml(row.customerName || '-') + '</td>' +
+                    '<td>' + escapeHtml(row.seller || row.supplier || '-') + '</td>' +
+                    '<td>' + escapeHtml(row.checkIn || '-') + '</td>' +
+                    '<td>' + escapeHtml(row.hotel || '-') + '</td>' +
+                    '<td>' + formatAmount(row.amount, row.currency) + '</td>' +
+                    '<td>' + escapeHtml(row.method || '-') + '</td>';
+                return tr;
+            }
+
+            function formatAmount(amount, currency) {
+                var formatted = formatNumber(amount || 0);
+                return currency ? formatted + ' ' + escapeHtml(currency) : formatted;
+            }
+
+            function formatNumber(value) {
+                var number = typeof value === 'number' ? value : parseFloat(value);
+                if (!isFinite(number)) {
+                    number = 0;
+                }
+                return number.toLocaleString('en-US', { maximumFractionDigits: 2 });
+            }
+
+            function formatCurrencyMap(map, fallbackValue) {
+                var entries = Object.keys(map || {});
+                if (!entries.length) {
+                    return formatNumber(fallbackValue || 0);
+                }
+                return entries.map(function (currency) {
+                    return formatNumber(map[currency] || 0) + ' ' + currency;
+                }).join(' | ');
+            }
+
+            function mergeCurrencyMaps(first, second) {
+                var merged = {};
+                [first, second].forEach(function (map) {
+                    Object.keys(map || {}).forEach(function (currency) {
+                        merged[currency] = (merged[currency] || 0) + (map[currency] || 0);
+                    });
+                });
+                return merged;
+            }
+
+            function setLoading(isLoading) {
+                if (!loadingIndicator) {
+                    return;
+                }
+                if (isLoading) {
+                    loadingIndicator.classList.add('active');
+                    loadingIndicator.setAttribute('aria-busy', 'true');
+                } else {
+                    loadingIndicator.classList.remove('active');
+                    loadingIndicator.setAttribute('aria-busy', 'false');
+                }
+                if (applyButton) {
+                    applyButton.disabled = !!isLoading;
+                }
+            }
+
+            function clearTables() {
+                if (receivablesBody) {
+                    receivablesBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-3">اختر مورداً لعرض البيانات</td></tr>';
+                }
+                if (obligationsBody) {
+                    obligationsBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-3">اختر مورداً لعرض البيانات</td></tr>';
+                }
+                if (receivablesCount) {
+                    receivablesCount.textContent = '0';
+                }
+                if (obligationsCount) {
+                    obligationsCount.textContent = '0';
+                }
+                if (receivablesSummaryInput) {
+                    receivablesSummaryInput.value = '0';
+                }
+                if (obligationsSummaryInput) {
+                    obligationsSummaryInput.value = '0';
+                }
+                if (bigNumber) {
+                    bigNumber.textContent = '0';
+                }
+            }
+
+            function showInlineError(message) {
+                if (!alertBox) {
+                    return;
+                }
+                alertBox.textContent = message || '';
+                alertBox.classList.remove('d-none');
+            }
+
+            function clearInlineError() {
+                if (!alertBox) {
+                    return;
+                }
+                alertBox.textContent = '';
+                alertBox.classList.add('d-none');
+            }
+
+            function escapeHtml(value) {
+                if (value === null || typeof value === 'undefined') {
+                    return '-';
+                }
+                return value.toString()
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;');
+            }
+
+            document.addEventListener('DOMContentLoaded', init);
+        })();
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>

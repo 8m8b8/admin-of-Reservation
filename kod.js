@@ -110,12 +110,34 @@ function getSuppliers() {
   if (cached != null) { 
     return JSON.parse(cached); 
   }
-  
-  var sheet = ss.getSheetByName("Suppliers");
-  var data = sheet.getDataRange().getValues();
-  data.shift(); // إزالة صف العناوين
-  cache.put(KEY_SUPPLIERS, JSON.stringify(data), CACHE_DURATION);
-  return data;
+
+  var sheet = ss.getSheetByName("INFORMATION");
+  if (!sheet) {
+    return [];
+  }
+
+  var lastRow = sheet.getLastRow();
+  if (lastRow <= 1) {
+    return [];
+  }
+
+  // العمود I هو العمود 9 (1-indexed)
+  var rawValues = sheet.getRange(2, 9, lastRow - 1, 1).getValues();
+  var suppliers = rawValues
+    .map(function (row) {
+      return (row[0] || "").toString().trim();
+    })
+    .filter(function (value) {
+      return value;
+    });
+
+  var uniqueSuppliers = Array.from(new Set(suppliers));
+  var formatted = uniqueSuppliers.map(function (name) {
+    return [name];
+  });
+
+  cache.put(KEY_SUPPLIERS, JSON.stringify(formatted), CACHE_DURATION);
+  return formatted;
 }
 
 /**
