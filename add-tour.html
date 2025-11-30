@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <title>إضافة رحلة جديدة</title>
+  <base target="_top">
+  <? var appUrl = getUrl(); var url = appUrl; ?>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  <?!= include("29lt_bukrabold"); ?>
+
+  <style>
+    :root {
+      --primary-color: #008891;
+      --primary-dark: #006d75;
+      --primary-light: #00a0a9;
+      --text-dark: #2c3f3f;
+      --bg-light: #f8f9fa;
+      --shadow-medium: 0 10px 35px rgba(0, 0, 0, 0.08);
+      --nav-primary: #008891;
+      --nav-primary-dark: #006d75;
+      --nav-shadow: 0 25px 45px rgba(0, 0, 0, 0.12);
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: #f4f6f8;
+      color: var(--text-dark);
+      margin: 0;
+      padding: 0;
+    }
+
+    .ghada-hero {
+      position: relative;
+      width: 100%;
+      background: linear-gradient(135deg, var(--nav-primary), var(--nav-primary-dark));
+      color: #fff;
+      padding: 32px clamp(16px, 6vw, 80px) 28px;
+      overflow: hidden;
+      box-shadow: var(--nav-shadow);
+      border-bottom-left-radius: 32px;
+      border-bottom-right-radius: 32px;
+    }
+
+    .ghada-hero::before,
+    .ghada-hero::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      background: #fff;
+      opacity: 0.12;
+      filter: blur(0.5px);
+      pointer-events: none;
+    }
+
+    .ghada-hero::before {
+      width: 320px;
+      height: 320px;
+      top: -160px;
+      left: -60px;
+    }
+
+    .ghada-hero::after {
+      width: 220px;
+      height: 220px;
+      bottom: -120px;
+      right: -30px;
+    }
+
+    .ghada-hero-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .ghada-hero-emoji {
+      font-size: 2.5rem;
+      background: rgba(255, 255, 255, 0.16);
+      border-radius: 24px;
+      padding: 14px 20px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .ghada-hero-text {
+      max-width: 640px;
+      color: #fff;
+    }
+
+    .ghada-hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
+      padding: 6px 16px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .ghada-hero-title {
+      margin: 0;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .ghada-hero-subtitle {
+      margin: 8px 0 0;
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.85);
+      line-height: 1.6;
+    }
+
+    .ghada-nav {
+      position: relative;
+      z-index: 1;
+      margin-top: 26px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(16px);
+    }
+
+    .ghada-nav-item {
+      border: none;
+      background: rgba(255, 255, 255, 0.18);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 16px;
+      min-width: 140px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .ghada-nav-item .emoji {
+      font-size: 1.6rem;
+      line-height: 1;
+    }
+
+    .ghada-nav-item .label {
+      font-size: 0.95rem;
+    }
+
+    .ghada-nav-item:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .ghada-nav-item.active {
+      background: #fff;
+      color: var(--nav-primary);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .ghada-nav-item:focus-visible {
+      outline: 2px solid #fff;
+      outline-offset: 3px;
+    }
+
+    @media (max-width: 768px) {
+      .ghada-hero {
+        border-bottom-left-radius: 24px;
+        border-bottom-right-radius: 24px;
+        padding: 28px 16px 20px;
+      }
+
+      .ghada-hero-content {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .ghada-nav-item {
+        flex: 1 1 calc(50% - 8px);
+        min-width: 120px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .ghada-nav-item {
+        flex: 1 1 100%;
+        align-items: flex-start;
+      }
+    }
+
+    .info-card,
+    .tour-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: var(--shadow-medium);
+    }
+
+    .info-card {
+      border-top: 6px solid var(--primary-color);
+    }
+
+    .tour-card {
+      border-top: 6px solid var(--primary-color);
+    }
+
+    .info-card h3 {
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 16px;
+    }
+
+    .info-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: rgba(0, 136, 145, 0.12);
+      color: var(--primary-dark);
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+
+    .info-list {
+      padding-right: 18px;
+      margin-bottom: 0;
+      color: #4c5c63;
+      line-height: 1.8;
+    }
+
+    .section-block + .section-block {
+      margin-top: 28px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: var(--primary-dark);
+    }
+
+    .form-control,
+    .form-select,
+    textarea {
+      border-radius: 12px;
+      border: 1px solid #d9e2ec;
+      padding: 12px;
+    }
+
+    .form-control:focus,
+    .form-select:focus,
+    textarea:focus {
+      border-color: var(--primary-color);
+      box-shadow: none;
+    }
+
+    .route-card {
+      background: #f9fbfb;
+      border: 1px solid #e1ecec;
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .route-card h5 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .submit-btn {
+      background: linear-gradient(135deg, #008891, #00a0a9);
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .submit-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 136, 145, 0.3);
+    }
+
+    .reset-btn {
+      border-radius: 12px;
+      padding: 14px;
+      font-weight: 600;
+      border: 1px solid #d9e2ec;
+      background: #fff;
+      color: #4c5c63;
+      transition: 0.2s ease;
+    }
+
+    .reset-btn:hover {
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+    }
+
+    textarea {
+      resize: none;
+    }
+  </style>
+</head>
+<body data-page="add-tour">
+  <? var headerAppUrl = typeof appUrl !== 'undefined' ? appUrl : getUrl(); ?>
+  <header class="ghada-hero" dir="rtl">
+    <div class="ghada-hero-content">
+      <span class="ghada-hero-emoji" aria-hidden="true">🧭</span>
+      <div class="ghada-hero-text">
+        <span class="ghada-hero-badge">🚐 تنظيم الرحلات</span>
+        <h1 class="ghada-hero-title">خطط لمساراتك واجمع كل التفاصيل في مكان واحد</h1>
+        <p class="ghada-hero-subtitle">
+          نسّق بيانات العملاء والنقل والمدن بسهولة، مع شريط تنقل يبدأ من أعلى الصفحة مباشرة.
+        </p>
+      </div>
+    </div>
+    <nav class="ghada-nav" id="ghada-nav-bar" aria-label="القائمة العلوية">
+      <button class="ghada-nav-item" data-page="index" type="button">
+        <span class="emoji" aria-hidden="true">📝</span>
+        <span class="label">إضافة حجز</span>
+      </button>
+      <button class="ghada-nav-item" data-page="Add-client" type="button">
+        <span class="emoji" aria-hidden="true">👤</span>
+        <span class="label">إضافة عميل</span>
+      </button>
+      <button class="ghada-nav-item" data-page="add-tour" type="button">
+        <span class="emoji" aria-hidden="true">🧭</span>
+        <span class="label">إضافة رحلة</span>
+      </button>
+      <button class="ghada-nav-item" data-page="add-hotel" type="button">
+        <span class="emoji" aria-hidden="true">🏨</span>
+        <span class="label">إضافة فندق</span>
+      </button>
+      <button class="ghada-nav-item" data-page="manage-reservations" type="button">
+        <span class="emoji" aria-hidden="true">📂</span>
+        <span class="label">إدارة الحجوزات</span>
+      </button>
+    </nav>
+  </header>
+  <script>
+    (function () {
+      const navBar = document.getElementById('ghada-nav-bar');
+      if (!navBar) {
+        return;
+      }
+      const rawBaseUrl = '<?= headerAppUrl ?>';
+      const baseUrl = rawBaseUrl && rawBaseUrl !== 'undefined'
+        ? rawBaseUrl
+        : (function () {
+            try {
+              return window.top.location.href.split('?')[0];
+            } catch (error) {
+              return '';
+            }
+          })();
+      const currentPage = document.body.dataset.page || 'index';
+      navBar.querySelectorAll('.ghada-nav-item').forEach((button) => {
+        const targetPage = button.dataset.page;
+        if (targetPage === currentPage) {
+          button.classList.add('active');
+          button.setAttribute('aria-current', 'page');
+        }
+        button.addEventListener('click', () => {
+          if (!targetPage || !baseUrl || targetPage === currentPage) {
+            return;
+          }
+          const targetUrl = targetPage === 'index'
+            ? baseUrl
+            : `${baseUrl}?page=${targetPage}`;
+          window.top.location.href = targetUrl;
+        });
+      });
+    })();
+  </script>
+
+  <div class="container my-4">
+    <div class="row g-4">
+      <div class="col-lg-4 order-2 order-lg-1">
+        <div class="info-card h-100">
+          <div class="info-pill">
+            <i class="fas fa-route"></i>
+            إدارة سريعة لمسارات الرحلات
+          </div>
+          <h3>جهّز رحلة كاملة في دقائق</h3>
+          <p>ادمج بيانات العميل، المسار، والتكاليف في نموذج واحد لتسهيل المتابعة والموافقة.</p>
+          <ul class="info-list">
+            <li>تأكد من تعبئة الحقول الإلزامية ( * ).</li>
+            <li>اختر المدن والجهات من القوائم لضمان دقة السجلات.</li>
+            <li>أضف ملاحظاتك لمساعدة الفريق على متابعة التنفيذ.</li>
+          </ul>
+          <hr>
+          <p class="mb-0" style="font-size: 0.95rem; color:#7a8b93;">يمكنك تعديل البيانات لاحقاً من قسم إدارة الحجوزات.</p>
+        </div>
+      </div>
+      <div class="col-lg-8 order-1 order-lg-2">
+        <form id="registration-form" class="tour-card">
+          <div class="section-block">
+            <div class="section-title">
+              <i class="fas fa-store"></i>
+              <span>بيانات البائع والمورد</span>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label" for="sellerSelect">اسم البائع *</label>
+                <select class="form-select" name="seller" id="sellerSelect" required></select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="supplierSelect">المورد *</label>
+                <select class="form-select" name="supplier" id="supplierSelect" required></select>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-block">
+            <div class="section-title">
+              <i class="fas fa-user"></i>
+              <span>بيانات العميل</span>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label" for="customerNameInput">اسم العميل *</label>
+                <input class="form-control" type="text" id="customerNameInput" name="name" placeholder="اكتب اسم العميل" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="customerPhoneInput">رقم الجوال *</label>
+                <input class="form-control" type="tel" id="customerPhoneInput" name="phone" pattern="^\+?[0-9]{10,15}$" placeholder="مثال: +9665xxxxxxx" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="nationalitySelect">الجنسية *</label>
+                <select class="form-select" name="nationality" id="nationalitySelect" required></select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="personSelect">عدد الأشخاص *</label>
+                <select class="form-select" name="personCount" id="personSelect" required></select>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-block">
+            <div class="section-title">
+              <i class="fas fa-map-marked-alt"></i>
+              <span>تفاصيل الرحلة</span>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label" for="tourSelect">نوع الرحلة *</label>
+                <select class="form-select" name="tour" id="tourSelect" required></select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="transportInput">وسيلة النقل</label>
+                <input class="form-control" type="text" id="transportInput" name="transport" placeholder="مثال: باص، سيارة خاصة">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="driverNameInput">اسم السائق</label>
+                <input class="form-control" type="text" id="driverNameInput" name="driverName" placeholder="اسم السائق">
+              </div>
+            </div>
+          </div>
+
+          <div class="section-block">
+            <div class="section-title">
+              <i class="fas fa-arrows-alt-h"></i>
+              <span>مسار الرحلة</span>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="route-card">
+                  <h5><i class="fas fa-sign-out-alt"></i>من</h5>
+                  <div class="mb-3">
+                    <label class="form-label" for="fromCitySelect">المدينة *</label>
+                    <select class="form-select" name="fromCity" id="fromCitySelect" required></select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label" for="fromPlaceSelect">نوع المكان *</label>
+                    <select class="form-select" name="fromPlace" id="fromPlaceSelect" required></select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label" for="fromPlaceNameInput">اسم المكان</label>
+                    <input class="form-control" type="text" id="fromPlaceNameInput" name="fromPlaceName" placeholder="مثال: فندق الريان">
+                  </div>
+                  <div>
+                    <label class="form-label" for="pickupDate">تاريخ الانطلاق *</label>
+                    <input class="form-control" type="date" name="pickupDate" id="pickupDate" required>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="route-card">
+                  <h5><i class="fas fa-sign-in-alt"></i>إلى</h5>
+                  <div class="mb-3">
+                    <label class="form-label" for="toCitySelect">المدينة *</label>
+                    <select class="form-select" name="toCity" id="toCitySelect" required></select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label" for="toPlaceSelect">نوع المكان *</label>
+                    <select class="form-select" name="toPlace" id="toPlaceSelect" required></select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label" for="toPlaceNameInput">اسم المكان</label>
+                    <input class="form-control" type="text" id="toPlaceNameInput" name="toPlaceName" placeholder="مثال: مطار إسطنبول">
+                  </div>
+                  <div>
+                    <label class="form-label" for="dropoffDate">تاريخ الوصول *</label>
+                    <input class="form-control" type="date" name="dropoffDate" id="dropoffDate" required>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-block">
+            <div class="section-title">
+              <i class="fas fa-wallet"></i>
+              <span>البيانات المالية</span>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-4">
+                <label class="form-label" for="tourPriceInput">تكلفة الرحلة *</label>
+                <input class="form-control" type="number" step="0.01" id="tourPriceInput" name="tourPrice" placeholder="0.00" required>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label" for="sellingPriceInput">سعر البيع *</label>
+                <input class="form-control" type="number" step="0.01" id="sellingPriceInput" name="sellingPrice" placeholder="0.00" required>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label" for="receivedAmountInput">المبلغ المستلم *</label>
+                <input class="form-control" type="number" step="0.01" id="receivedAmountInput" name="receivedAmount" placeholder="0.00" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="collectionSelect">طريقة التحصيل *</label>
+                <select class="form-select" name="collectionMethod" id="collectionSelect" required></select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="currencySelect">نوع العملة *</label>
+                <select class="form-select" name="currencyType" id="currencySelect" required></select>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-block">
+            <div class="section-title">
+              <i class="fas fa-sticky-note"></i>
+              <span>ملاحظات إضافية</span>
+            </div>
+            <textarea class="form-control" name="note" rows="4" placeholder="اكتب الملاحظات أو طلبات العميل"></textarea>
+          </div>
+
+          <div class="d-flex flex-column flex-md-row gap-3 mt-4">
+            <button class="reset-btn flex-fill" type="reset">تفريغ الحقول</button>
+            <button class="submit-btn flex-fill" id="submit" type="submit">حفظ بيانات الرحلة</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <input type="hidden" value="<?= url ?>" id="url" />
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script>
+    function populateCities(selectName) {
+      google.script.run.withSuccessHandler(function (cities) {
+        const citySelect = document.getElementById(selectName);
+        citySelect.innerHTML = '';
+
+        const placeholderOption = document.createElement('option');
+        placeholderOption.value = '';
+        placeholderOption.textContent = 'اسم المدينة';
+        placeholderOption.disabled = true;
+        placeholderOption.selected = true;
+        citySelect.appendChild(placeholderOption);
+
+        cities.forEach(function (city) {
+          const option = document.createElement('option');
+          option.value = city;
+          option.textContent = city;
+          citySelect.appendChild(option);
+        });
+      }).getCities();
+    }
+
+    function getColumns() {
+      const selectList = [
+        { selectId: 'sellerSelect', columnName: 'SELLERS', placeholder: 'اسم البائع' },
+        { selectId: 'supplierSelect', columnName: 'TOUR SUPPLIER', placeholder: 'المورد' },
+        { selectId: 'nationalitySelect', columnName: 'NATIONALITY', placeholder: 'جنسية العميل' },
+        { selectId: 'personSelect', columnName: 'PERSONS', placeholder: 'عدد الأشخاص' },
+        { selectId: 'tourSelect', columnName: 'TOUR TYPE', placeholder: 'نوع الرحلة' },
+        { selectId: 'fromPlaceSelect', columnName: 'PLACE TYPE', placeholder: 'نقطة الانطلاق' },
+        { selectId: 'toPlaceSelect', columnName: 'PLACE TYPE', placeholder: 'الوجهة' },
+        { selectId: 'currencySelect', columnName: 'CURRENCY TYPE', placeholder: 'نوع العملة' },
+        { selectId: 'collectionSelect', columnName: 'COLLECTION METHOD', placeholder: 'طريقة التحصيل' },
+      ];
+      populateCities('fromCitySelect');
+      populateCities('toCitySelect');
+
+      selectList.forEach(({ selectId, columnName, placeholder }) =>
+        getColumn(selectId, columnName, placeholder)
+      );
+    }
+
+    function getColumn(selectId, columnName, placeholder) {
+      google.script.run.withSuccessHandler(function (column) {
+        const selectElement = document.getElementById(selectId);
+        selectElement.innerHTML = '';
+
+        const placeholderOption = document.createElement('option');
+        placeholderOption.value = '';
+        placeholderOption.textContent = placeholder;
+        placeholderOption.disabled = true;
+        placeholderOption.selected = true;
+        selectElement.appendChild(placeholderOption);
+
+        column.forEach(function (item) {
+          const option = document.createElement('option');
+          option.value = item;
+          option.textContent = item;
+          selectElement.appendChild(option);
+        });
+      }).getColumnByName(columnName);
+    }
+
+    window.onload = function () {
+      getColumns();
+    };
+
+    document.getElementById('registration-form').addEventListener('submit', submitData);
+
+    function submitData(event) {
+      event.preventDefault();
+      const formData = new FormData(document.getElementById('registration-form'));
+      const data = {};
+      formData.forEach((value, key) => {
+        data[key] = value;
+      });
+
+      const valuesArray = Object.values(data);
+
+      google.script.run.withSuccessHandler(function () {
+        Swal.fire({
+          title: 'تم الحفظ',
+          text: 'تمت إضافة الرحلة بنجاح.',
+          icon: 'success',
+          heightAuto: false,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 2000);
+        document.getElementById('registration-form').reset();
+        getColumns();
+      }).addTour(valuesArray);
+    }
+  </script>
+</body>
+</html>

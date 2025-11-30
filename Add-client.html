@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <title>إضافة عميل جديد</title>
+  <base target="_top">
+  <? var appUrl = getUrl(); var url = appUrl; ?>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --nav-primary: #008891;
+      --nav-primary-dark: #006d75;
+      --nav-shadow: 0 25px 45px rgba(0, 0, 0, 0.12);
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: #f4f6f8;
+      color: #2c3f3f;
+      margin: 0;
+      padding: 0;
+    }
+
+    .ghada-hero {
+      position: relative;
+      width: 100%;
+      background: linear-gradient(135deg, var(--nav-primary), var(--nav-primary-dark));
+      color: #fff;
+      padding: 32px clamp(16px, 6vw, 80px) 28px;
+      overflow: hidden;
+      box-shadow: var(--nav-shadow);
+      border-bottom-left-radius: 32px;
+      border-bottom-right-radius: 32px;
+    }
+
+    .ghada-hero::before,
+    .ghada-hero::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      background: #fff;
+      opacity: 0.12;
+      filter: blur(0.5px);
+      pointer-events: none;
+    }
+
+    .ghada-hero::before {
+      width: 320px;
+      height: 320px;
+      top: -160px;
+      left: -60px;
+    }
+
+    .ghada-hero::after {
+      width: 220px;
+      height: 220px;
+      bottom: -120px;
+      right: -30px;
+    }
+
+    .ghada-hero-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .ghada-hero-emoji {
+      font-size: 2.5rem;
+      background: rgba(255, 255, 255, 0.16);
+      border-radius: 24px;
+      padding: 14px 20px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .ghada-hero-text {
+      max-width: 640px;
+      color: #fff;
+    }
+
+    .ghada-hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
+      padding: 6px 16px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .ghada-hero-title {
+      margin: 0;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .ghada-hero-subtitle {
+      margin: 8px 0 0;
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.85);
+      line-height: 1.6;
+    }
+
+    .ghada-nav {
+      position: relative;
+      z-index: 1;
+      margin-top: 26px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(16px);
+    }
+
+    .ghada-nav-item {
+      border: none;
+      background: rgba(255, 255, 255, 0.18);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 16px;
+      min-width: 140px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .ghada-nav-item .emoji {
+      font-size: 1.6rem;
+      line-height: 1;
+    }
+
+    .ghada-nav-item .label {
+      font-size: 0.95rem;
+    }
+
+    .ghada-nav-item:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .ghada-nav-item.active {
+      background: #fff;
+      color: var(--nav-primary);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .ghada-nav-item:focus-visible {
+      outline: 2px solid #fff;
+      outline-offset: 3px;
+    }
+
+    @media (max-width: 768px) {
+      .ghada-hero {
+        border-bottom-left-radius: 24px;
+        border-bottom-right-radius: 24px;
+        padding: 28px 16px 20px;
+      }
+
+      .ghada-hero-content {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .ghada-nav-item {
+        flex: 1 1 calc(50% - 8px);
+        min-width: 120px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .ghada-nav-item {
+        flex: 1 1 100%;
+        align-items: flex-start;
+      }
+    }
+
+    .page-intro {
+      padding: 20px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      margin-bottom: 20px;
+    }
+
+    .client-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.1);
+      border-top: 6px solid #008891;
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: #006d75;
+    }
+
+    .form-control,
+    .form-select,
+    textarea {
+      border-radius: 12px;
+      padding: 12px;
+      border: 1px solid #d9e2ec;
+      transition: border-color 0.2s ease;
+    }
+
+    .form-control:focus,
+    .form-select:focus,
+    textarea:focus {
+      border-color: #008891;
+      box-shadow: none;
+    }
+
+    .submit-btn {
+      background: linear-gradient(135deg, #008891, #00a0a9);
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+      width: 100%;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .submit-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 136, 145, 0.3);
+    }
+
+    .info-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 20px;
+      background: rgba(0, 136, 145, 0.1);
+      color: #008891;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body data-page="Add-client">
+  <? var headerAppUrl = typeof appUrl !== 'undefined' ? appUrl : getUrl(); ?>
+  <header class="ghada-hero" dir="rtl">
+    <div class="ghada-hero-content">
+      <span class="ghada-hero-emoji" aria-hidden="true">🤝</span>
+      <div class="ghada-hero-text">
+        <span class="ghada-hero-badge">👥 ملفات العملاء</span>
+        <h1 class="ghada-hero-title">رحّب بعملائك بواجهة مليئة بالطاقة الإيجابية</h1>
+        <p class="ghada-hero-subtitle">
+          حافظ على بيانات الاتصال والملاحظات محدثة لتسريع إنشاء الحجوزات المستقبلية.
+        </p>
+      </div>
+    </div>
+    <nav class="ghada-nav" id="ghada-nav-bar" aria-label="القائمة العلوية">
+      <button class="ghada-nav-item" data-page="index" type="button">
+        <span class="emoji" aria-hidden="true">📝</span>
+        <span class="label">إضافة حجز</span>
+      </button>
+      <button class="ghada-nav-item" data-page="Add-client" type="button">
+        <span class="emoji" aria-hidden="true">👤</span>
+        <span class="label">إضافة عميل</span>
+      </button>
+      <button class="ghada-nav-item" data-page="add-tour" type="button">
+        <span class="emoji" aria-hidden="true">🧭</span>
+        <span class="label">إضافة رحلة</span>
+      </button>
+      <button class="ghada-nav-item" data-page="add-hotel" type="button">
+        <span class="emoji" aria-hidden="true">🏨</span>
+        <span class="label">إضافة فندق</span>
+      </button>
+      <button class="ghada-nav-item" data-page="manage-reservations" type="button">
+        <span class="emoji" aria-hidden="true">📂</span>
+        <span class="label">إدارة الحجوزات</span>
+      </button>
+    </nav>
+  </header>
+  <script>
+    (function () {
+      const navBar = document.getElementById('ghada-nav-bar');
+      if (!navBar) {
+        return;
+      }
+      const rawBaseUrl = '<?= headerAppUrl ?>';
+      const baseUrl = rawBaseUrl && rawBaseUrl !== 'undefined'
+        ? rawBaseUrl
+        : (function () {
+            try {
+              return window.top.location.href.split('?')[0];
+            } catch (error) {
+              return '';
+            }
+          })();
+      const currentPage = document.body.dataset.page || 'index';
+      navBar.querySelectorAll('.ghada-nav-item').forEach((button) => {
+        const targetPage = button.dataset.page;
+        if (targetPage === currentPage) {
+          button.classList.add('active');
+          button.setAttribute('aria-current', 'page');
+        }
+        button.addEventListener('click', () => {
+          if (!targetPage || !baseUrl || targetPage === currentPage) {
+            return;
+          }
+          const targetUrl = targetPage === 'index'
+            ? baseUrl
+            : `${baseUrl}?page=${targetPage}`;
+          window.top.location.href = targetUrl;
+        });
+      });
+    })();
+  </script>
+
+  <div class="container my-4">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="page-intro h-100">
+          <div class="info-pill">
+            <i class="fas fa-user-check"></i>
+            خطوة واحدة فقط
+          </div>
+          <h3 class="fw-bold mb-3" style="color:#006d75;">إنشاء ملف عميل جديد</h3>
+          <p class="mb-3">
+            احتفظ بجميع تفاصيل عملائك في مكان واحد لسهولة الرجوع إليها أثناء إنشاء الحجوزات أو متابعة المدفوعات.
+          </p>
+          <ul class="ps-3 mb-0">
+            <li>تأكد من صحة بيانات الاتصال.</li>
+            <li>اختر الجنسية والمدينة المفضلة.</li>
+            <li>أضف أي ملاحظات مهمة للفريق.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="col-lg-8">
+        <form id="clientForm" class="client-card">
+          <div class="mb-3">
+            <label class="form-label" for="clientName">اسم العميل *</label>
+            <input type="text" class="form-control" id="clientName" name="name" placeholder="اكتب الاسم الكامل" required>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label" for="clientPhone">رقم الجوال *</label>
+              <input type="tel" class="form-control" id="clientPhone" name="phone" placeholder="+9665xxxxxxxx" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="clientEmail">البريد الإلكتروني</label>
+              <input type="email" class="form-control" id="clientEmail" name="email" placeholder="example@email.com">
+            </div>
+          </div>
+
+          <div class="row g-3 mt-1">
+            <div class="col-md-6">
+              <label class="form-label" for="nationalitySelect">الجنسية *</label>
+              <select id="nationalitySelect" name="nationality" class="form-select" required>
+                <option value="" disabled selected>اختر الجنسية</option>
+                </select>
+            </div>
+           <div class="col-md-6">
+             <label class="form-label" for="citySelect">المدينة المفضلة *</label>
+             <select id="citySelect" name="city" class="form-select" required>
+               <option value="" disabled selected>اختر المدينة</option>
+               <option value="Istanbul">إسطنبول</option>
+               <option value="Ankara">أنقرة</option>
+               <option value="Izmir">إزمير</option>
+               <option value="Bursa">بورصة</option>
+               <option value="Antalya">أنطاليا</option>
+               <option value="Adana">أضنة</option>
+               <option value="Konya">قونية</option>
+               <option value="Gaziantep">غازي عنتاب</option>
+               <option value="Sanliurfa">شانلي أورفا</option>
+               <option value="Mersin">مرسين</option>
+               <option value="Diyarbakir">ديار بكر</option>
+               <option value="Kayseri">قيصري</option>
+               <option value="Samsun">سامسون</option>
+               <option value="Denizli">دنيزلي</option>
+               <option value="Sakarya">سكاريا</option>
+               <option value="Eskisehir">إسكي شهير</option>
+               <option value="Trabzon">طرابزون</option>
+               <option value="Manisa">مانيسا</option>
+               <option value="Hatay">هاتاي</option>
+               <option value="Balikesir">باليكسير</option>
+               <option value="Van">فان</option>
+               <option value="Kahramanmaras">كهرمان مرعش</option>
+               <option value="Aydin">ايدن</option>
+               <option value="Tekirdag">تيكيرداغ</option>
+               <option value="Mugla">مغلا</option>
+             </select>
+             </div>
+           </div>
+          <div class="mt-3">
+            <label class="form-label" for="clientNotes">ملاحظات إضافية</label>
+            <textarea class="form-control" id="clientNotes" name="notes" rows="4" placeholder="مثال: يفضل التواصل عبر الواتساب صباحاً"></textarea>
+          </div>
+
+          <button type="submit" class="submit-btn mt-4" id="submitBtn">
+            <span class="default-text">حفظ بيانات العميل</span>
+            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <input type="hidden" value="<?= url ?>" id="url" />
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+    <script>
+      const submitBtn = document.getElementById('submitBtn');
+    const spinner = submitBtn.querySelector('.spinner-border');
+    const submitText = submitBtn.querySelector('.default-text');
+    const nationalitySelect = document.getElementById('nationalitySelect');
+    // const citySelect = document.getElementById('citySelect'); // لم نعد بحاجة لهذا المتغير هنا في الجلب
+
+    document.addEventListener('DOMContentLoaded', () => {
+        removeDuplicateClientForms();
+        const clientForm = document.getElementById('clientForm');
+        if (!clientForm) {
+          console.warn('clientForm element is missing from the page.');
+          return;
+        }
+      loadSelectOptions();
+
+      clientForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const formData = new FormData(clientForm);
+        const payload = {
+          name: (formData.get('name') || '').trim(),
+          phone: (formData.get('phone') || '').trim(),
+          nationality: formData.get('nationality') || '',
+          email: (formData.get('email') || '').trim(),
+          city: formData.get('city') || '',
+          notes: (formData.get('notes') || '').trim()
+        };
+
+        if (!payload.name || !payload.phone || !payload.nationality || !payload.city) {
+          Swal.fire({
+            title: 'تنبيه',
+            text: 'الرجاء تعبئة الحقول الإلزامية.',
+            icon: 'warning',
+            confirmButtonText: 'حسناً'
+          });
+          return;
+        }
+
+        toggleLoading(true);
+
+        google.script.run
+          .withSuccessHandler(() => {
+            Swal.fire({
+              title: 'تم الحفظ',
+              text: 'تمت إضافة العميل بنجاح.',
+              icon: 'success',
+              timer: 1500,
+              showConfirmButton: false
+            });
+            clientForm.reset();
+            toggleLoading(false);
+          })
+          .withFailureHandler((error) => {
+            console.error(error);
+            Swal.fire({
+              title: 'خطأ',
+              text: 'تعذر حفظ البيانات. الرجاء المحاولة مجدداً.',
+              icon: 'error',
+              confirmButtonText: 'حسناً'
+            });
+            toggleLoading(false);
+          })
+          .addClient(payload);
+      });
+    });
+
+    function toggleLoading(isLoading) {
+      submitBtn.disabled = isLoading;
+      spinner.classList.toggle('d-none', !isLoading);
+      submitText.classList.toggle('d-none', isLoading);
+    }
+
+    function removeDuplicateClientForms() {
+      const forms = document.querySelectorAll('form#clientForm');
+      if (forms.length <= 1) {
+        return;
+      }
+      forms.forEach((form, index) => {
+        if (index === 0) {
+          return;
+        }
+        form.remove();
+      });
+      console.warn('Removed duplicate client form instances:', forms.length - 1);
+    }
+
+  function loadSelectOptions() {
+    google.script.run
+      .withSuccessHandler(function (data) {
+        // نبقي على جلب الجنسيات لأنها قائمة طويلة ومتغيرة
+        const nationalities = Array.isArray(data && data.nationalities)
+          ? data.nationalities.filter(Boolean)
+          : [];
+        populateSelect(nationalitySelect, nationalities, 'اختر الجنسية');
+
+        // تم إلغاء جلب المدن من هنا لكي تظهر القائمة التي أضفناها في HTML
+        // const cities = normalizeCityList(data && data.cities);
+        // populateSelect(citySelect, cities, 'اختر المدينة');
+      })
+      .withFailureHandler(function (error) {
+        console.error(error);
+        Swal.fire({
+          title: 'تنبيه',
+          text: 'تعذر تحميل قائمة الجنسيات.',
+          icon: 'error',
+          confirmButtonText: 'حسناً'
+        });
+      })
+      .getClientFormLookups();
+  }
+
+  function populateSelect(selectElement, items, placeholder) {
+    const fragment = document.createDocumentFragment();
+    const placeholderOption = document.createElement('option');
+    placeholderOption.value = '';
+    placeholderOption.textContent = placeholder;
+    placeholderOption.disabled = true;
+    placeholderOption.selected = true;
+    fragment.appendChild(placeholderOption);
+
+    items.forEach(item => {
+      if (!item) return;
+      const option = document.createElement('option');
+      option.value = item;
+      option.textContent = item;
+      fragment.appendChild(option);
+    });
+
+    selectElement.innerHTML = '';
+    selectElement.appendChild(fragment);
+  }
+
+  function normalizeCityList(list) {
+    if (!Array.isArray(list)) {
+      return [];
+    }
+    return list
+      .map(item => Array.isArray(item) ? item[0] : item)
+      .filter(Boolean);
+  }
+  </script>
+</body>
+</html>
