@@ -261,6 +261,151 @@ function getCustomers(searchTerm, pageNumber, checkInDate, checkOutDate) {
   };
 }
 
+/**
+ * يعيد الحجوزات المرتبطة بمورد محدد بناءً على طريقتي تحصيل العربون والمبلغ المتبقي.
+ * @param {{supplier:string,startDate:string,endDate:string}} filterOptions
+ * @returns {{
+ *   supplier:string,
+ *   filters:{startDate:string,endDate:string},
+ *   receivables:Array<Object>,
+ *   obligations:Array<Object>,
+ *   totals:{
+ *     receivablesCount:number,
+ *     obligationsCount:number,
+ *     receivablesTotal:number,
+ *     obligationsTotal:number,
+ *     receivablesByCurrency:Object,
+ *     obligationsByCurrency:Object
+ *   }
+ * }}
+ */
+function getSupplierFinancials(filterOptions) {
+  filterOptions = filterOptions || {};
+  var supplierName = (filterOptions.supplier || "").toString().trim();
+  var startDateInput = filterOptions.startDate;
+  var endDateInput = filterOptions.endDate;
+  var startDate = parseFilterDate(startDateInput, true);
+  var endDate = parseFilterDate(endDateInput, false);
+  var timezone = Session.getScriptTimeZone();
+  var normalizedSupplier = supplierName.toLowerCase();
+  var response = buildSupplierFinancialResponse_(supplierName, startDate, endDate);
+
+  if (!supplierName) {
+    return response;
+  }
+
+  var sheet = SpreadsheetApp.openById(MASTER_SPREADSHEET_ID).getSheetByName("DATABASE");
+  if (!sheet) {
+    return response;
+  }
+
+  var values = sheet.getDataRange().getValues();
+  if (!values || values.length <= 1) {
+    return response;
+  }
+
+  var header = values.shift();
+  var headerMap = buildHeaderIndexMap_(header);
+  var indexes = {
+    id: getHeaderIndexByName_(headerMap, ["booking id", "id"], DATABASE_COL_INDEX.ID),
+    customerName: getHeaderIndexByName_(headerMap, ["name", "customer name", "client name"], DATABASE_COL_INDEX.NAME),
+    seller: getHeaderIndexByName_(headerMap, ["seller", "agent", "agency"], -1),
+    supplier: getHeaderIndexByName_(headerMap, ["hotel supplier", "supplier"], -1),
+    checkin: getHeaderIndexByName_(headerMap, ["check-in date", "check in", "checkin", "chek in date"], DATABASE_COL_INDEX.CHECKIN_DATE),
+    checkout: getHeaderIndexByName_(headerMap, ["check-out date", "checkout", "check out"], DATABASE_COL_INDEX.CHECKOUT_DATE),
+    hotel: getHeaderIndexByName_(headerMap, ["hotel", "hotel name"], DATABASE_COL_INDEX.HOTEL),
+    ra3bon: getHeaderIndexByName_(headerMap, ["ra3bon", "advance method", "deposit method", "طريقة تحصيل العربون"], -1),
+    collection: getHeaderIndexByName_(headerMap, ["collection method", "remaining method", "طريقة التحصيل"], -1),
+    depositAmount: getHeaderIndexByName_(headerMap, ["amount sent", "deposit amount", "prepayment", "arrived amount"], DATABASE_COL_INDEX.ARRIVED_AMOUNT),
+    depositCurrency: getHeaderIndexByName_(headerMap, ["amount sent currency", "deposit currency", "prepayment currency", "arrived amount currency"], DATABASE_COL_INDEX.ARRIVED_AMOUNT_CURRENCY),
+    remainingAmount: getHeaderIndexByName_(headerMap, ["remaining amount", "rest amount"], DATABASE_COL_INDEX.REMAINING_AMOUNT),
+    remainingCurrency: getHeaderIndexByName_(headerMap, ["remaining amount currency", "amount remaining currency"], DATABASE_COL_INDEX.REMAINING_AMOUNT_CURRENCY),
+    reservationState: getHeaderIndexByName_(headerMap, ["reservation state", "status"], -1),
+    note: getHeaderIndexByName_(headerMap, ["notes", "note"], DATABASE_COL_INDEX.NOTES)
+  };
+
+  if (indexes.ra3bon === -1 && indexes.collection === -1) {
+    return response;
+  }
+
+  var receivables = [];
+  var obligations = [];
+  var receivableTotals = {};
+  var obligationTotals = {};
+  var receivableSum = 0;
+  var obligationSum = 0;
+
+  values.forEach(function (row) {
+    var checkInDate = indexes.checkin > -1 ? parseSheetDate(row[indexes.checkin]) : null;
+    if (startDate && (!checkInDate || checkInDate < startDate)) {
+      return;
+    }
+    if (endDate && (!checkInDate || checkInDate > endDate)) {
+      return;
+    }
+
+    var depositMethod = indexes.ra3bon > -1 ? (row[indexes.ra3bon] || "").toString().trim() : "";
+    var collectionMethod = indexes.collection > -1 ? (row[indexes.collection] || "").toString().trim() : "";
+
+    var depositMatches = depositMethod && depositMethod.toLowerCase().indexOf(normalizedSupplier) !== -1;
+    var collectionMatches = collectionMethod && collectionMethod.toLowerCase().indexOf(normalizedSupplier) !== -1;
+
+    if (!depositMatches && !collectionMatches) {
+      return;
+    }
+
+    var checkoutDate = indexes.checkout > -1 ? parseSheetDate(row[indexes.checkout]) : null;
+    var recordBase = {
+      id: indexes.id > -1 ? (row[indexes.id] || "").toString().trim() : "",
+      customerName: indexes.customerName > -1 ? (row[indexes.customerName] || "").toString().trim() : "",
+      seller: indexes.seller > -1 ? (row[indexes.seller] || "").toString().trim() : "",
+      supplier: indexes.supplier > -1 ? (row[indexes.supplier] || "").toString().trim() : "",
+      hotel: indexes.hotel > -1 ? (row[indexes.hotel] || "").toString().trim() : "",
+      reservationState: indexes.reservationState > -1 ? (row[indexes.reservationState] || "").toString().trim() : "",
+      note: indexes.note > -1 ? (row[indexes.note] || "").toString().trim() : "",
+      checkIn: formatDateValue_(checkInDate, timezone),
+      checkOut: formatDateValue_(checkoutDate, timezone),
+      nights: calculateNights_(checkInDate, checkoutDate)
+    };
+
+    if (depositMatches) {
+      var depositAmount = indexes.depositAmount > -1 ? sanitizeNumber_(row[indexes.depositAmount]) : 0;
+      var depositCurrency = indexes.depositCurrency > -1 ? (row[indexes.depositCurrency] || "").toString().trim() : "";
+      receivables.push(Object.assign({}, recordBase, {
+        method: depositMethod || "غير محدد",
+        amount: depositAmount,
+        currency: depositCurrency
+      }));
+      receivableSum += depositAmount;
+      accumulateCurrencyTotal_(receivableTotals, depositCurrency, depositAmount);
+    }
+
+    if (collectionMatches) {
+      var remainingAmount = indexes.remainingAmount > -1 ? sanitizeNumber_(row[indexes.remainingAmount]) : 0;
+      var remainingCurrency = indexes.remainingCurrency > -1 ? (row[indexes.remainingCurrency] || "").toString().trim() : "";
+      obligations.push(Object.assign({}, recordBase, {
+        method: collectionMethod || "غير محدد",
+        amount: remainingAmount,
+        currency: remainingCurrency
+      }));
+      obligationSum += remainingAmount;
+      accumulateCurrencyTotal_(obligationTotals, remainingCurrency, remainingAmount);
+    }
+  });
+
+  response.receivables = receivables;
+  response.obligations = obligations;
+  response.totals.receivablesCount = receivables.length;
+  response.totals.obligationsCount = obligations.length;
+  response.totals.receivablesTotal = receivableSum;
+  response.totals.obligationsTotal = obligationSum;
+  response.totals.receivablesByCurrency = receivableTotals;
+  response.totals.obligationsByCurrency = obligationTotals;
+  response.filters.startDate = formatDateValue_(startDate, timezone);
+  response.filters.endDate = formatDateValue_(endDate, timezone);
+  return response;
+}
+
 function clearInvoice(){
   var myGooglSheet = SpreadsheetApp.openById(MASTER_SPREADSHEET_ID);
   var invoiceSheet = myGooglSheet.getSheetByName("INVOICE");
@@ -1093,5 +1238,81 @@ function formatMoneyString_(amount, currency) {
     : sanitizeNumber_(amount);
   var suffix = currency ? " " + currency : "";
   return value + suffix;
+}
+
+function buildHeaderIndexMap_(headerRow) {
+  var map = {};
+  (headerRow || []).forEach(function (cell, index) {
+    if (cell === null || typeof cell === "undefined") {
+      return;
+    }
+    var key = cell.toString().trim().toLowerCase();
+    if (key) {
+      map[key] = index;
+    }
+  });
+  return map;
+}
+
+function getHeaderIndexByName_(headerMap, names, fallbackIndex) {
+  var normalizedFallback = typeof fallbackIndex === "number" ? fallbackIndex : -1;
+  if (!headerMap) {
+    return normalizedFallback;
+  }
+  var lookupList = Array.isArray(names) ? names : [names];
+  for (var i = 0; i < lookupList.length; i++) {
+    var candidate = lookupList[i];
+    if (candidate === null || typeof candidate === "undefined") {
+      continue;
+    }
+    var normalized = candidate.toString().trim().toLowerCase();
+    if (normalized && typeof headerMap[normalized] === "number") {
+      return headerMap[normalized];
+    }
+  }
+  return normalizedFallback;
+}
+
+function formatDateValue_(value, timezone) {
+  if (!value) {
+    return "";
+  }
+  var date = value instanceof Date ? value : parseDateInput_(value);
+  if (!date || isNaN(date.getTime())) {
+    return "";
+  }
+  return Utilities.formatDate(date, timezone || Session.getScriptTimeZone(), "yyyy-MM-dd");
+}
+
+function buildSupplierFinancialResponse_(supplierName, startDate, endDate) {
+  var timezone = Session.getScriptTimeZone();
+  return {
+    supplier: supplierName || "",
+    filters: {
+      startDate: formatDateValue_(startDate, timezone),
+      endDate: formatDateValue_(endDate, timezone)
+    },
+    receivables: [],
+    obligations: [],
+    totals: {
+      receivablesCount: 0,
+      obligationsCount: 0,
+      receivablesTotal: 0,
+      obligationsTotal: 0,
+      receivablesByCurrency: {},
+      obligationsByCurrency: {}
+    }
+  };
+}
+
+function accumulateCurrencyTotal_(totalsMap, currency, amount) {
+  if (!totalsMap) {
+    return;
+  }
+  var key = (currency || "").toString().trim();
+  if (!key) {
+    key = "غير محدد";
+  }
+  totalsMap[key] = (totalsMap[key] || 0) + (amount || 0);
 }
 
