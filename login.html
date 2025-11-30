@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <? var appUrl = getUrl(); ?>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <base target="_top">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      min-height: 100vh;
+      background: #f4f6f8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cairo', sans-serif;
+    }
+    .auto-auth-card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 32px;
+      max-width: 460px;
+      text-align: center;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08);
+    }
+    h1 {
+      font-size: 1.6rem;
+      color: #008891;
+      margin-bottom: 12px;
+    }
+    p {
+      color: #4a4a4a;
+      line-height: 1.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="auto-auth-card">
+    <h1>تم تفعيل الدخول التلقائي</h1>
+    <p>
+      لا حاجة لإدخال البريد الإلكتروني أو اختيار الدور. النظام يتعرف عليك مباشرة من حساب Google.
+    </p>
+    <a class="btn btn-primary mt-3" href="<?= appUrl ?>">الانتقال للواجهة الآن</a>
+  </div>
+  <script>
+    setTimeout(function () {
+      window.top.location.href = '<?= appUrl ?>';
+    }, 1200);
+  </script>
+</body>
+</html>
