@@ -29,7 +29,11 @@ var EMPLOYEE_ALLOWED_PAGES = [
   'add-tour',
   'add-hotel',
   'manage-reservations',
-  'edit-reservation'
+  'edit-reservation',
+  'SUPPLIER',
+  'manage-statistics',
+  'mediator',
+  'payments'
 ];
 
 var MANAGEMENT_ROLES = ['admin', 'owner', 'developer', 'accountant'];
@@ -546,6 +550,42 @@ function addTour(formPayload) {
 
   sheet.appendRow(rowValues);
   return "Tour added successfully";
+}
+
+/**
+ * إضافة دفعة جديدة إلى شيت Payments.
+ * @param {Object} paymentData بيانات الدفعة القادمة من الواجهة.
+ * @returns {string} رسالة نجاح.
+ */
+function addPayment(paymentData) {
+  paymentData = paymentData || {};
+  var sheet = ensureSheetWithHeaders_(ss, "Payments", [
+    "timestamp",
+    "beneficiary",
+    "amount",
+    "amountEuro",
+    "deliveryMethod",
+    "dueDate",
+    "paymentDate",
+    "createdBy"
+  ]);
+
+  var amountValue = sanitizeNumber_(paymentData.amount);
+  var amountEuroValue = sanitizeNumber_(paymentData.amountEuro);
+
+  var row = [
+    new Date(),
+    (paymentData.beneficiary || '').toString().trim(),
+    amountValue,
+    amountEuroValue,
+    (paymentData.deliveryMethod || '').toString().trim(),
+    paymentData.dueDate || '',
+    paymentData.paymentDate || '',
+    getExecutionEmail_()
+  ];
+
+  sheet.appendRow(row);
+  return "تم تسجيل الدفعة بنجاح";
 }
 
 // -----------------------------------------------------------------

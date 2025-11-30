@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+    <title>دفعات الموردين</title>
+    <base target="_top" />
+    <? var appUrl = getUrl(); var url = appUrl; ?>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+      :root {
+        --primary-color: #008891;
+        --primary-dark: #006d75;
+        --primary-light: #00a0a9;
+        --text-dark: #2c3f3f;
+        --text-muted: #6c757d;
+        --bg-light: #f5f7fb;
+        --card-shadow: 0 18px 60px rgba(0, 0, 0, 0.08);
+      }
+
+      * {
+        font-family: 'Cairo', sans-serif;
+      }
+
+      body {
+        background: var(--bg-light);
+        min-height: 100vh;
+        margin: 0;
+      }
+
+      .payments-wrapper {
+        max-width: 950px;
+        margin: 0 auto 60px;
+        padding: 0 15px;
+      }
+
+      .payments-card {
+        background: #fff;
+        border-radius: 24px;
+        padding: 32px;
+        box-shadow: var(--card-shadow);
+      }
+
+      .payments-card h2 {
+        color: var(--primary-dark);
+        font-weight: 800;
+        margin-bottom: 10px;
+        font-size: 1.8rem;
+      }
+
+      .payments-card p.lead {
+        color: var(--text-muted);
+        margin-bottom: 25px;
+        font-size: 1rem;
+      }
+
+      label.form-label {
+        font-weight: 700;
+        color: var(--text-dark);
+      }
+
+      .form-control,
+      .form-select {
+        border-radius: 14px;
+        padding: 0.75rem 1rem;
+        border: 1px solid #e1e5eb;
+        text-align: right;
+      }
+
+      .form-control:focus,
+      .form-select:focus {
+        border-color: var(--primary-light);
+        box-shadow: 0 0 0 0.2rem rgba(0, 136, 145, 0.15);
+      }
+
+      .helper-text {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+      }
+
+      .actions-row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        margin-top: 10px;
+      }
+
+      .actions-row .btn {
+        min-width: 160px;
+        border-radius: 14px;
+        font-weight: 700;
+        padding: 0.85rem 1.5rem;
+      }
+
+      .submit-btn {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        border: none;
+      }
+
+      .submit-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+
+      .reset-btn {
+        border: 1px solid var(--primary-light);
+        color: var(--primary-dark);
+        background: transparent;
+      }
+
+      @media (max-width: 576px) {
+        .payments-card {
+          padding: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body data-page="payments">
+    <? var headerAppUrl = typeof appUrl !== 'undefined' ? appUrl : getUrl(); ?>
+    <?!= include('shared-header'); ?>
+    <main class="payments-wrapper">
+      <section class="payments-card">
+        <h2>تسجيل دفعة جديدة</h2>
+        <p class="lead">اربط الدفعات مع شيت <strong>Payments</strong> واحتفظ بسجل موحّد للمستحقات.</p>
+
+        <form id="payments-form">
+          <div class="row g-4">
+            <div class="col-md-6">
+              <label for="paymentBeneficiary" class="form-label">المستفيد</label>
+              <input type="text" class="form-control" id="paymentBeneficiary" name="beneficiary" placeholder="اسم المورد أو الجهة" required />
+            </div>
+            <div class="col-md-3">
+              <label for="paymentAmount" class="form-label">المبلغ (SAR)</label>
+              <input type="number" class="form-control" id="paymentAmount" name="amount" min="0" step="0.01" placeholder="0.00" required />
+              <small class="helper-text">أدخل المبلغ بالريال السعودي</small>
+            </div>
+            <div class="col-md-3">
+              <label for="paymentAmountEuro" class="form-label">المبلغ باليورو</label>
+              <input type="number" class="form-control" id="paymentAmountEuro" name="amountEuro" min="0" step="0.01" placeholder="0.00" required />
+            </div>
+            <div class="col-md-6">
+              <label for="deliveryMethod" class="form-label">طريقة التسليم</label>
+              <select class="form-select" id="deliveryMethod" name="deliveryMethod" required>
+                <option value="" selected disabled>اختر الطريقة</option>
+                <option value="تحويل بنكي">تحويل بنكي</option>
+                <option value="حوالة">حوالة</option>
+                <option value="شيك">شيك</option>
+                <option value="نقدي">نقدي</option>
+                <option value="أخرى">أخرى</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label for="dueDate" class="form-label">تاريخ الاستحقاق</label>
+              <input type="date" class="form-control" id="dueDate" name="dueDate" required />
+            </div>
+            <div class="col-md-3">
+              <label for="paymentDate" class="form-label">تاريخ الدفع</label>
+              <input type="date" class="form-control" id="paymentDate" name="paymentDate" />
+              <small class="helper-text">اتركه فارغاً إذا لم يتم السداد بعد</small>
+            </div>
+          </div>
+
+          <div class="actions-row mt-4">
+            <button type="submit" class="btn btn-primary submit-btn" id="submitPaymentButton">حفظ الدفعة</button>
+            <button type="reset" class="btn reset-btn">مسح الحقول</button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script>
+      (function () {
+        const form = document.getElementById('payments-form');
+        const submitButton = document.getElementById('submitPaymentButton');
+
+        if (!form || !submitButton) {
+          return;
+        }
+
+        function toggleLoading(isLoading) {
+          submitButton.disabled = isLoading;
+          submitButton.textContent = isLoading ? '... جاري الحفظ' : 'حفظ الدفعة';
+        }
+
+        form.addEventListener('submit', function (event) {
+          event.preventDefault();
+          if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+          }
+
+          const payload = {
+            beneficiary: document.getElementById('paymentBeneficiary').value.trim(),
+            amount: document.getElementById('paymentAmount').value.trim(),
+            amountEuro: document.getElementById('paymentAmountEuro').value.trim(),
+            deliveryMethod: document.getElementById('deliveryMethod').value,
+            dueDate: document.getElementById('dueDate').value,
+            paymentDate: document.getElementById('paymentDate').value
+          };
+
+          toggleLoading(true);
+          google.script.run
+            .withSuccessHandler(function (message) {
+              toggleLoading(false);
+              Swal.fire({
+                icon: 'success',
+                title: 'تم الحفظ بنجاح',
+                text: message || 'تم تسجيل الدفعة في شيت Payments.',
+                confirmButtonText: 'حسناً'
+              });
+              form.reset();
+            })
+            .withFailureHandler(function (error) {
+              toggleLoading(false);
+              Swal.fire({
+                icon: 'error',
+                title: 'تعذر حفظ الدفعة',
+                text: (error && error.message) ? error.message : 'حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى.',
+                confirmButtonText: 'إغلاق'
+              });
+            })
+            .addPayment(payload);
+        });
+      })();
+    </script>
+  </body>
+</html>
