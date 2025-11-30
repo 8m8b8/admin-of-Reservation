@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+    <title>دفعات الموردين</title>
+    <base target="_top" />
+    <? var appUrl = getUrl(); var url = appUrl; ?>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+      :root {
+        --primary-color: #008891;
+        --primary-dark: #006d75;
+        --primary-light: #00a0a9;
+        --text-dark: #2c3f3f;
+        --text-muted: #6c757d;
+        --bg-light: #f5f7fb;
+        --card-shadow: 0 18px 60px rgba(0, 0, 0, 0.08);
+      }
+
+      * {
+        font-family: 'Cairo', sans-serif;
+      }
+
+      body {
+        background: var(--bg-light);
+        min-height: 100vh;
+        margin: 0;
+      }
+
+      .ghada-hero {
+        position: relative;
+        width: 100%;
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        color: #fff;
+        padding: 24px clamp(12px, 5vw, 60px) 20px;
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+        border-bottom-left-radius: 28px;
+        border-bottom-right-radius: 28px;
+        margin-bottom: 24px;
+      }
+
+      .ghada-hero::before,
+      .ghada-hero::after {
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+        background: #fff;
+        opacity: 0.12;
+        filter: blur(0.5px);
+        pointer-events: none;
+      }
+
+      .ghada-hero::before {
+        width: 320px;
+        height: 320px;
+        top: -160px;
+        left: -60px;
+      }
+
+      .ghada-hero::after {
+        width: 220px;
+        height: 220px;
+        bottom: -120px;
+        right: -30px;
+      }
+
+      .ghada-hero-content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .ghada-hero-emoji {
+        font-size: 2.2rem;
+        background: rgba(255, 255, 255, 0.16);
+        border-radius: 20px;
+        padding: 12px 18px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .ghada-hero-text {
+        max-width: 640px;
+        color: #fff;
+      }
+
+      .ghada-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.25);
+        border-radius: 999px;
+        padding: 6px 16px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+
+      .ghada-hero-title {
+        margin: 0;
+        font-size: clamp(1.5rem, 3vw, 2.3rem);
+        font-weight: 800;
+      }
+
+      .ghada-hero-subtitle {
+        margin: 8px 0 0;
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      .ghada-nav {
+        position: relative;
+        z-index: 1;
+        margin-top: 18px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
+        padding: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        backdrop-filter: blur(14px);
+      }
+
+      .ghada-nav-item {
+        border: none;
+        background: rgba(255, 255, 255, 0.18);
+        color: #fff;
+        padding: 10px 14px;
+        border-radius: 14px;
+        min-width: 110px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        font-weight: 600;
+        transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+        font-size: 0.9rem;
+      }
+
+      .ghada-nav-item .emoji {
+        font-size: 1.3rem;
+        line-height: 1;
+      }
+
+      .ghada-nav-item .label {
+        font-size: 0.85rem;
+      }
+
+      .ghada-nav-item:hover {
+        transform: translateY(-2px);
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .ghada-nav-item.active {
+        background: #fff;
+        color: var(--primary-color);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .ghada-nav-item:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 3px;
+      }
+
+      @media (max-width: 768px) {
+        .ghada-hero-content {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .ghada-nav-item {
+          flex: 1 1 calc(50% - 6px);
+          min-width: 100px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .ghada-nav-item {
+          flex: 1 1 100%;
+          align-items: flex-start;
+        }
+      }
+
+      .payments-wrapper {
+        max-width: 950px;
+        margin: 0 auto 60px;
+        padding: 0 15px;
+      }
+
+      .payments-card {
+        background: #fff;
+        border-radius: 24px;
+        padding: 32px;
+        box-shadow: var(--card-shadow);
+      }
+
+      .payments-card h2 {
+        color: var(--primary-dark);
+        font-weight: 800;
+        margin-bottom: 10px;
+        font-size: 1.8rem;
+      }
+
+      .payments-card p.lead {
+        color: var(--text-muted);
+        margin-bottom: 25px;
+        font-size: 1rem;
+      }
+
+      label.form-label {
+        font-weight: 700;
+        color: var(--text-dark);
+      }
+
+      .form-control,
+      .form-select {
+        border-radius: 14px;
+        padding: 0.75rem 1rem;
+        border: 1px solid #e1e5eb;
+        text-align: right;
+      }
+
+      .form-control:focus,
+      .form-select:focus {
+        border-color: var(--primary-light);
+        box-shadow: 0 0 0 0.2rem rgba(0, 136, 145, 0.15);
+      }
+
+      .helper-text {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+      }
+
+      .actions-row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        margin-top: 10px;
+      }
+
+      .actions-row .btn {
+        min-width: 160px;
+        border-radius: 14px;
+        font-weight: 700;
+        padding: 0.85rem 1.5rem;
+      }
+
+      .submit-btn {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        border: none;
+      }
+
+      .submit-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+
+      .reset-btn {
+        border: 1px solid var(--primary-light);
+        color: var(--primary-dark);
+        background: transparent;
+      }
+
+      @media (max-width: 576px) {
+        .payments-card {
+          padding: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body data-page="payments">
+    <? var headerAppUrl = typeof appUrl !== 'undefined' ? appUrl : getUrl(); ?>
+    <header class="ghada-hero" dir="rtl">
+      <div class="ghada-hero-content">
+        <span class="ghada-hero-emoji" aria-hidden="true">💳</span>
+        <div class="ghada-hero-text">
+          <span class="ghada-hero-badge">دفعات الموردين</span>
+          <h1 class="ghada-hero-title">سجّل واستعرض عمليات الدفع بسهولة</h1>
+          <p class="ghada-hero-subtitle">
+            جميع روابط النظام أمامك مع قائمة أخف حجماً تناسب كل الخيارات.
+          </p>
+        </div>
+      </div>
+      <nav class="ghada-nav" id="ghada-nav-bar" aria-label="القائمة العلوية">
+        <button class="ghada-nav-item" data-page="index" type="button">
+          <span class="emoji" aria-hidden="true">📝</span>
+          <span class="label">إضافة حجز</span>
+        </button>
+        <button class="ghada-nav-item" data-page="Add-client" type="button">
+          <span class="emoji" aria-hidden="true">👤</span>
+          <span class="label">إضافة عميل</span>
+        </button>
+        <button class="ghada-nav-item" data-page="add-tour" type="button">
+          <span class="emoji" aria-hidden="true">🧭</span>
+          <span class="label">إضافة رحلة</span>
+        </button>
+        <button class="ghada-nav-item" data-page="add-hotel" type="button">
+          <span class="emoji" aria-hidden="true">🏨</span>
+          <span class="label">إضافة فندق</span>
+        </button>
+        <button class="ghada-nav-item" data-page="manage-reservations" type="button">
+          <span class="emoji" aria-hidden="true">📂</span>
+          <span class="label">إدارة الحجوزات</span>
+        </button>
+        <button class="ghada-nav-item" data-page="SUPPLIER" type="button">
+          <span class="emoji" aria-hidden="true">🤝</span>
+          <span class="label">الموردين</span>
+        </button>
+        <button class="ghada-nav-item" data-page="manage-statistics" type="button">
+          <span class="emoji" aria-hidden="true">📊</span>
+          <span class="label">الإحصائيات</span>
+        </button>
+        <button class="ghada-nav-item" data-page="mediator" type="button">
+          <span class="emoji" aria-hidden="true">🕴️</span>
+          <span class="label">الوسطاء</span>
+        </button>
+        <button class="ghada-nav-item" data-page="payments" type="button">
+          <span class="emoji" aria-hidden="true">💳</span>
+          <span class="label">الدفعات</span>
+        </button>
+      </nav>
+    </header>
+    <script>
+      (function () {
+        const navBar = document.getElementById('ghada-nav-bar');
+        if (!navBar) {
+          return;
+        }
+        const rawBaseUrl = '<?= headerAppUrl ?>';
+        const baseUrl = rawBaseUrl && rawBaseUrl !== 'undefined'
+          ? rawBaseUrl
+          : (function () {
+              try {
+                return window.top.location.href.split('?')[0];
+              } catch (error) {
+                return '';
+              }
+            })();
+        const currentPage = document.body.dataset.page || 'index';
+        navBar.querySelectorAll('.ghada-nav-item').forEach((button) => {
+          const targetPage = button.dataset.page;
+          if (targetPage === currentPage) {
+            button.classList.add('active');
+            button.setAttribute('aria-current', 'page');
+          }
+          button.addEventListener('click', () => {
+            if (!targetPage || !baseUrl || targetPage === currentPage) {
+              return;
+            }
+            const targetUrl = targetPage === 'index'
+              ? baseUrl
+              : `${baseUrl}?page=${targetPage}`;
+            window.top.location.href = targetUrl;
+          });
+        });
+      })();
+    </script>
+    <main class="payments-wrapper">
+      <section class="payments-card">
+        <h2>تسجيل دفعة جديدة</h2>
+        <p class="lead">اربط الدفعات مع شيت <strong>Payments</strong> واحتفظ بسجل موحّد للمستحقات.</p>
+
+        <form id="payments-form">
+          <div class="row g-4">
+            <div class="col-md-6">
+              <label for="paymentBeneficiary" class="form-label">المستفيد</label>
+              <input type="text" class="form-control" id="paymentBeneficiary" name="beneficiary" placeholder="اسم المورد أو الجهة" required />
+            </div>
+            <div class="col-md-3">
+              <label for="paymentAmount" class="form-label">المبلغ (SAR)</label>
+              <input type="number" class="form-control" id="paymentAmount" name="amount" min="0" step="0.01" placeholder="0.00" required />
+              <small class="helper-text">أدخل المبلغ بالريال السعودي</small>
+            </div>
+            <div class="col-md-3">
+              <label for="paymentAmountEuro" class="form-label">المبلغ باليورو</label>
+              <input type="number" class="form-control" id="paymentAmountEuro" name="amountEuro" min="0" step="0.01" placeholder="0.00" required />
+            </div>
+            <div class="col-md-6">
+              <label for="deliveryMethod" class="form-label">طريقة التسليم</label>
+              <select class="form-select" id="deliveryMethod" name="deliveryMethod" required>
+                <option value="" selected disabled>اختر الطريقة</option>
+                <option value="تحويل بنكي">تحويل بنكي</option>
+                <option value="حوالة">حوالة</option>
+                <option value="شيك">شيك</option>
+                <option value="نقدي">نقدي</option>
+                <option value="أخرى">أخرى</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label for="dueDate" class="form-label">تاريخ الاستحقاق</label>
+              <input type="date" class="form-control" id="dueDate" name="dueDate" required />
+            </div>
+            <div class="col-md-3">
+              <label for="paymentDate" class="form-label">تاريخ الدفع</label>
+              <input type="date" class="form-control" id="paymentDate" name="paymentDate" />
+              <small class="helper-text">اتركه فارغاً إذا لم يتم السداد بعد</small>
+            </div>
+          </div>
+
+          <div class="actions-row mt-4">
+            <button type="submit" class="btn btn-primary submit-btn" id="submitPaymentButton">حفظ الدفعة</button>
+            <button type="reset" class="btn reset-btn">مسح الحقول</button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script>
+      (function () {
+        const form = document.getElementById('payments-form');
+        const submitButton = document.getElementById('submitPaymentButton');
+
+        if (!form || !submitButton) {
+          return;
+        }
+
+        function toggleLoading(isLoading) {
+          submitButton.disabled = isLoading;
+          submitButton.textContent = isLoading ? '... جاري الحفظ' : 'حفظ الدفعة';
+        }
+
+        form.addEventListener('submit', function (event) {
+          event.preventDefault();
+          if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+          }
+
+          const payload = {
+            beneficiary: document.getElementById('paymentBeneficiary').value.trim(),
+            amount: document.getElementById('paymentAmount').value.trim(),
+            amountEuro: document.getElementById('paymentAmountEuro').value.trim(),
+            deliveryMethod: document.getElementById('deliveryMethod').value,
+            dueDate: document.getElementById('dueDate').value,
+            paymentDate: document.getElementById('paymentDate').value
+          };
+
+          toggleLoading(true);
+          google.script.run
+            .withSuccessHandler(function (message) {
+              toggleLoading(false);
+              Swal.fire({
+                icon: 'success',
+                title: 'تم الحفظ بنجاح',
+                text: message || 'تم تسجيل الدفعة في شيت Payments.',
+                confirmButtonText: 'حسناً'
+              });
+              form.reset();
+            })
+            .withFailureHandler(function (error) {
+              toggleLoading(false);
+              Swal.fire({
+                icon: 'error',
+                title: 'تعذر حفظ الدفعة',
+                text: (error && error.message) ? error.message : 'حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى.',
+                confirmButtonText: 'إغلاق'
+              });
+            })
+            .addPayment(payload);
+        });
+      })();
+    </script>
+  </body>
+</html>

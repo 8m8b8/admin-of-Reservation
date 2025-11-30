@@ -23,25 +23,19 @@ var KEY_HOTELS = 'hotels_data';
 var KEY_RESERVATIONS = 'reservations_data';
 var PAGE_SIZE = 20;
 
-var EMPLOYEE_ALLOWED_PAGES = [
+var PUBLIC_PAGES = [
   'index',
   'Add-client',
-  'add-tour',
   'add-hotel',
+  'add-tour',
   'manage-reservations',
-  'edit-reservation'
+  'edit-reservation',
+  'manage-statistics',
+  'mediator',
+  'SUPPLIER',
+  'payments',
+  'style'
 ];
-
-var MANAGEMENT_ROLES = ['admin', 'owner', 'developer', 'accountant'];
-var KNOWN_ROLES = ['employee'].concat(MANAGEMENT_ROLES);
-
-var DEFAULT_REDIRECT = {
-  employee: 'index',
-  admin: 'index',
-  owner: 'index',
-  developer: 'index',
-  accountant: 'index'
-};
 
 function getSheetOrThrow(sheetName) {
   var sheet = ss.getSheetByName(sheetName);
@@ -49,127 +43,6 @@ function getSheetOrThrow(sheetName) {
     throw new Error('تعذر العثور على الشيت "' + sheetName + '" داخل ملف Google Sheets الرئيسي.');
   }
   return sheet;
-}
-
-function resolveAuthorizedUser() {
-  return {
-    status: 'authorized',
-    user: {
-      name: 'وصول عام',
-      email: '',
-      role: 'admin'
-    }
-  };
-}
-
-function renderStatusPage(title, message, options) {
-  options = options || {};
-  var subMessage = options.subMessage || '';
-  var actionHtml = options.actionHtml || '';
-  var html =
-    '<!DOCTYPE html>' +
-    '<html lang="ar" dir="rtl">' +
-    '<head>' +
-      '<meta charset="utf-8">' +
-      '<meta name="viewport" content="width=device-width, initial-scale=1">' +
-      '<style>' +
-        'body{font-family:"Cairo","Tahoma",sans-serif;background:#f4f6f8;margin:0;padding:40px;}' +
-        '.card{max-width:520px;margin:0 auto;background:#fff;border-radius:18px;padding:32px;text-align:center;box-shadow:0 20px 45px rgba(0,0,0,0.08);}' +
-        'h1{margin:0 0 12px;color:#008891;font-size:1.6rem;}' +
-        'p{color:#4a4a4a;line-height:1.8;margin:0 0 16px;font-size:1rem;}' +
-        '.actions{margin-top:20px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}' +
-        '.btn{display:inline-block;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:600;background:#008891;color:#fff;}' +
-        '.btn.secondary{background:#e8f4f5;color:#006d75;}' +
-      '</style>' +
-    '</head>' +
-    '<body>' +
-      '<div class="card">' +
-        '<h1>' + title + '</h1>' +
-        '<p>' + message + '</p>' +
-        (subMessage ? '<p style="font-size:0.9rem;color:#6c757d;margin-top:0;">' + subMessage + '</p>' : '') +
-        (actionHtml ? '<div class="actions">' + actionHtml + '</div>' : '') +
-      '</div>' +
-    '</body>' +
-    '</html>';
-  return HtmlService.createHtmlOutput(html).setTitle(title);
-}
-
-function renderAuthRequiredPage() {
-  var appUrl = ScriptApp.getService().getUrl();
-  var actions =
-    '<a class="btn" href="https://accounts.google.com/ServiceLogin" target="_top">تسجيل الدخول</a>' +
-    '<a class="btn secondary" href="' + appUrl + '">تحديث الصفحة</a>';
-  return renderStatusPage(
-    'يرجى تسجيل الدخول',
-    'يجب تسجيل الدخول بحساب Google للوصول إلى النظام.',
-    {
-      subMessage: 'بعد تسجيل الدخول أعد فتح الرابط أو استخدم زر تحديث الصفحة.',
-      actionHtml: actions
-    }
-  );
-}
-
-function renderUnauthorizedPage(email) {
-  var appUrl = ScriptApp.getService().getUrl();
-  var actions =
-    '<a class="btn" href="' + appUrl + '" target="_top">المحاولة مجدداً</a>';
-  var message = 'الحساب ' + (email || 'الحالي') + ' غير موجود في ورقة USERS.';
-  return renderStatusPage(
-    'غير مصرح لك بالدخول',
-    message,
-    {
-      subMessage: 'تواصل مع الإدارة لإضافة بريدك الإلكتروني إلى قائمة الصلاحيات.',
-      actionHtml: actions
-    }
-  );
-}
-
-function renderLogoutPage(user) {
-  var baseUrl = ScriptApp.getService().getUrl();
-  var actions =
-    '<a class="btn" href="' + baseUrl + '">العودة للنظام</a>' +
-    '<a class="btn secondary" href="https://accounts.google.com/Logout" target="_top">تسجيل الخروج من Google</a>';
-  return renderStatusPage(
-    'تم تسجيل الخروج',
-    'يمكنك إغلاق هذه الصفحة أو العودة فوراً للنظام. لتسجيل خروج كامل يرجى تسجيل الخروج من حساب Google.',
-    {
-      subMessage: user && user.email ? ('المستخدم: ' + user.email) : '',
-      actionHtml: actions
-    }
-  );
-}
-
-// -----------------------------------------------------------------
-// 🔒 دوال الأمان وتسجيل الدخول
-// -----------------------------------------------------------------
-
-function normalizeRole(role) {
-  if (!role) return '';
-  var normalized = role.toString().trim().toLowerCase();
-  return KNOWN_ROLES.indexOf(normalized) !== -1 ? normalized : '';
-}
-
-function hasFullAccess(role) {
-  return MANAGEMENT_ROLES.indexOf(role) !== -1;
-}
-
-function getDefaultPageForRole(role) {
-  var normalized = normalizeRole(role);
-  return DEFAULT_REDIRECT[normalized] || 'index';
-}
-
-function isPageAllowedForRole(page, role) {
-  if (page === 'login' || page === 'logout') {
-    return true;
-  }
-  var normalizedRole = normalizeRole(role);
-  if (!normalizedRole) {
-    return false;
-  }
-  if (hasFullAccess(normalizedRole)) {
-    return true;
-  }
-  return EMPLOYEE_ALLOWED_PAGES.indexOf(page) !== -1;
 }
 
 // -----------------------------------------------------------------
@@ -180,7 +53,7 @@ function isPageAllowedForRole(page, role) {
 function doGet(e) {
   // 1. تحديد بيانات افتراضية للزائر (لأننا ألغينا التحقق من الإيميل)
   var userRole = 'guest';      // الدور: زائر
-  var userEmail = '';          // لا يوجد إيميل محفوظ
+  var userEmail = 'guest@ghadatourism.local'; // بريد افتراضي لعمليات التوقيع أو السجلات
   var userName = 'زائر';       // الاسم الافتراضي
 
   // 2. تحديد الصفحة المطلوبة من الرابط
@@ -189,6 +62,9 @@ function doGet(e) {
   var page = (e && e.parameter && e.parameter.page) 
              ? e.parameter.page.toString() 
              : 'index'; 
+  if (page === 'login' || page === 'logout' || PUBLIC_PAGES.indexOf(page) === -1) {
+    page = 'index';
+  }
 
   // 3. محاولة عرض الصفحة
   try {
@@ -546,6 +422,42 @@ function addTour(formPayload) {
 
   sheet.appendRow(rowValues);
   return "Tour added successfully";
+}
+
+/**
+ * إضافة دفعة جديدة إلى شيت Payments.
+ * @param {Object} paymentData بيانات الدفعة القادمة من الواجهة.
+ * @returns {string} رسالة نجاح.
+ */
+function addPayment(paymentData) {
+  paymentData = paymentData || {};
+  var sheet = ensureSheetWithHeaders_(ss, "Payments", [
+    "timestamp",
+    "beneficiary",
+    "amount",
+    "amountEuro",
+    "deliveryMethod",
+    "dueDate",
+    "paymentDate",
+    "createdBy"
+  ]);
+
+  var amountValue = sanitizeNumber_(paymentData.amount);
+  var amountEuroValue = sanitizeNumber_(paymentData.amountEuro);
+
+  var row = [
+    new Date(),
+    (paymentData.beneficiary || '').toString().trim(),
+    amountValue,
+    amountEuroValue,
+    (paymentData.deliveryMethod || '').toString().trim(),
+    paymentData.dueDate || '',
+    paymentData.paymentDate || '',
+    getExecutionEmail_()
+  ];
+
+  sheet.appendRow(row);
+  return "تم تسجيل الدفعة بنجاح";
 }
 
 // -----------------------------------------------------------------

@@ -38,11 +38,11 @@
       width: 100%;
       background: linear-gradient(135deg, var(--nav-primary), var(--nav-primary-dark));
       color: #fff;
-      padding: 32px clamp(16px, 6vw, 80px) 28px;
+      padding: 24px clamp(12px, 5vw, 60px) 20px;
       overflow: hidden;
       box-shadow: var(--nav-shadow);
-      border-bottom-left-radius: 32px;
-      border-bottom-right-radius: 32px;
+      border-bottom-left-radius: 28px;
+      border-bottom-right-radius: 28px;
     }
 
     .ghada-hero::before,
@@ -122,41 +122,42 @@
     .ghada-nav {
       position: relative;
       z-index: 1;
-      margin-top: 26px;
+      margin-top: 18px;
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 8px;
       justify-content: center;
       background: rgba(255, 255, 255, 0.12);
-      border-radius: 20px;
-      padding: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(16px);
+      border-radius: 16px;
+      padding: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(14px);
     }
 
     .ghada-nav-item {
       border: none;
       background: rgba(255, 255, 255, 0.18);
       color: #fff;
-      padding: 12px 18px;
-      border-radius: 16px;
-      min-width: 140px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      min-width: 110px;
       cursor: pointer;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
       font-weight: 600;
       transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+      font-size: 0.9rem;
     }
 
     .ghada-nav-item .emoji {
-      font-size: 1.6rem;
+      font-size: 1.3rem;
       line-height: 1;
     }
 
     .ghada-nav-item .label {
-      font-size: 0.95rem;
+      font-size: 0.85rem;
     }
 
     .ghada-nav-item:hover {
@@ -188,8 +189,8 @@
       }
 
       .ghada-nav-item {
-        flex: 1 1 calc(50% - 8px);
-        min-width: 120px;
+        flex: 1 1 calc(50% - 6px);
+        min-width: 100px;
       }
     }
 
@@ -341,28 +342,44 @@
         </p>
       </div>
     </div>
-    <nav class="ghada-nav" id="ghada-nav-bar" aria-label="القائمة العلوية">
-      <button class="ghada-nav-item" data-page="index" type="button">
-        <span class="emoji" aria-hidden="true">📝</span>
-        <span class="label">إضافة حجز</span>
-      </button>
-      <button class="ghada-nav-item" data-page="Add-client" type="button">
-        <span class="emoji" aria-hidden="true">👤</span>
-        <span class="label">إضافة عميل</span>
-      </button>
-      <button class="ghada-nav-item" data-page="add-tour" type="button">
-        <span class="emoji" aria-hidden="true">🧭</span>
-        <span class="label">إضافة رحلة</span>
-      </button>
-      <button class="ghada-nav-item" data-page="add-hotel" type="button">
-        <span class="emoji" aria-hidden="true">🏨</span>
-        <span class="label">إضافة فندق</span>
-      </button>
-      <button class="ghada-nav-item" data-page="manage-reservations" type="button">
-        <span class="emoji" aria-hidden="true">📂</span>
-        <span class="label">إدارة الحجوزات</span>
-      </button>
-    </nav>
+  <nav class="ghada-nav" id="ghada-nav-bar" aria-label="القائمة العلوية">
+    <button class="ghada-nav-item" data-page="index" type="button">
+      <span class="emoji" aria-hidden="true">📝</span>
+      <span class="label">إضافة حجز</span>
+    </button>
+    <button class="ghada-nav-item" data-page="Add-client" type="button">
+      <span class="emoji" aria-hidden="true">👤</span>
+      <span class="label">إضافة عميل</span>
+    </button>
+    <button class="ghada-nav-item" data-page="add-tour" type="button">
+      <span class="emoji" aria-hidden="true">🧭</span>
+      <span class="label">إضافة رحلة</span>
+    </button>
+    <button class="ghada-nav-item" data-page="add-hotel" type="button">
+      <span class="emoji" aria-hidden="true">🏨</span>
+      <span class="label">إضافة فندق</span>
+    </button>
+    <button class="ghada-nav-item" data-page="manage-reservations" type="button">
+      <span class="emoji" aria-hidden="true">📂</span>
+      <span class="label">إدارة الحجوزات</span>
+    </button>
+    <button class="ghada-nav-item" data-page="SUPPLIER" type="button">
+      <span class="emoji" aria-hidden="true">🤝</span>
+      <span class="label">الموردين</span>
+    </button>
+    <button class="ghada-nav-item" data-page="manage-statistics" type="button">
+      <span class="emoji" aria-hidden="true">📊</span>
+      <span class="label">الإحصائيات</span>
+    </button>
+    <button class="ghada-nav-item" data-page="mediator" type="button">
+      <span class="emoji" aria-hidden="true">🕴️</span>
+      <span class="label">الوسطاء</span>
+    </button>
+    <button class="ghada-nav-item" data-page="payments" type="button">
+      <span class="emoji" aria-hidden="true">💳</span>
+      <span class="label">الدفعات</span>
+    </button>
+  </nav>
   </header>
   <script>
     (function () {
