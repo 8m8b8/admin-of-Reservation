@@ -327,6 +327,20 @@
       .reservation-status-select {
         min-width: 120px;
         font-size: 0.9rem;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+      }
+      
+      .payment-status-select {
+        min-width: 120px;
+        font-size: 0.9rem;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+      }
+      
+      .reservation-status-select option,
+      .payment-status-select option {
+        padding: 5px;
       }
       
       .table-responsive table {
@@ -337,6 +351,16 @@
         .table-responsive {
           overflow-x: auto;
         }
+        .container-lg {
+          max-width: 100% !important;
+          padding-left: 10px !important;
+          padding-right: 10px !important;
+        }
+      }
+      
+      .search-table-col {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
       }
       
       @media (max-width: 768px) {
@@ -455,7 +479,7 @@
         <h1 class="text-center fw-bold" style="color: rgb(0,136,145); font-size: 30px"><strong><span>البحث عن
               حجز</span></strong></h1>
       </div>
-      <div class="col-md-10 search-table-col mx-auto">
+      <div class="col-md-12 search-table-col" style="padding-left: 5px; padding-right: 5px;">
         <div class="row mb-3 justify-content-center">
           <div class="row justify-content-center mb-4">
             <div class="col-12 d-flex justify-content-center gap-2 mb-3">
@@ -1119,6 +1143,9 @@
       var newStatus = $(this).val();
       var $select = $(this);
       
+      // Update the style immediately
+      $select.attr('style', getStatusStyle(newStatus));
+      
       google.script.run
         .withSuccessHandler(function (response) {
           Swal.fire({
@@ -1139,6 +1166,37 @@
           getCustomerInfo(userEmail, currentPagination.page);
         })
         .updateReservationStatus(reservationId, newStatus);
+    });
+
+    // Handle payment status change
+    $(document).on("change", ".payment-status-select", function () {
+      var reservationId = $(this).data("id");
+      var newStatus = $(this).val();
+      var $select = $(this);
+      
+      // Update the style immediately
+      $select.attr('style', getPaymentStatusStyle(newStatus));
+      
+      google.script.run
+        .withSuccessHandler(function (response) {
+          Swal.fire({
+            title: "تم التحديث!",
+            text: "تم تحديث حالة الدفع بنجاح",
+            icon: "success",
+            timer: 1500,
+            showConfirmButton: false
+          });
+        })
+        .withFailureHandler(function (error) {
+          Swal.fire({
+            title: "خطأ!",
+            text: "فشل تحديث حالة الدفع: " + error.message,
+            icon: "error"
+          });
+          // Revert the selection
+          getCustomerInfo(userEmail, currentPagination.page);
+        })
+        .updatePaymentStatus(reservationId, newStatus);
     });
 
 
@@ -1314,13 +1372,20 @@
             <td class="text-center align-middle" style="font-size: 2.5vmin;">${safeValue(customer.sellinEuroPrice, '0')} €</td>
             <td class="text-center align-middle" style="font-size: 2.2vmin;">${depositInfo}</td>
             <td class="text-center align-middle" style="font-size: 2.2vmin;">${remainingInfo}</td>
-            <td class="text-center align-middle" style="font-size: 2.2vmin;">${safeValue(customer.paymentStatus)}</td>
             <td class="text-center align-middle" style="font-size: 2.2vmin;">
-              <select class="form-control form-control-sm reservation-status-select" data-id="${customer.id}">
-                <option value="مؤكد" ${customer.reservationStatus === 'مؤكد' ? 'selected' : ''}>مؤكد</option>
-                <option value="قيد الانتظار" ${customer.reservationStatus === 'قيد الانتظار' ? 'selected' : ''}>قيد الانتظار</option>
-                <option value="ملغي" ${customer.reservationStatus === 'ملغي' ? 'selected' : ''}>ملغي</option>
-                <option value="مكتمل" ${customer.reservationStatus === 'مكتمل' ? 'selected' : ''}>مكتمل</option>
+              <select class="form-control form-control-sm payment-status-select" data-id="${customer.id}" style="${getPaymentStatusStyle(customer.paymentStatus)}">
+                <option value="unpaid" ${customer.paymentStatus === 'unpaid' ? 'selected' : ''}>unpaid</option>
+                <option value="partially paid" ${customer.paymentStatus === 'partially paid' ? 'selected' : ''}>partially paid</option>
+                <option value="paid" ${customer.paymentStatus === 'paid' ? 'selected' : ''}>paid</option>
+                <option value="waiting" ${customer.paymentStatus === 'waiting' ? 'selected' : ''}>waiting</option>
+              </select>
+            </td>
+            <td class="text-center align-middle" style="font-size: 2.2vmin;">
+              <select class="form-control form-control-sm reservation-status-select status-${getStatusClass(customer.reservationStatus)}" data-id="${customer.id}" style="${getStatusStyle(customer.reservationStatus)}">
+                <option value="حجز ملغي" ${customer.reservationStatus === 'حجز ملغي' ? 'selected' : ''}>حجز ملغي</option>
+                <option value="يحتاج مراجعة" ${customer.reservationStatus === 'يحتاج مراجعة' ? 'selected' : ''}>يحتاج مراجعة</option>
+                <option value="تمت المراجعة" ${customer.reservationStatus === 'تمت المراجعة' ? 'selected' : ''}>تمت المراجعة</option>
+                <option value="معلق" ${customer.reservationStatus === 'معلق' ? 'selected' : ''}>معلق</option>
               </select>
             </td>
             <td class="text-center align-middle" style="font-size: 2.5vmin;">${safeValue(customer.hotel)}</td>
@@ -1438,6 +1503,36 @@
           return value;
         }
         return value && value !== "" ? value : (placeholder || "—");
+      }
+      
+      function getStatusStyle(status) {
+        var styles = {
+          'حجز ملغي': 'background-color: #ff4444; color: white; font-weight: bold;',
+          'يحتاج مراجعة': 'background-color: #ffbb33; color: white; font-weight: bold;',
+          'تمت المراجعة': 'background-color: #00C851; color: white; font-weight: bold;',
+          'معلق': 'background-color: #33b5e5; color: white; font-weight: bold;'
+        };
+        return styles[status] || '';
+      }
+      
+      function getStatusClass(status) {
+        var classes = {
+          'حجز ملغي': 'cancelled',
+          'يحتاج مراجعة': 'needs-review',
+          'تمت المراجعة': 'reviewed',
+          'معلق': 'pending'
+        };
+        return classes[status] || '';
+      }
+      
+      function getPaymentStatusStyle(status) {
+        var styles = {
+          'unpaid': 'background-color: #ff4444; color: white; font-weight: bold;',
+          'partially paid': 'background-color: #ffbb33; color: white; font-weight: bold;',
+          'paid': 'background-color: #00C851; color: white; font-weight: bold;',
+          'waiting': 'background-color: #33b5e5; color: white; font-weight: bold;'
+        };
+        return styles[status] || '';
       }
 
       function formatMoney(amount, currency, emptyLabel) {

@@ -4,6 +4,8 @@ var MASTER_SPREADSHEET_ID = (typeof SPREADSHEET_ID !== 'undefined' && SPREADSHEE
 
 var DATABASE_COL_INDEX = {
   ID: 0,
+  SELLER: 1,
+  SUPPLIER: 2,
   NAME: 3,
   PHONE: 4,
   PERSON_COUNT: 6,
@@ -35,8 +37,6 @@ var DATABASE_COL_INDEX = {
   SERVICE_SELLING_PRICE: 39,
   SERVICE_SELLING_EURO_PRICE: 40,
   NOTES: 41,
-  SELLER: 2,
-  SUPPLIER: 16,
   RESERVATION_STATUS: 48
 };
 
@@ -123,7 +123,8 @@ function getHotelsByCity(city) {
     for (let i = 1; i < data.length; i++) { // Assuming the first row is headers
       if (data[i][0] == customerId) {  // Check if the first column matches customerId
         customerData = {
-            seller: data[i][2],
+            seller: data[i][1],
+            supplier: data[i][2],
             name: data[i][3],
             phone: data[i][4],
             person: data[i][6],
@@ -136,7 +137,6 @@ function getHotelsByCity(city) {
             roomType: data[i][13],
             viewType: data[i][14],
             meals: data[i][15],
-            supplier: data[i][16],
             hotelPriceEuro: data[i][17],
             sellinPrice: data[i][18],
             sellinEuroPrice: data[i][19],
@@ -232,7 +232,8 @@ function getCustomers(searchTerm, pageNumber, checkInDate, checkOutDate) {
     var checkoutValue = parseSheetDate(row[11]);
     return {
       id: row[0],
-      seller: row[2],
+      seller: row[1],
+      supplier: row[2],
       name: row[3],
       phone: row[4],
       person: row[6],
@@ -245,7 +246,6 @@ function getCustomers(searchTerm, pageNumber, checkInDate, checkOutDate) {
       roomType: row[13],
       viewType: row[14],
       meals: row[15],
-      supplier: row[16],
       hotelPriceEuro: row[17],
       sellinPrice: row[18],
       sellinEuroPrice: row[19],
@@ -1348,6 +1348,23 @@ function updateReservationStatus(reservationId, newStatus) {
     if (data[i][DATABASE_COL_INDEX.ID] == reservationId) {
       sheet.getRange(i + 1, DATABASE_COL_INDEX.RESERVATION_STATUS + 1).setValue(newStatus);
       return { success: true, message: "تم تحديث حالة الحجز بنجاح" };
+    }
+  }
+  
+  throw new Error("لم يتم العثور على الحجز رقم " + reservationId);
+}
+
+function updatePaymentStatus(reservationId, newStatus) {
+  var sheet = SpreadsheetApp.openById(MASTER_SPREADSHEET_ID).getSheetByName("DATABASE");
+  if (!sheet) {
+    throw new Error("تعذر العثور على ورقة DATABASE");
+  }
+  
+  var data = sheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][DATABASE_COL_INDEX.ID] == reservationId) {
+      sheet.getRange(i + 1, DATABASE_COL_INDEX.PAYMENT_STATUS + 1).setValue(newStatus);
+      return { success: true, message: "تم تحديث حالة الدفع بنجاح" };
     }
   }
   
