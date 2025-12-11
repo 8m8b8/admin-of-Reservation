@@ -316,6 +316,29 @@
         margin-top: 8px;
         font-size: 0.95rem;
       }
+      .desktop-filters {
+        display: flex;
+      }
+      
+      #totals-row {
+        display: table-row;
+      }
+      
+      .reservation-status-select {
+        min-width: 120px;
+        font-size: 0.9rem;
+      }
+      
+      .table-responsive table {
+        min-width: 1800px;
+      }
+      
+      @media (min-width: 769px) {
+        .table-responsive {
+          overflow-x: auto;
+        }
+      }
+      
       @media (max-width: 768px) {
         .table-responsive {
           display: none;
@@ -323,6 +346,12 @@
         .reservation-cards {
           display: flex;
           flex-direction: column;
+        }
+        .desktop-filters {
+          display: none !important;
+        }
+        #totals-row {
+          display: none !important;
         }
       }
       @media (min-width: 769px) {
@@ -452,23 +481,63 @@
                 style="max-width: 100%;">
             </div>
           </div>
+          <div class="row justify-content-center mb-3 desktop-filters">
+            <div class="col-md-3">
+              <label for="filterSupplier" class="d-block mb-2">المورد</label>
+              <select class="form-control" id="filterSupplier">
+                <option value="">الكل</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label for="filterSeller" class="d-block mb-2">البائع</label>
+              <select class="form-control" id="filterSeller">
+                <option value="">الكل</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label for="filterDepositMethod" class="d-block mb-2">طريقة تحصيل العربون</label>
+              <select class="form-control" id="filterDepositMethod">
+                <option value="">الكل</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label for="filterRemainingMethod" class="d-block mb-2">طريقة تحصيل المتبقي</label>
+              <select class="form-control" id="filterRemainingMethod">
+                <option value="">الكل</option>
+              </select>
+            </div>
+          </div>
         </div>
         <span class="counter pull-right"></span>
         <div class="table-responsive table table-hover table-bordered results">
           <table class="table table-hover table-bordered" style="table-layout: fixed;">
             <thead class="bill-header cs">
+              <tr id="totals-row" style="background-color: #f0f8ff; font-weight: bold;">
+                <th colspan="2">المجموع</th>
+                <th id="total-hotelPrice">-</th>
+                <th id="total-sellingPrice">-</th>
+                <th id="total-deposit">-</th>
+                <th id="total-remaining">-</th>
+                <th colspan="5">-</th>
+              </tr>
               <tr>
                 <th id="trs-hd-0" class="checkbox-cell">اختيار</th>
-                <th id="trs-hd-1" class="col-lg-2 fs-6 col-md-2 sortable" data-column="name">اسم العميل</th>
-                <th id="trs-hd-2" class="col-lg-2 fs-6 col-md-2 sortable" data-column="hotel">الفندق</th>
-                <th id="trs-hd-3" class="col-lg-2 fs-6 col-md-2 sortable" data-column="checkinDate">تاريخ الوصول</th>
-                <th id="trs-hd-4" class="col-lg-2 fs-6 col-md-2 sortable" data-column="checkoutDate">تاريخ المغادرة</th>
-                <th id="trs-hd-6" class="col-lg-2 fs-6 col-md-2">الإجراءات</th>
+                <th id="trs-hd-1" class="col-lg-1 fs-6 col-md-1 sortable" data-column="name">اسم العميل</th>
+                <th id="trs-hd-2" class="col-lg-1 fs-6 col-md-1 sortable" data-column="hotelPriceEuro">سعر الفندق €</th>
+                <th id="trs-hd-3" class="col-lg-1 fs-6 col-md-1 sortable" data-column="sellinEuroPrice">سعر المبيع €</th>
+                <th id="trs-hd-4" class="col-lg-1 fs-6 col-md-1">العربون € / طريقة التحصيل</th>
+                <th id="trs-hd-5" class="col-lg-1 fs-6 col-md-1">المبلغ المتبقي / طريقة التحصيل</th>
+                <th id="trs-hd-6" class="col-lg-1 fs-6 col-md-1 sortable" data-column="paymentStatus">حالة الدفع</th>
+                <th id="trs-hd-7" class="col-lg-1 fs-6 col-md-1">حالة الحجز</th>
+                <th id="trs-hd-8" class="col-lg-1 fs-6 col-md-1 sortable" data-column="hotel">الفندق</th>
+                <th id="trs-hd-9" class="col-lg-1 fs-6 col-md-1 sortable" data-column="checkinDate">تاريخ الوصول</th>
+                <th id="trs-hd-10" class="col-lg-1 fs-6 col-md-1 sortable" data-column="checkoutDate">تاريخ المغادرة</th>
+                <th id="trs-hd-11" class="col-lg-1 fs-6 col-md-1">الإجراءات</th>
               </tr>
             </thead>
             <tbody id="customerResults">
               <tr class="warning no-result">
-                <td colspan="7"><i class="fa fa-warning"></i> لا توجد نتائج</td>
+                <td colspan="12"><i class="fa fa-warning"></i> لا توجد نتائج</td>
               </tr>
             </tbody>
           </table>
@@ -582,10 +651,17 @@
 
       // Fetch and display customer data on load
       getCustomerInfo(userEmail);
+      
+      // Populate filter dropdowns
+      populateFilters();
 
       // Add event listeners for filters
       $("#checkInDate, #checkOutDate").on("change", function () {
         getCustomerInfo(userEmail, 1);
+      });
+      
+      $("#filterSupplier, #filterSeller, #filterDepositMethod, #filterRemainingMethod").on("change", function () {
+        applyFilters();
       });
 
       $("#customerId").on("input", function () {
@@ -1037,7 +1113,101 @@
       });
     });
 
+    // Handle reservation status change
+    $(document).on("change", ".reservation-status-select", function () {
+      var reservationId = $(this).data("id");
+      var newStatus = $(this).val();
+      var $select = $(this);
+      
+      google.script.run
+        .withSuccessHandler(function (response) {
+          Swal.fire({
+            title: "تم التحديث!",
+            text: "تم تحديث حالة الحجز بنجاح",
+            icon: "success",
+            timer: 1500,
+            showConfirmButton: false
+          });
+        })
+        .withFailureHandler(function (error) {
+          Swal.fire({
+            title: "خطأ!",
+            text: "فشل تحديث حالة الحجز: " + error.message,
+            icon: "error"
+          });
+          // Revert the selection
+          getCustomerInfo(userEmail, currentPagination.page);
+        })
+        .updateReservationStatus(reservationId, newStatus);
+    });
 
+
+
+      function populateFilters() {
+        // This will be populated from the actual data when loaded
+        // We'll populate them dynamically from customer data
+      }
+      
+      function applyFilters() {
+        var filterSupplier = $("#filterSupplier").val();
+        var filterSeller = $("#filterSeller").val();
+        var filterDepositMethod = $("#filterDepositMethod").val();
+        var filterRemainingMethod = $("#filterRemainingMethod").val();
+        
+        var filtered = allCustomers.filter(function(customer) {
+          if (filterSupplier && customer.supplier !== filterSupplier) return false;
+          if (filterSeller && customer.seller !== filterSeller) return false;
+          if (filterDepositMethod && customer.depositMethod !== filterDepositMethod) return false;
+          if (filterRemainingMethod && customer.remainingMethod !== filterRemainingMethod) return false;
+          return true;
+        });
+        
+        renderReservations(filtered);
+      }
+      
+      function updateFilterOptions(customers) {
+        // Get unique values for filters
+        var suppliers = [...new Set(customers.map(c => c.supplier).filter(Boolean))];
+        var sellers = [...new Set(customers.map(c => c.seller).filter(Boolean))];
+        var depositMethods = [...new Set(customers.map(c => c.depositMethod).filter(Boolean))];
+        var remainingMethods = [...new Set(customers.map(c => c.remainingMethod).filter(Boolean))];
+        
+        // Update supplier dropdown
+        var supplierSelect = $("#filterSupplier");
+        var currentSupplier = supplierSelect.val();
+        supplierSelect.html('<option value="">الكل</option>');
+        suppliers.forEach(function(supplier) {
+          supplierSelect.append(`<option value="${supplier}">${supplier}</option>`);
+        });
+        if (currentSupplier) supplierSelect.val(currentSupplier);
+        
+        // Update seller dropdown
+        var sellerSelect = $("#filterSeller");
+        var currentSeller = sellerSelect.val();
+        sellerSelect.html('<option value="">الكل</option>');
+        sellers.forEach(function(seller) {
+          sellerSelect.append(`<option value="${seller}">${seller}</option>`);
+        });
+        if (currentSeller) sellerSelect.val(currentSeller);
+        
+        // Update deposit method dropdown
+        var depositSelect = $("#filterDepositMethod");
+        var currentDeposit = depositSelect.val();
+        depositSelect.html('<option value="">الكل</option>');
+        depositMethods.forEach(function(method) {
+          depositSelect.append(`<option value="${method}">${method}</option>`);
+        });
+        if (currentDeposit) depositSelect.val(currentDeposit);
+        
+        // Update remaining method dropdown
+        var remainingSelect = $("#filterRemainingMethod");
+        var currentRemaining = remainingSelect.val();
+        remainingSelect.html('<option value="">الكل</option>');
+        remainingMethods.forEach(function(method) {
+          remainingSelect.append(`<option value="${method}">${method}</option>`);
+        });
+        if (currentRemaining) remainingSelect.val(currentRemaining);
+      }
 
       function getCustomerInfo(userEmail, pageOverride) {
         const targetPage = pageOverride || 1;
@@ -1068,6 +1238,7 @@
         currentPagination = pagination;
         allCustomers = safeResponse.data || [];
 
+        updateFilterOptions(allCustomers);
         renderReservations(allCustomers);
         updatePaginationControls(pagination);
       }
@@ -1081,7 +1252,7 @@
         if (!customers.length) {
           $tbody.append(`
             <tr class="warning">
-              <td colspan="6" class="text-center">لا توجد نتائج</td>
+              <td colspan="12" class="text-center">لا توجد نتائج</td>
             </tr>
           `);
           $cardContainer.append(`
@@ -1089,34 +1260,80 @@
               لا توجد نتائج مطابقة لخيارات البحث الحالية
             </div>
           `);
+          // Reset totals
+          $("#total-hotelPrice").text("0 €");
+          $("#total-sellingPrice").text("0 €");
+          $("#total-deposit").text("0 €");
+          $("#total-remaining").text("0 €");
         } else {
+          var totalHotelPrice = 0;
+          var totalSellingPrice = 0;
+          var totalDeposit = 0;
+          var totalRemaining = 0;
+          
           customers.forEach(function (customer) {
             $tbody.append(buildReservationRow(customer));
             $cardContainer.append(buildReservationCard(customer));
+            
+            // Calculate totals
+            totalHotelPrice += parseFloat(customer.hotelPriceEuro || 0);
+            totalSellingPrice += parseFloat(customer.sellinEuroPrice || 0);
+            totalDeposit += parseFloat(customer.arrivedEuroAmount || 0);
+            totalRemaining += (parseFloat(customer.sellinEuroPrice || 0) - parseFloat(customer.arrivedEuroAmount || 0));
           });
+          
+          // Update totals row
+          $("#total-hotelPrice").text(totalHotelPrice.toFixed(2) + " €");
+          $("#total-sellingPrice").text(totalSellingPrice.toFixed(2) + " €");
+          $("#total-deposit").text(totalDeposit.toFixed(2) + " €");
+          $("#total-remaining").text(totalRemaining.toFixed(2) + " €");
         }
 
         $('.counter').text(printReservationMessage(currentPagination.totalCount));
       }
 
       function buildReservationRow(customer) {
+        var depositInfo = `${safeValue(customer.arrivedEuroAmount, '0')} €`;
+        if (customer.depositMethod) {
+          depositInfo += `<br><small style="color: #666;">${customer.depositMethod}</small>`;
+        }
+        
+        var remainingCalc = (customer.sellinEuroPrice || 0) - (customer.arrivedEuroAmount || 0);
+        var remainingInfo = `${remainingCalc.toFixed(2)} €`;
+        if (customer.remainingMethod) {
+          remainingInfo += `<br><small style="color: #666;">${customer.remainingMethod}</small>`;
+        }
+        
         return `
           <tr data-row-id="${customer.id || ''}">
             <td class="text-center align-middle">
               <input type="checkbox" class="reservation-checkbox" data-id="${customer.id}">
             </td>
             <td class="text-center align-middle" style="font-size: 2.5vmin;">${safeValue(customer.name)}</td>
+            <td class="text-center align-middle" style="font-size: 2.5vmin;">${safeValue(customer.hotelPriceEuro, '0')} €</td>
+            <td class="text-center align-middle" style="font-size: 2.5vmin;">${safeValue(customer.sellinEuroPrice, '0')} €</td>
+            <td class="text-center align-middle" style="font-size: 2.2vmin;">${depositInfo}</td>
+            <td class="text-center align-middle" style="font-size: 2.2vmin;">${remainingInfo}</td>
+            <td class="text-center align-middle" style="font-size: 2.2vmin;">${safeValue(customer.paymentStatus)}</td>
+            <td class="text-center align-middle" style="font-size: 2.2vmin;">
+              <select class="form-control form-control-sm reservation-status-select" data-id="${customer.id}">
+                <option value="مؤكد" ${customer.reservationStatus === 'مؤكد' ? 'selected' : ''}>مؤكد</option>
+                <option value="قيد الانتظار" ${customer.reservationStatus === 'قيد الانتظار' ? 'selected' : ''}>قيد الانتظار</option>
+                <option value="ملغي" ${customer.reservationStatus === 'ملغي' ? 'selected' : ''}>ملغي</option>
+                <option value="مكتمل" ${customer.reservationStatus === 'مكتمل' ? 'selected' : ''}>مكتمل</option>
+              </select>
+            </td>
             <td class="text-center align-middle" style="font-size: 2.5vmin;">${safeValue(customer.hotel)}</td>
             <td class="text-center align-middle" style="font-size: 2.5vmin;">${safeValue(customer.checkinDate)}</td>
             <td class="text-center align-middle" style="font-size: 2.5vmin;">${safeValue(customer.checkoutDate)}</td>
             <td class="text-center align-middle">
-              <button class="btn btn-dark voucher-button" data-id="${customer.id}">
+              <button class="btn btn-dark btn-sm voucher-button" data-id="${customer.id}">
                 <i class="fa fa-print"></i>
               </button>
-              <button class="btn btn-success edit-button" data-id="${customer.id}">
+              <button class="btn btn-success btn-sm edit-button" data-id="${customer.id}">
                 <i class="fa fa-edit"></i>
               </button>
-              <button class="btn btn-danger delete-button" data-id="${customer.id}">
+              <button class="btn btn-danger btn-sm delete-button" data-id="${customer.id}">
                 <i class="fa fa-trash"></i>
               </button>
             </td>
