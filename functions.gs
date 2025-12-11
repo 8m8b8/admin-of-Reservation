@@ -172,7 +172,7 @@ function getCustomers(searchTerm, pageNumber, checkInDate, checkOutDate) {
   var data = sheet.getDataRange().getValues();
   var timezone = Session.getScriptTimeZone();
   var sanitizedSearch = (searchTerm || '').toString().trim().toLowerCase();
-  var pageSize = PAGE_SIZE || 20;
+  var pageSize = PAGE_SIZE || 50;
   var page = parseInt(pageNumber, 10);
   if (isNaN(page) || page < 1) {
     page = 1;

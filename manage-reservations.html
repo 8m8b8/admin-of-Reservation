@@ -344,7 +344,14 @@
       }
       
       .table-responsive table {
-        min-width: 1800px;
+        width: 100%;
+        table-layout: auto;
+      }
+      
+      @media (min-width: 1400px) {
+        .table-responsive table {
+          table-layout: fixed;
+        }
       }
       
       @media (min-width: 769px) {
@@ -361,6 +368,313 @@
       .search-table-col {
         padding-left: 0 !important;
         padding-right: 0 !important;
+      }
+      
+      .results tbody tr:hover {
+        background-color: #f0f8ff !important;
+        box-shadow: 0 2px 8px rgba(0, 136, 145, 0.15);
+      }
+      
+      .results table {
+        border-collapse: separate;
+        border-spacing: 0;
+      }
+      
+      .results th {
+        font-weight: 600;
+        white-space: nowrap;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+      
+      .results td {
+        vertical-align: middle;
+        white-space: nowrap;
+      }
+      
+      .table-responsive {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      
+      .sortable {
+        cursor: pointer;
+        user-select: none;
+      }
+      
+      .sortable:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+      
+      /* Modern Input Styles */
+      .modern-input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        background: white;
+        font-family: '29LT Bukra Bold', sans-serif;
+      }
+      
+      .modern-input:focus {
+        outline: none;
+        border-color: #008891;
+        box-shadow: 0 0 0 4px rgba(0, 136, 145, 0.1);
+      }
+      
+      .modern-select {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        background: white;
+        cursor: pointer;
+        font-family: '29LT Bukra Bold', sans-serif;
+      }
+      
+      .modern-select:focus {
+        outline: none;
+        border-color: #008891;
+        box-shadow: 0 0 0 4px rgba(0, 136, 145, 0.1);
+      }
+      
+      .filter-group {
+        margin-bottom: 10px;
+      }
+      
+      .filter-label {
+        display: block;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+        font-family: '29LT Bukra Bold', sans-serif;
+      }
+      
+      .filter-label i {
+        color: #008891;
+        margin-left: 5px;
+      }
+      
+      .search-container {
+        position: relative;
+        width: 100%;
+      }
+      
+      .search-icon {
+        position: absolute;
+        right: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #999;
+        z-index: 1;
+      }
+      
+      .search-container .modern-input {
+        padding-right: 45px;
+      }
+      
+      .modern-btn {
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        font-family: '29LT Bukra Bold', sans-serif;
+      }
+      
+      .modern-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+      
+      /* Modern Modal Styles */
+      .modern-modal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+      }
+      
+      .modern-modal.show {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.3s ease;
+      }
+      
+      .modern-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+      }
+      
+      .modern-modal-content {
+        position: relative;
+        background: white;
+        border-radius: 20px;
+        max-width: 900px;
+        width: 90%;
+        max-height: 85vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        animation: slideUp 0.3s ease;
+        z-index: 10000;
+      }
+      
+      .modern-modal-header {
+        background: linear-gradient(135deg, #008891, #006d75);
+        color: white;
+        padding: 24px 30px;
+        border-radius: 20px 20px 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      
+      .modern-modal-header h3 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+      }
+      
+      .modern-modal-header i {
+        margin-left: 10px;
+      }
+      
+      .modern-modal-close {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .modern-modal-close:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: rotate(90deg);
+      }
+      
+      .modern-modal-body {
+        padding: 30px;
+      }
+      
+      .info-section {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+      
+      .section-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #008891;
+        margin: 0 0 20px 0;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e0e0e0;
+      }
+      
+      .section-title i {
+        margin-left: 10px;
+      }
+      
+      .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+      }
+      
+      .info-item {
+        background: white;
+        padding: 12px 16px;
+        border-radius: 10px;
+        border: 1px solid #e0e0e0;
+        transition: all 0.3s ease;
+      }
+      
+      .info-item:hover {
+        box-shadow: 0 4px 12px rgba(0, 136, 145, 0.1);
+        transform: translateY(-2px);
+      }
+      
+      .info-item.highlight {
+        background: linear-gradient(135deg, #fff5e6, #ffe8cc);
+        border-color: #ffbb33;
+      }
+      
+      .info-label {
+        display: block;
+        font-size: 0.75rem;
+        color: #666;
+        font-weight: 600;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      
+      .info-value {
+        display: block;
+        font-size: 1rem;
+        color: #333;
+        font-weight: 700;
+        direction: ltr;
+        text-align: left;
+      }
+      
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      
+      @keyframes slideUp {
+        from {
+          transform: translateY(50px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      
+      @media (max-width: 768px) {
+        .modern-modal-content {
+          width: 95%;
+          max-height: 90vh;
+        }
+        
+        .info-grid {
+          grid-template-columns: 1fr;
+        }
       }
       
       @media (max-width: 768px) {
@@ -482,81 +796,110 @@
       <div class="col-md-12 search-table-col" style="padding-left: 5px; padding-right: 5px;">
         <div class="row mb-3 justify-content-center">
           <div class="row justify-content-center mb-4">
-            <div class="col-12 d-flex justify-content-center gap-2 mb-3">
-              <button id="manualVoucherButton" class="btn btn-info" type="button">إصدار تأكيد حجز يدوي</button>
-              <button id="manualInvoiceButton" class="btn btn-secondary" type="button">إصدار فاتورة يدوي</button>
-              <button id="invoiceButton" class="btn btn-warning invoice-button" type="button">إصدار فاتورة</button>
+            <div class="col-12 d-flex justify-content-center gap-2 mb-3 flex-wrap">
+              <button id="manualVoucherButton" class="btn btn-info modern-btn" type="button">
+                <i class="fa fa-file-text"></i> إصدار تأكيد حجز يدوي
+              </button>
+              <button id="manualInvoiceButton" class="btn btn-secondary modern-btn" type="button">
+                <i class="fa fa-file-invoice"></i> إصدار فاتورة يدوي
+              </button>
+              <button id="invoiceButton" class="btn btn-warning modern-btn invoice-button" type="button">
+                <i class="fa fa-file-invoice-dollar"></i> إصدار فاتورة
+              </button>
             </div>
             <div class="col-12">
-              <div class="input-group">
-                <input id="customerId" class="form-control" type="text" placeholder="أدخل معلومات الحجز للبحث">
+              <div class="search-container">
+                <i class="fa fa-search search-icon"></i>
+                <input id="customerId" class="modern-input" type="text" placeholder="ابحث عن حجز... (اسم، رقم، فندق)">
               </div>
             </div>
           </div>
           <div class="row justify-content-center mb-3">
-            <div class="col-6 text-center">
-              <label for="checkInDate" class="d-block mb-2">تاريخ الوصول</label>
-              <input class="form-control mx-auto" id="checkInDate" name="checkInDate" type="date"
-                style="max-width: 100%;">
+            <div class="col-6">
+              <div class="filter-group">
+                <label for="checkInDate" class="filter-label">
+                  <i class="fa fa-calendar-check"></i> تاريخ الوصول
+                </label>
+                <input class="modern-input" id="checkInDate" name="checkInDate" type="date">
+              </div>
             </div>
-            <div class="col-6 text-center">
-              <label for="checkOutDate" class="d-block mb-2">تاريخ المغادرة</label>
-              <input class="form-control mx-auto" id="checkOutDate" name="checkOutDate" type="date"
-                style="max-width: 100%;">
+            <div class="col-6">
+              <div class="filter-group">
+                <label for="checkOutDate" class="filter-label">
+                  <i class="fa fa-calendar-times"></i> تاريخ المغادرة
+                </label>
+                <input class="modern-input" id="checkOutDate" name="checkOutDate" type="date">
+              </div>
             </div>
           </div>
           <div class="row justify-content-center mb-3 desktop-filters">
             <div class="col-md-3">
-              <label for="filterSupplier" class="d-block mb-2">المورد</label>
-              <select class="form-control" id="filterSupplier">
-                <option value="">الكل</option>
-              </select>
+              <div class="filter-group">
+                <label for="filterSupplier" class="filter-label">
+                  <i class="fa fa-building"></i> المورد
+                </label>
+                <select class="modern-select" id="filterSupplier">
+                  <option value="">الكل</option>
+                </select>
+              </div>
             </div>
             <div class="col-md-3">
-              <label for="filterSeller" class="d-block mb-2">البائع</label>
-              <select class="form-control" id="filterSeller">
-                <option value="">الكل</option>
-              </select>
+              <div class="filter-group">
+                <label for="filterSeller" class="filter-label">
+                  <i class="fa fa-user-tie"></i> البائع
+                </label>
+                <select class="modern-select" id="filterSeller">
+                  <option value="">الكل</option>
+                </select>
+              </div>
             </div>
             <div class="col-md-3">
-              <label for="filterDepositMethod" class="d-block mb-2">طريقة تحصيل العربون</label>
-              <select class="form-control" id="filterDepositMethod">
-                <option value="">الكل</option>
-              </select>
+              <div class="filter-group">
+                <label for="filterDepositMethod" class="filter-label">
+                  <i class="fa fa-money-bill-wave"></i> طريقة تحصيل العربون
+                </label>
+                <select class="modern-select" id="filterDepositMethod">
+                  <option value="">الكل</option>
+                </select>
+              </div>
             </div>
             <div class="col-md-3">
-              <label for="filterRemainingMethod" class="d-block mb-2">طريقة تحصيل المتبقي</label>
-              <select class="form-control" id="filterRemainingMethod">
-                <option value="">الكل</option>
-              </select>
+              <div class="filter-group">
+                <label for="filterRemainingMethod" class="filter-label">
+                  <i class="fa fa-money-check-alt"></i> طريقة تحصيل المتبقي
+                </label>
+                <select class="modern-select" id="filterRemainingMethod">
+                  <option value="">الكل</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
         <span class="counter pull-right"></span>
         <div class="table-responsive table table-hover table-bordered results">
           <table class="table table-hover table-bordered" style="table-layout: fixed;">
-            <thead class="bill-header cs">
-              <tr id="totals-row" style="background-color: #f0f8ff; font-weight: bold;">
-                <th colspan="2">المجموع</th>
-                <th id="total-hotelPrice">-</th>
-                <th id="total-sellingPrice">-</th>
-                <th id="total-deposit">-</th>
-                <th id="total-remaining">-</th>
-                <th colspan="5">-</th>
+            <thead class="bill-header cs" style="background: linear-gradient(135deg, #008891, #006d75); color: white;">
+              <tr id="totals-row" style="background: linear-gradient(135deg, #00b3c7, #008891); font-weight: bold; font-size: 0.85rem;">
+                <th style="padding: 8px 4px;">المجموع</th>
+                <th id="total-hotelPrice" style="padding: 8px 4px;">-</th>
+                <th id="total-sellingPrice" style="padding: 8px 4px;">-</th>
+                <th id="total-deposit" style="padding: 8px 4px;">-</th>
+                <th id="total-remaining" style="padding: 8px 4px;">-</th>
+                <th colspan="7" style="padding: 8px 4px;">-</th>
               </tr>
-              <tr>
-                <th id="trs-hd-0" class="checkbox-cell">اختيار</th>
-                <th id="trs-hd-1" class="col-lg-1 fs-6 col-md-1 sortable" data-column="name">اسم العميل</th>
-                <th id="trs-hd-2" class="col-lg-1 fs-6 col-md-1 sortable" data-column="hotelPriceEuro">سعر الفندق €</th>
-                <th id="trs-hd-3" class="col-lg-1 fs-6 col-md-1 sortable" data-column="sellinEuroPrice">سعر المبيع €</th>
-                <th id="trs-hd-4" class="col-lg-1 fs-6 col-md-1">العربون € / طريقة التحصيل</th>
-                <th id="trs-hd-5" class="col-lg-1 fs-6 col-md-1">المبلغ المتبقي / طريقة التحصيل</th>
-                <th id="trs-hd-6" class="col-lg-1 fs-6 col-md-1 sortable" data-column="paymentStatus">حالة الدفع</th>
-                <th id="trs-hd-7" class="col-lg-1 fs-6 col-md-1">حالة الحجز</th>
-                <th id="trs-hd-8" class="col-lg-1 fs-6 col-md-1 sortable" data-column="hotel">الفندق</th>
-                <th id="trs-hd-9" class="col-lg-1 fs-6 col-md-1 sortable" data-column="checkinDate">تاريخ الوصول</th>
-                <th id="trs-hd-10" class="col-lg-1 fs-6 col-md-1 sortable" data-column="checkoutDate">تاريخ المغادرة</th>
-                <th id="trs-hd-11" class="col-lg-1 fs-6 col-md-1">الإجراءات</th>
+              <tr style="font-size: 0.8rem;">
+                <th style="width: 30px; padding: 8px 4px; font-size: 0.75rem;">☑</th>
+                <th style="width: 80px; padding: 8px 4px;" class="sortable" data-column="name">العميل</th>
+                <th style="width: 75px; padding: 8px 4px;" class="sortable" data-column="hotelPriceEuro">س.فندق €</th>
+                <th style="width: 75px; padding: 8px 4px;" class="sortable" data-column="sellinEuroPrice">س.مبيع €</th>
+                <th style="width: 90px; padding: 8px 4px;">عربون/طريقة</th>
+                <th style="width: 90px; padding: 8px 4px;">متبقي/طريقة</th>
+                <th style="width: 100px; padding: 8px 4px;" class="sortable" data-column="paymentStatus">حالة دفع</th>
+                <th style="width: 100px; padding: 8px 4px;">حالة حجز</th>
+                <th style="width: 100px; padding: 8px 4px;" class="sortable" data-column="hotel">الفندق</th>
+                <th style="width: 85px; padding: 8px 4px;" class="sortable" data-column="checkinDate">وصول</th>
+                <th style="width: 85px; padding: 8px 4px;" class="sortable" data-column="checkoutDate">مغادرة</th>
+                <th style="width: 100px; padding: 8px 4px;">إجراءات</th>
               </tr>
             </thead>
             <tbody id="customerResults">
@@ -575,22 +918,124 @@
           <div id="pageMeta" class="pagination-meta"></div>
       </div>
     </div>
-    <div id="customerModal" class="modal">
-      <div class="modal-content">
-        <span class="close" id="closeModal">&times;</span>
-        <div class="modal-header">بيانات العميل</div>
-        <div class="modal-body">
-          <div class="customer-info-grid">
-            <div><strong>الاسم:</strong> <span id="modalCustomerName"></span></div>
-            <div><strong>الفندق:</strong> <span id="modalCustomerHotel"></span></div>
-            <div><strong>تاريخ الوصول:</strong> <span id="modalCustomerCheckin"></span></div>
-            <div><strong>تاريخ المغادرة:</strong> <span id="modalCustomerCheckout"></span></div>
-            <div><strong>رقم الجوال:</strong> <span id="modalCustomerPhone"></span></div>
-            <div><strong>عدد النزلاء:</strong> <span id="modalCustomerPersonCount"></span></div>
-            <div><strong>المبلغ المدفوع:</strong> <span id="modalCustomerArrivedAmount"></span></div>
-            <div><strong>المبلغ المتبقي:</strong> <span id="modalCustomerRemainingAmount"></span></div>
-            <div><strong>سعر الليلة:</strong> <span id="modalCustomerNightPrice"></span></div>
-            <div><strong>السعر الإجمالي:</strong> <span id="modalCustomerTotalPrice"></span></div>
+    <div id="customerModal" class="modern-modal">
+      <div class="modern-modal-overlay"></div>
+      <div class="modern-modal-content">
+        <div class="modern-modal-header">
+          <h3><i class="fa fa-info-circle"></i> تفاصيل الحجز</h3>
+          <button class="modern-modal-close" id="closeModal">
+            <i class="fa fa-times"></i>
+          </button>
+        </div>
+        <div class="modern-modal-body">
+          <div class="info-section">
+            <h4 class="section-title"><i class="fa fa-user"></i> معلومات العميل</h4>
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">الاسم</span>
+                <span class="info-value" id="modalCustomerName">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">رقم الجوال</span>
+                <span class="info-value" id="modalCustomerPhone">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">عدد النزلاء</span>
+                <span class="info-value" id="modalCustomerPersonCount">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">البائع</span>
+                <span class="info-value" id="modalCustomerSeller">-</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="info-section">
+            <h4 class="section-title"><i class="fa fa-hotel"></i> معلومات الفندق</h4>
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">الفندق</span>
+                <span class="info-value" id="modalCustomerHotel">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">المدينة</span>
+                <span class="info-value" id="modalCustomerCity">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">المورد</span>
+                <span class="info-value" id="modalCustomerSupplier">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">نوع الغرفة</span>
+                <span class="info-value" id="modalCustomerRoomType">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">عدد الغرف</span>
+                <span class="info-value" id="modalCustomerRoomCount">-</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="info-section">
+            <h4 class="section-title"><i class="fa fa-calendar"></i> تفاصيل الإقامة</h4>
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">تاريخ الوصول</span>
+                <span class="info-value" id="modalCustomerCheckin">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">تاريخ المغادرة</span>
+                <span class="info-value" id="modalCustomerCheckout">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">عدد الليالي</span>
+                <span class="info-value" id="modalCustomerNights">-</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="info-section">
+            <h4 class="section-title"><i class="fa fa-money-bill-wave"></i> التفاصيل المالية</h4>
+            <div class="info-grid">
+              <div class="info-item highlight">
+                <span class="info-label">سعر الفندق €</span>
+                <span class="info-value" id="modalCustomerHotelPrice">-</span>
+              </div>
+              <div class="info-item highlight">
+                <span class="info-label">سعر المبيع €</span>
+                <span class="info-value" id="modalCustomerSellingPrice">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">العربون €</span>
+                <span class="info-value" id="modalCustomerArrivedAmount">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">طريقة تحصيل العربون</span>
+                <span class="info-value" id="modalCustomerDepositMethod">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">المبلغ المتبقي €</span>
+                <span class="info-value" id="modalCustomerRemainingAmount">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">طريقة تحصيل المتبقي</span>
+                <span class="info-value" id="modalCustomerRemainingMethod">-</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="info-section">
+            <h4 class="section-title"><i class="fa fa-chart-line"></i> الحالات</h4>
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">حالة الدفع</span>
+                <span class="info-value" id="modalCustomerPaymentStatus">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">حالة الحجز</span>
+                <span class="info-value" id="modalCustomerReservationStatus">-</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -605,7 +1050,7 @@
 
     $(document).ready(function () {
       var allCustomers = [];
-      var currentPagination = { page: 1, totalPages: 1, totalCount: 0, pageSize: 20 };
+      var currentPagination = { page: 1, totalPages: 1, totalCount: 0, pageSize: 50 };
       var userEmail = "<?= userEmail ?>";
       var debounceHandle = null;
       var DEBOUNCE_DELAY = 400;
@@ -667,8 +1112,8 @@
     // Close modal when clicking the close button or outside the modal
     $(document).on("click", function (event) {
       const modal = $("#customerModal");
-      if ($(event.target).is("#closeModal") || $(event.target).is("#customerModal")) {
-        modal.removeClass("show"); // Hide modal by removing 'show' class
+      if ($(event.target).is("#closeModal") || $(event.target).is(".modern-modal-close") || $(event.target).is(".modern-modal-overlay")) {
+        modal.removeClass("show");
       }
     });
 
@@ -1351,54 +1796,59 @@
       }
 
       function buildReservationRow(customer) {
-        var depositInfo = `${safeValue(customer.arrivedEuroAmount, '0')} €`;
+        var depositInfo = `<div style="font-size: 0.75rem; font-weight: bold;">${safeValue(customer.arrivedEuroAmount, '0')} €</div>`;
         if (customer.depositMethod) {
-          depositInfo += `<br><small style="color: #666;">${customer.depositMethod}</small>`;
+          depositInfo += `<div style="font-size: 0.65rem; color: #666; margin-top: 2px;">${customer.depositMethod}</div>`;
         }
         
         var remainingCalc = (customer.sellinEuroPrice || 0) - (customer.arrivedEuroAmount || 0);
-        var remainingInfo = `${remainingCalc.toFixed(2)} €`;
+        var remainingInfo = `<div style="font-size: 0.75rem; font-weight: bold;">${remainingCalc.toFixed(2)} €</div>`;
         if (customer.remainingMethod) {
-          remainingInfo += `<br><small style="color: #666;">${customer.remainingMethod}</small>`;
+          remainingInfo += `<div style="font-size: 0.65rem; color: #666; margin-top: 2px;">${customer.remainingMethod}</div>`;
         }
         
+        var paymentStatusValue = customer.paymentStatus || '';
+        var reservationStatusValue = customer.reservationStatus || '';
+        
         return `
-          <tr data-row-id="${customer.id || ''}">
-            <td class="text-center align-middle">
-              <input type="checkbox" class="reservation-checkbox" data-id="${customer.id}">
+          <tr data-row-id="${customer.id || ''}" style="cursor: pointer; transition: background-color 0.2s;">
+            <td class="text-center align-middle" style="padding: 6px 4px;">
+              <input type="checkbox" class="reservation-checkbox" data-id="${customer.id}" style="width: 16px; height: 16px;">
             </td>
-            <td class="text-center align-middle" style="font-size: 2.5vmin;">${safeValue(customer.name)}</td>
-            <td class="text-center align-middle" style="font-size: 2.5vmin;">${safeValue(customer.hotelPriceEuro, '0')} €</td>
-            <td class="text-center align-middle" style="font-size: 2.5vmin;">${safeValue(customer.sellinEuroPrice, '0')} €</td>
-            <td class="text-center align-middle" style="font-size: 2.2vmin;">${depositInfo}</td>
-            <td class="text-center align-middle" style="font-size: 2.2vmin;">${remainingInfo}</td>
-            <td class="text-center align-middle" style="font-size: 2.2vmin;">
-              <select class="form-control form-control-sm payment-status-select" data-id="${customer.id}" style="${getPaymentStatusStyle(customer.paymentStatus)}">
-                <option value="unpaid" ${customer.paymentStatus === 'unpaid' ? 'selected' : ''}>unpaid</option>
-                <option value="partially paid" ${customer.paymentStatus === 'partially paid' ? 'selected' : ''}>partially paid</option>
-                <option value="paid" ${customer.paymentStatus === 'paid' ? 'selected' : ''}>paid</option>
-                <option value="waiting" ${customer.paymentStatus === 'waiting' ? 'selected' : ''}>waiting</option>
+            <td class="text-center align-middle" style="padding: 6px 4px; font-size: 0.75rem; font-weight: 600;">${safeValue(customer.name)}</td>
+            <td class="text-center align-middle" style="padding: 6px 4px; font-size: 0.75rem;">${safeValue(customer.hotelPriceEuro, '0')} €</td>
+            <td class="text-center align-middle" style="padding: 6px 4px; font-size: 0.75rem; font-weight: bold;">${safeValue(customer.sellinEuroPrice, '0')} €</td>
+            <td class="text-center align-middle" style="padding: 6px 4px; font-size: 0.7rem;">${depositInfo}</td>
+            <td class="text-center align-middle" style="padding: 6px 4px; font-size: 0.7rem;">${remainingInfo}</td>
+            <td class="text-center align-middle" style="padding: 4px 2px;">
+              <select class="form-control form-control-sm payment-status-select" data-id="${customer.id}" style="${getPaymentStatusStyle(paymentStatusValue)}; font-size: 0.7rem; padding: 4px;">
+                <option value="" ${!paymentStatusValue ? 'selected' : ''}></option>
+                <option value="unpaid" ${paymentStatusValue === 'unpaid' ? 'selected' : ''}>unpaid</option>
+                <option value="partially paid" ${paymentStatusValue === 'partially paid' ? 'selected' : ''}>partially paid</option>
+                <option value="paid" ${paymentStatusValue === 'paid' ? 'selected' : ''}>paid</option>
+                <option value="waiting" ${paymentStatusValue === 'waiting' ? 'selected' : ''}>waiting</option>
               </select>
             </td>
-            <td class="text-center align-middle" style="font-size: 2.2vmin;">
-              <select class="form-control form-control-sm reservation-status-select status-${getStatusClass(customer.reservationStatus)}" data-id="${customer.id}" style="${getStatusStyle(customer.reservationStatus)}">
-                <option value="حجز ملغي" ${customer.reservationStatus === 'حجز ملغي' ? 'selected' : ''}>حجز ملغي</option>
-                <option value="يحتاج مراجعة" ${customer.reservationStatus === 'يحتاج مراجعة' ? 'selected' : ''}>يحتاج مراجعة</option>
-                <option value="تمت المراجعة" ${customer.reservationStatus === 'تمت المراجعة' ? 'selected' : ''}>تمت المراجعة</option>
-                <option value="معلق" ${customer.reservationStatus === 'معلق' ? 'selected' : ''}>معلق</option>
+            <td class="text-center align-middle" style="padding: 4px 2px;">
+              <select class="form-control form-control-sm reservation-status-select" data-id="${customer.id}" style="${getStatusStyle(reservationStatusValue)}; font-size: 0.7rem; padding: 4px;">
+                <option value="" ${!reservationStatusValue ? 'selected' : ''}></option>
+                <option value="حجز ملغي" ${reservationStatusValue === 'حجز ملغي' ? 'selected' : ''}>حجز ملغي</option>
+                <option value="يحتاج مراجعة" ${reservationStatusValue === 'يحتاج مراجعة' ? 'selected' : ''}>يحتاج مراجعة</option>
+                <option value="تمت المراجعة" ${reservationStatusValue === 'تمت المراجعة' ? 'selected' : ''}>تمت المراجعة</option>
+                <option value="معلق" ${reservationStatusValue === 'معلق' ? 'selected' : ''}>معلق</option>
               </select>
             </td>
-            <td class="text-center align-middle" style="font-size: 2.5vmin;">${safeValue(customer.hotel)}</td>
-            <td class="text-center align-middle" style="font-size: 2.5vmin;">${safeValue(customer.checkinDate)}</td>
-            <td class="text-center align-middle" style="font-size: 2.5vmin;">${safeValue(customer.checkoutDate)}</td>
-            <td class="text-center align-middle">
-              <button class="btn btn-dark btn-sm voucher-button" data-id="${customer.id}">
+            <td class="text-center align-middle" style="padding: 6px 4px; font-size: 0.75rem;">${safeValue(customer.hotel)}</td>
+            <td class="text-center align-middle" style="padding: 6px 4px; font-size: 0.75rem;">${safeValue(customer.checkinDate)}</td>
+            <td class="text-center align-middle" style="padding: 6px 4px; font-size: 0.75rem;">${safeValue(customer.checkoutDate)}</td>
+            <td class="text-center align-middle" style="padding: 4px 2px;">
+              <button class="btn btn-dark btn-sm voucher-button" data-id="${customer.id}" style="padding: 4px 6px; font-size: 0.7rem;">
                 <i class="fa fa-print"></i>
               </button>
-              <button class="btn btn-success btn-sm edit-button" data-id="${customer.id}">
+              <button class="btn btn-success btn-sm edit-button" data-id="${customer.id}" style="padding: 4px 6px; font-size: 0.7rem;">
                 <i class="fa fa-edit"></i>
               </button>
-              <button class="btn btn-danger btn-sm delete-button" data-id="${customer.id}">
+              <button class="btn btn-danger btn-sm delete-button" data-id="${customer.id}" style="padding: 4px 6px; font-size: 0.7rem;">
                 <i class="fa fa-trash"></i>
               </button>
             </td>
@@ -1556,24 +2006,40 @@
             var checkinDate = new Date(customerMapData.checkinDate);
             var checkoutDate = new Date(customerMapData.checkoutDate);
             var dayCount = (!isNaN(checkinDate) && !isNaN(checkoutDate))
-              ? (checkoutDate - checkinDate) / (1000 * 60 * 60 * 24)
+              ? Math.ceil((checkoutDate - checkinDate) / (1000 * 60 * 60 * 24))
               : 0;
 
+            // معلومات العميل
             $("#modalCustomerName").text(customerMapData.name || '—');
-            $("#modalCustomerHotel").text(customerMapData.hotel || '—');
-            $("#modalCustomerCheckin").text(customerMapData.checkinDate || '—');
-            $("#modalCustomerCheckout").text(customerMapData.checkoutDate || '—');
             $("#modalCustomerPhone").text(customerMapData.phone || '—');
             $("#modalCustomerPersonCount").text(customerMapData.person || '—');
-            $("#modalCustomerArrivedAmount").text(formatMoney(customerMapData.arrivedAmount, customerMapData.arrivedAmountCurrency));
-            $("#modalCustomerRemainingAmount").text(formatMoney(customerMapData.remainingAmount, customerMapData.remainingAmountCurrency, "لا يوجد"));
-            $("#modalCustomerNightPrice").text(formatMoney(customerMapData.sellinPrice, customerMapData.currency));
-
-            var totalEuro = dayCount * (customerMapData.roomCount || 1) * (customerMapData.sellinEuroPrice || 0);
-            $("#modalCustomerTotalPrice").text(totalEuro ? `${totalEuro} €` : '—');
-
-            $("#modalCustomerPhone, #modalCustomerPersonCount, #modalCustomerArrivedAmount, #modalCustomerRemainingAmount, #modalCustomerNightPrice, #modalCustomerTotalPrice")
-              .css({ "direction": "ltr", "unicode-bidi": "embed", "text-align": "left" });
+            $("#modalCustomerSeller").text(customerMapData.seller || '—');
+            
+            // معلومات الفندق
+            $("#modalCustomerHotel").text(customerMapData.hotel || '—');
+            $("#modalCustomerCity").text(customerMapData.city || '—');
+            $("#modalCustomerSupplier").text(customerMapData.supplier || '—');
+            $("#modalCustomerRoomType").text(customerMapData.roomType || '—');
+            $("#modalCustomerRoomCount").text(customerMapData.roomCount || '—');
+            
+            // تفاصيل الإقامة
+            $("#modalCustomerCheckin").text(customerMapData.checkinDate || '—');
+            $("#modalCustomerCheckout").text(customerMapData.checkoutDate || '—');
+            $("#modalCustomerNights").text(dayCount || '—');
+            
+            // التفاصيل المالية
+            $("#modalCustomerHotelPrice").text((customerMapData.hotelPriceEuro || 0) + ' €');
+            $("#modalCustomerSellingPrice").text((customerMapData.sellinEuroPrice || 0) + ' €');
+            $("#modalCustomerArrivedAmount").text((customerMapData.arrivedEuroAmount || 0) + ' €');
+            $("#modalCustomerDepositMethod").text(customerMapData.depositMethod || '—');
+            
+            var remaining = (customerMapData.sellinEuroPrice || 0) - (customerMapData.arrivedEuroAmount || 0);
+            $("#modalCustomerRemainingAmount").text(remaining.toFixed(2) + ' €');
+            $("#modalCustomerRemainingMethod").text(customerMapData.remainingMethod || '—');
+            
+            // الحالات
+            $("#modalCustomerPaymentStatus").text(customerMapData.paymentStatus || '—');
+            $("#modalCustomerReservationStatus").text(customerMapData.reservationStatus || '—');
 
             $("#customerModal").addClass('show');
           })
