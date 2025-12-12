@@ -845,7 +845,7 @@
             </div>
           </div>
           <div class="row justify-content-center mb-3">
-            <div class="col-6">
+            <div class="col-4">
               <div class="filter-group">
                 <label for="checkInDate" class="filter-label">
                   <i class="fa fa-calendar-check"></i> تاريخ الوصول
@@ -853,12 +853,25 @@
                 <input class="modern-input" id="checkInDate" name="checkInDate" type="date">
               </div>
             </div>
-            <div class="col-6">
+            <div class="col-4">
               <div class="filter-group">
                 <label for="checkOutDate" class="filter-label">
                   <i class="fa fa-calendar-times"></i> تاريخ المغادرة
                 </label>
                 <input class="modern-input" id="checkOutDate" name="checkOutDate" type="date">
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="filter-group">
+                <label for="pageSizeSelect" class="filter-label">
+                  <i class="fa fa-list"></i> عدد الحجوزات في الصفحة
+                </label>
+                <select class="modern-select" id="pageSizeSelect">
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                  <option value="500">500</option>
+                  <option value="-1" selected>الكل</option>
+                </select>
               </div>
             </div>
           </div>
@@ -911,6 +924,8 @@
             <thead class="bill-header cs" style="background: linear-gradient(135deg, #008891, #006d75); color: white;">
               <tr id="totals-row" style="background: linear-gradient(135deg, #00b3c7, #008891); font-weight: bold; font-size: 0.85rem;">
                 <th style="padding: 8px 4px;"></th>
+                <th style="padding: 8px 4px;">-</th>
+                <th style="padding: 8px 4px;">-</th>
                 <th style="padding: 8px 4px;">المجموع</th>
                 <th style="padding: 8px 4px;">-</th>
                 <th style="padding: 8px 4px;">-</th>
@@ -925,6 +940,8 @@
               </tr>
               <tr style="font-size: 0.8rem;">
                 <th style="width: 50px; padding: 8px 8px; font-size: 0.75rem;">☑</th>
+                <th style="width: 50px; padding: 8px 4px;" class="sortable" data-column="supplier">المورد</th>
+                <th style="width: 50px; padding: 8px 4px;" class="sortable" data-column="seller">البائع</th>
                 <th style="width: 80px; padding: 8px 4px;" class="sortable" data-column="name">العميل</th>
                 <th style="width: 100px; padding: 8px 4px;" class="sortable" data-column="hotel">الفندق</th>
                 <th style="width: 85px; padding: 8px 2px;" class="sortable" data-column="checkinDate">وصول</th>
@@ -940,7 +957,7 @@
             </thead>
             <tbody id="customerResults">
               <tr class="warning no-result">
-                <td colspan="12"><i class="fa fa-warning"></i> لا توجد نتائج</td>
+                <td colspan="14"><i class="fa fa-warning"></i> لا توجد نتائج</td>
               </tr>
             </tbody>
           </table>
@@ -1086,7 +1103,7 @@
 
     $(document).ready(function () {
       var allCustomers = [];
-      var currentPagination = { page: 1, totalPages: 1, totalCount: 0, pageSize: 50 };
+      var currentPagination = { page: 1, totalPages: 1, totalCount: 0, pageSize: -1 };
       var userEmail = "<?= userEmail ?>";
       var debounceHandle = null;
       var DEBOUNCE_DELAY = 400;
@@ -1162,6 +1179,10 @@
 
       // Add event listeners for filters
       $("#checkInDate, #checkOutDate").on("change", function () {
+        getCustomerInfo(userEmail, 1);
+      });
+      
+      $("#pageSizeSelect").on("change", function () {
         getCustomerInfo(userEmail, 1);
       });
       
@@ -1753,6 +1774,7 @@
         const searchTerm = $("#customerId").val().trim();
         const checkIn = $("#checkInDate").val();
         const checkOut = $("#checkOutDate").val();
+        const pageSize = parseInt($("#pageSizeSelect").val()) || -1;
 
         $("#pageIndicator").text("جارٍ التحميل...");
         google.script.run
@@ -1763,7 +1785,7 @@
             console.error('Error fetching reservations', err);
             Swal.fire('خطأ', 'تعذر تحميل بيانات الحجوزات', 'error');
           })
-          .getCustomers(searchTerm, targetPage, checkIn, checkOut);
+          .getCustomers(searchTerm, targetPage, checkIn, checkOut, pageSize);
       }
 
       function handleCustomersResponse(response, requestedPage) {
@@ -1791,7 +1813,7 @@
         if (!customers.length) {
           $tbody.append(`
             <tr class="warning">
-              <td colspan="12" class="text-center">لا توجد نتائج</td>
+              <td colspan="14" class="text-center">لا توجد نتائج</td>
             </tr>
           `);
           $cardContainer.append(`
@@ -1814,11 +1836,15 @@
             $tbody.append(buildReservationRow(customer));
             $cardContainer.append(buildReservationCard(customer));
             
-            // Calculate totals
-            totalHotelPrice += parseFloat(customer.hotelPriceEuro || 0);
-            totalSellingPrice += parseFloat(customer.sellinEuroPrice || 0);
+            // Calculate totals with nights
+            var nights = customer.nights || 1;
+            var hotelPriceTotal = (parseFloat(customer.hotelPriceEuro || 0)) * nights;
+            var sellingPriceTotal = (parseFloat(customer.sellinEuroPrice || 0)) * nights;
+            
+            totalHotelPrice += hotelPriceTotal;
+            totalSellingPrice += sellingPriceTotal;
             totalDeposit += parseFloat(customer.arrivedEuroAmount || 0);
-            totalRemaining += (parseFloat(customer.sellinEuroPrice || 0) - parseFloat(customer.arrivedEuroAmount || 0));
+            totalRemaining += (sellingPriceTotal - parseFloat(customer.arrivedEuroAmount || 0));
           });
           
           // Update totals row
@@ -1832,16 +1858,37 @@
       }
 
       function buildReservationRow(customer) {
+        // حساب عدد الليالي
+        var nights = customer.nights || 1;
+        
+        // حساب السعر الإجمالي للفندق
+        var hotelPricePerNight = parseFloat(customer.hotelPriceEuro || 0);
+        var hotelPriceTotal = hotelPricePerNight * nights;
+        var hotelPriceInfo = `<div style="font-size: 0.8rem; font-weight: bold;">${hotelPriceTotal.toFixed(2)} €</div>`;
+        hotelPriceInfo += `<div style="font-size: 0.65rem; color: #666; margin-top: 2px;">${hotelPricePerNight.toFixed(2)} €/ليلة</div>`;
+        
+        // حساب السعر الإجمالي للمبيع
+        var sellingPricePerNight = parseFloat(customer.sellinEuroPrice || 0);
+        var sellingPriceTotal = sellingPricePerNight * nights;
+        var sellingPriceInfo = `<div style="font-size: 0.8rem; font-weight: bold;">${sellingPriceTotal.toFixed(2)} €</div>`;
+        sellingPriceInfo += `<div style="font-size: 0.65rem; color: #666; margin-top: 2px;">${sellingPricePerNight.toFixed(2)} €/ليلة</div>`;
+        
+        // معلومات العربون
         var depositInfo = `<div style="font-size: 0.75rem; font-weight: bold;">${safeValue(customer.arrivedEuroAmount, '0')} €</div>`;
         if (customer.depositMethod) {
           depositInfo += `<div style="font-size: 0.65rem; color: #666; margin-top: 2px;">${customer.depositMethod}</div>`;
         }
         
-        var remainingCalc = (customer.sellinEuroPrice || 0) - (customer.arrivedEuroAmount || 0);
+        // حساب المبلغ المتبقي: (سعر المبيع × عدد الليالي) - العربون
+        var remainingCalc = sellingPriceTotal - (customer.arrivedEuroAmount || 0);
         var remainingInfo = `<div style="font-size: 0.75rem; font-weight: bold;">${remainingCalc.toFixed(2)} €</div>`;
         if (customer.remainingMethod) {
           remainingInfo += `<div style="font-size: 0.65rem; color: #666; margin-top: 2px;">${customer.remainingMethod}</div>`;
         }
+        
+        // أول حرفين من المورد والبائع
+        var supplierShort = customer.supplier ? customer.supplier.substring(0, 2) : '-';
+        var sellerShort = customer.seller ? customer.seller.substring(0, 2) : '-';
         
         var paymentStatusValue = customer.paymentStatus || '';
         var reservationStatusValue = customer.reservationStatus || '';
@@ -1852,6 +1899,10 @@
               <input type="checkbox" class="reservation-checkbox" data-id="${customer.id}" style="width: 16px; height: 16px;">
             </td>
             
+            <td class="text-center align-middle" style="padding: 6px 4px; font-size: 0.75rem; font-weight: 600;" title="${safeValue(customer.supplier)}">${supplierShort}</td>
+            
+            <td class="text-center align-middle" style="padding: 6px 4px; font-size: 0.75rem; font-weight: 600;" title="${safeValue(customer.seller)}">${sellerShort}</td>
+            
             <td class="text-center align-middle" style="padding: 6px 4px; font-size: 0.75rem; font-weight: 600;">${safeValue(customer.name)}</td>
             
             <td class="text-center align-middle" style="padding: 6px 4px; font-size: 0.75rem;">${safeValue(customer.hotel)}</td>
@@ -1860,9 +1911,9 @@
             
             <td class="text-center align-middle" style="padding: 6px 4px; font-size: 0.75rem;">${safeValue(customer.checkoutDate)}</td>
             
-            <td class="text-center align-middle" style="padding: 6px 1px; font-size: 0.75rem;">${safeValue(customer.hotelPriceEuro, '0')} €</td>
+            <td class="text-center align-middle" style="padding: 6px 1px; font-size: 0.7rem;">${hotelPriceInfo}</td>
             
-            <td class="text-center align-middle" style="padding: 6px 1px; font-size: 0.75rem; font-weight: bold;">${safeValue(customer.sellinEuroPrice, '0')} €</td>
+            <td class="text-center align-middle" style="padding: 6px 1px; font-size: 0.7rem;">${sellingPriceInfo}</td>
             
             <td class="text-center align-middle" style="padding: 6px 1px; font-size: 0.7rem;">${depositInfo}</td>
             
@@ -1904,12 +1955,16 @@
       }
 
       function buildReservationCard(customer) {
-        var pricePerNight = customer.sellinPrice
-          ? `${customer.sellinPrice} ${customer.currency || ''}`
-          : '—';
-        var remainingAmount = customer.remainingAmount
-          ? `${customer.remainingAmount} ${customer.remainingAmountCurrency || ''}`
-          : 'لا يوجد';
+        var nights = customer.nights || 1;
+        var sellingPricePerNight = parseFloat(customer.sellinEuroPrice || 0);
+        var sellingPriceTotal = sellingPricePerNight * nights;
+        var priceDisplay = `${sellingPriceTotal.toFixed(2)} € (${sellingPricePerNight.toFixed(2)} €/ليلة)`;
+        
+        var remainingCalc = sellingPriceTotal - (customer.arrivedEuroAmount || 0);
+        var remainingAmount = `${remainingCalc.toFixed(2)} €`;
+        
+        var supplierShort = customer.supplier ? customer.supplier.substring(0, 2) : '-';
+        var sellerShort = customer.seller ? customer.seller.substring(0, 2) : '-';
 
         return `
           <div class="reservation-card" data-row-id="${customer.id || ''}">
@@ -1917,7 +1972,8 @@
               <div>
                 <h3>${safeValue(customer.name)}</h3>
                 <small class="text-muted d-block">رقم الحجز: ${safeValue(customer.id)}</small>
-                <small class="text-muted d-block">${safeValue(customer.person, '0')} ضيوف</small>
+                <small class="text-muted d-block">${safeValue(customer.person, '0')} ضيوف | ${nights} ليالي</small>
+                <small class="text-muted d-block">المورد: ${safeValue(customer.supplier)} | البائع: ${safeValue(customer.seller)}</small>
               </div>
               <div>
                 <input type="checkbox" class="reservation-checkbox" data-id="${customer.id}">
@@ -1945,8 +2001,8 @@
                 <strong>${safeValue(customer.roomType)}</strong>
               </div>
               <div class="card-field">
-                <span>السعر لليلة</span>
-                <strong>${pricePerNight}</strong>
+                <span>السعر الإجمالي</span>
+                <strong>${priceDisplay}</strong>
               </div>
               <div class="card-field">
                 <span>المتبقي</span>
@@ -2075,12 +2131,18 @@
             $("#modalCustomerNights").text(dayCount || '—');
             
             // التفاصيل المالية
-            $("#modalCustomerHotelPrice").text((customerMapData.hotelPriceEuro || 0) + ' €');
-            $("#modalCustomerSellingPrice").text((customerMapData.sellinEuroPrice || 0) + ' €');
+            var hotelPricePerNight = parseFloat(customerMapData.hotelPriceEuro || 0);
+            var hotelPriceTotal = hotelPricePerNight * dayCount;
+            $("#modalCustomerHotelPrice").text(hotelPriceTotal.toFixed(2) + ' € (إجمالي) - ' + hotelPricePerNight.toFixed(2) + ' €/ليلة');
+            
+            var sellingPricePerNight = parseFloat(customerMapData.sellinEuroPrice || 0);
+            var sellingPriceTotal = sellingPricePerNight * dayCount;
+            $("#modalCustomerSellingPrice").text(sellingPriceTotal.toFixed(2) + ' € (إجمالي) - ' + sellingPricePerNight.toFixed(2) + ' €/ليلة');
+            
             $("#modalCustomerArrivedAmount").text((customerMapData.arrivedEuroAmount || 0) + ' €');
             $("#modalCustomerDepositMethod").text(customerMapData.depositMethod || '—');
             
-            var remaining = (customerMapData.sellinEuroPrice || 0) - (customerMapData.arrivedEuroAmount || 0);
+            var remaining = sellingPriceTotal - (customerMapData.arrivedEuroAmount || 0);
             $("#modalCustomerRemainingAmount").text(remaining.toFixed(2) + ' €');
             $("#modalCustomerRemainingMethod").text(customerMapData.remainingMethod || '—');
             
