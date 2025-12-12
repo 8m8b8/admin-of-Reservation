@@ -167,12 +167,13 @@ function getHotelsByCity(city) {
     return customerData;
   }
 
-function getCustomers(searchTerm, pageNumber, checkInDate, checkOutDate) {
+function getCustomers(searchTerm, pageNumber, checkInDate, checkOutDate, requestedPageSize) {
   var sheet = SpreadsheetApp.openById("1Y5yMDhW9Lou2VY0zgsPqo7DDih66Qa4sfupI3cNV-0Q").getSheetByName("DATABASE");
   var data = sheet.getDataRange().getValues();
   var timezone = Session.getScriptTimeZone();
   var sanitizedSearch = (searchTerm || '').toString().trim().toLowerCase();
-  var pageSize = PAGE_SIZE || 50;
+  var pageSizeParam = parseInt(requestedPageSize, 10);
+  var pageSize = (pageSizeParam === -1 || isNaN(pageSizeParam)) ? 999999 : (pageSizeParam || 50);
   var page = parseInt(pageNumber, 10);
   if (isNaN(page) || page < 1) {
     page = 1;
@@ -230,6 +231,7 @@ function getCustomers(searchTerm, pageNumber, checkInDate, checkOutDate) {
   var customers = pageRows.map(function (row) {
     var checkinValue = parseSheetDate(row[10]);
     var checkoutValue = parseSheetDate(row[11]);
+    var nights = calculateNights_(checkinValue, checkoutValue);
     return {
       id: row[0],
       seller: row[1],
@@ -242,6 +244,7 @@ function getCustomers(searchTerm, pageNumber, checkInDate, checkOutDate) {
       hotelConfirmation: row[9],
       checkinDate: checkinValue ? Utilities.formatDate(checkinValue, timezone, "yyyy-MM-dd") : '',
       checkoutDate: checkoutValue ? Utilities.formatDate(checkoutValue, timezone, "yyyy-MM-dd") : '',
+      nights: nights,
       roomCount: row[12],
       roomType: row[13],
       viewType: row[14],
