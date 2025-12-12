@@ -4,6 +4,8 @@ var MASTER_SPREADSHEET_ID = (typeof SPREADSHEET_ID !== 'undefined' && SPREADSHEE
 
 var DATABASE_COL_INDEX = {
   ID: 0,
+  SELLER: 1,
+  SUPPLIER: 2,
   NAME: 3,
   PHONE: 4,
   PERSON_COUNT: 6,
@@ -16,21 +18,26 @@ var DATABASE_COL_INDEX = {
   ROOM_TYPE: 13,
   VIEW_TYPE: 14,
   MEAL_TYPE: 15,
+  HOTEL_PRICE_EURO: 17,
   SELLIN_PRICE: 18,
   SELLIN_EURO_PRICE: 19,
   CURRENCY: 20,
   ARRIVED_AMOUNT: 24,
   ARRIVED_EURO_AMOUNT: 25,
+  DEPOSIT_METHOD: 26,
   ARRIVED_AMOUNT_CURRENCY: 29,
   REMAINING_AMOUNT: 30,
   REMAINING_EURO_AMOUNT: 31,
   REMAINING_AMOUNT_CURRENCY: 32,
+  PAYMENT_STATUS: 33,
+  REMAINING_METHOD: 34,
   SERVICE_NAME: 36,
   SERVICE_PRICE: 37,
   SERVICE_EURO_PRICE: 38,
   SERVICE_SELLING_PRICE: 39,
   SERVICE_SELLING_EURO_PRICE: 40,
-  NOTES: 41
+  NOTES: 41,
+  RESERVATION_STATUS: 48
 };
 
 function getCities() {
@@ -116,6 +123,8 @@ function getHotelsByCity(city) {
     for (let i = 1; i < data.length; i++) { // Assuming the first row is headers
       if (data[i][0] == customerId) {  // Check if the first column matches customerId
         customerData = {
+            seller: data[i][1],
+            supplier: data[i][2],
             name: data[i][3],
             phone: data[i][4],
             person: data[i][6],
@@ -128,23 +137,28 @@ function getHotelsByCity(city) {
             roomType: data[i][13],
             viewType: data[i][14],
             meals: data[i][15],
+            hotelPriceEuro: data[i][17],
             sellinPrice: data[i][18],
             sellinEuroPrice: data[i][19],
             currency: data[i][20],
             arrivedAmount: data[i][24],
             arrivedEuroAmount: data[i][25],
+            depositMethod: data[i][26],
             sendingCost: data[i][27],
             sendingEuroCost: data[i][28],
             arrivedAmountCurrency: data[i][29],
             remainingAmount: data[i][30],
             remainingEuroAmount: data[i][31],
             remainingAmountCurrency: data[i][32],
+            paymentStatus: data[i][33],
+            remainingMethod: data[i][34],
             service: data[i][36],
             servicePrice: data[i][37],
             serviceEuroPrice: data[i][38],
             serviceSellingPrice: data[i][39],
             serviceSellingEuroPrice: data[i][40],
             flowerGift: data[i][41],
+            reservationStatus: data[i][48],
         };
         break;
       }
@@ -158,7 +172,7 @@ function getCustomers(searchTerm, pageNumber, checkInDate, checkOutDate) {
   var data = sheet.getDataRange().getValues();
   var timezone = Session.getScriptTimeZone();
   var sanitizedSearch = (searchTerm || '').toString().trim().toLowerCase();
-  var pageSize = PAGE_SIZE || 20;
+  var pageSize = PAGE_SIZE || 50;
   var page = parseInt(pageNumber, 10);
   if (isNaN(page) || page < 1) {
     page = 1;
@@ -218,6 +232,8 @@ function getCustomers(searchTerm, pageNumber, checkInDate, checkOutDate) {
     var checkoutValue = parseSheetDate(row[11]);
     return {
       id: row[0],
+      seller: row[1],
+      supplier: row[2],
       name: row[3],
       phone: row[4],
       person: row[6],
@@ -230,23 +246,28 @@ function getCustomers(searchTerm, pageNumber, checkInDate, checkOutDate) {
       roomType: row[13],
       viewType: row[14],
       meals: row[15],
+      hotelPriceEuro: row[17],
       sellinPrice: row[18],
       sellinEuroPrice: row[19],
       currency: row[20],
       arrivedAmount: row[24],
       arrivedEuroAmount: row[25],
+      depositMethod: row[26],
       sendingCost: row[27],
       sendingEuroCost: row[28],
       arrivedAmountCurrency: row[29],
       remainingAmount: row[30],
       remainingEuroAmount: row[31],
       remainingAmountCurrency: row[32],
+      paymentStatus: row[33],
+      remainingMethod: row[34],
       service: row[36],
       servicePrice: row[37],
       serviceEuroPrice: row[38],
       serviceSellingPrice: row[39],
       serviceSellingEuroPrice: row[40],
-      flowerGift: row[41]
+      flowerGift: row[41],
+      reservationStatus: row[48]
     };
   });
 
@@ -1314,5 +1335,39 @@ function accumulateCurrencyTotal_(totalsMap, currency, amount) {
     key = "غير محدد";
   }
   totalsMap[key] = (totalsMap[key] || 0) + (amount || 0);
+}
+
+function updateReservationStatus(reservationId, newStatus) {
+  var sheet = SpreadsheetApp.openById(MASTER_SPREADSHEET_ID).getSheetByName("DATABASE");
+  if (!sheet) {
+    throw new Error("تعذر العثور على ورقة DATABASE");
+  }
+  
+  var data = sheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][DATABASE_COL_INDEX.ID] == reservationId) {
+      sheet.getRange(i + 1, DATABASE_COL_INDEX.RESERVATION_STATUS + 1).setValue(newStatus);
+      return { success: true, message: "تم تحديث حالة الحجز بنجاح" };
+    }
+  }
+  
+  throw new Error("لم يتم العثور على الحجز رقم " + reservationId);
+}
+
+function updatePaymentStatus(reservationId, newStatus) {
+  var sheet = SpreadsheetApp.openById(MASTER_SPREADSHEET_ID).getSheetByName("DATABASE");
+  if (!sheet) {
+    throw new Error("تعذر العثور على ورقة DATABASE");
+  }
+  
+  var data = sheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][DATABASE_COL_INDEX.ID] == reservationId) {
+      sheet.getRange(i + 1, DATABASE_COL_INDEX.PAYMENT_STATUS + 1).setValue(newStatus);
+      return { success: true, message: "تم تحديث حالة الدفع بنجاح" };
+    }
+  }
+  
+  throw new Error("لم يتم العثور على الحجز رقم " + reservationId);
 }
 
