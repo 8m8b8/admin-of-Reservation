@@ -1373,4 +1373,3 @@ function updatePaymentStatus(reservationId, newStatus) {
   
   throw new Error("لم يتم العثور على الحجز رقم " + reservationId);
 }
-
