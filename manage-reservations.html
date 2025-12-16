@@ -933,6 +933,7 @@
                 <th id="total-hotelPrice" style="padding: 8px 1px;">-</th>
                 <th id="total-sellingPrice" style="padding: 8px 1px;">-</th>
                 <th id="total-deposit" style="padding: 8px 1px;">-</th>
+                <th id="total-secondPayment" style="padding: 8px 1px;">-</th>
                 <th id="total-remaining" style="padding: 8px 1px;">-</th>
                 <th style="padding: 8px 4px;">-</th>
                 <th style="padding: 8px 4px;">-</th>
@@ -949,7 +950,8 @@
                 <th style="width: 75px; padding: 8px 1px;" class="sortable" data-column="hotelPriceEuro">س.فندق €</th>
                 <th style="width: 75px; padding: 8px 1px;" class="sortable" data-column="sellinEuroPrice">س.مبيع €</th>
                 <th style="width: 90px; padding: 8px 1px;">عربون/طريقة</th>
-                <th style="width: 90px; padding: 8px 1px;">متبقي/طريقة</th>
+                <th style="width: 90px; padding: 8px 1px;">دفعة ثانية/طريقة</th>
+                <th style="width: 90px; padding: 8px 1px;">متبقي</th>
                 <th style="width: 100px; padding: 8px 4px;" class="sortable" data-column="paymentStatus">حالة دفع</th>
                 <th style="width: 100px; padding: 8px 4px;">حالة حجز</th>
                 <th style="width: 100px; padding: 8px 4px;">إجراءات</th>
@@ -957,7 +959,7 @@
             </thead>
             <tbody id="customerResults">
               <tr class="warning no-result">
-                <td colspan="14"><i class="fa fa-warning"></i> لا توجد نتائج</td>
+                <td colspan="15"><i class="fa fa-warning"></i> لا توجد نتائج</td>
               </tr>
             </tbody>
           </table>
@@ -1051,6 +1053,10 @@
             <h4 class="section-title"><i class="fa fa-money-bill-wave"></i> التفاصيل المالية</h4>
             <div class="info-grid">
               <div class="info-item highlight">
+                <span class="info-label">سعر الفندق بالعملة الأصلية</span>
+                <span class="info-value" id="modalCustomerHotelPriceOriginal">-</span>
+              </div>
+              <div class="info-item highlight">
                 <span class="info-label">سعر الفندق €</span>
                 <span class="info-value" id="modalCustomerHotelPrice">-</span>
               </div>
@@ -1067,12 +1073,16 @@
                 <span class="info-value" id="modalCustomerDepositMethod">-</span>
               </div>
               <div class="info-item">
-                <span class="info-label">المبلغ المتبقي €</span>
-                <span class="info-value" id="modalCustomerRemainingAmount">-</span>
+                <span class="info-label">الدفعة الثانية €</span>
+                <span class="info-value" id="modalCustomerSecondPayment">-</span>
               </div>
               <div class="info-item">
-                <span class="info-label">طريقة تحصيل المتبقي</span>
-                <span class="info-value" id="modalCustomerRemainingMethod">-</span>
+                <span class="info-label">طريقة تحصيل الدفعة الثانية</span>
+                <span class="info-value" id="modalCustomerSecondPaymentMethod">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">المبلغ المتبقي €</span>
+                <span class="info-value" id="modalCustomerRemainingAmount">-</span>
               </div>
             </div>
           </div>
@@ -1813,7 +1823,7 @@
         if (!customers.length) {
           $tbody.append(`
             <tr class="warning">
-              <td colspan="14" class="text-center">لا توجد نتائج</td>
+              <td colspan="15" class="text-center">لا توجد نتائج</td>
             </tr>
           `);
           $cardContainer.append(`
@@ -1825,32 +1835,37 @@
           $("#total-hotelPrice").text("0 €");
           $("#total-sellingPrice").text("0 €");
           $("#total-deposit").text("0 €");
+          $("#total-secondPayment").text("0 €");
           $("#total-remaining").text("0 €");
         } else {
           var totalHotelPrice = 0;
           var totalSellingPrice = 0;
           var totalDeposit = 0;
+          var totalSecondPayment = 0;
           var totalRemaining = 0;
           
           customers.forEach(function (customer) {
             $tbody.append(buildReservationRow(customer));
             $cardContainer.append(buildReservationCard(customer));
             
-            // Calculate totals with nights
+            // Calculate totals with nights and rooms
             var nights = customer.nights || 1;
-            var hotelPriceTotal = (parseFloat(customer.hotelPriceEuro || 0)) * nights;
-            var sellingPriceTotal = (parseFloat(customer.sellinEuroPrice || 0)) * nights;
+            var rooms = customer.roomCount || 1;
+            var hotelPriceTotal = (parseFloat(customer.hotelPriceEuro || 0)) * nights * rooms;
+            var sellingPriceTotal = (parseFloat(customer.sellinEuroPrice || 0)) * nights * rooms;
             
             totalHotelPrice += hotelPriceTotal;
             totalSellingPrice += sellingPriceTotal;
             totalDeposit += parseFloat(customer.arrivedEuroAmount || 0);
-            totalRemaining += (sellingPriceTotal - parseFloat(customer.arrivedEuroAmount || 0));
+            totalSecondPayment += parseFloat(customer.secondPayment || 0);
+            totalRemaining += (sellingPriceTotal - parseFloat(customer.arrivedEuroAmount || 0) - parseFloat(customer.secondPayment || 0));
           });
           
           // Update totals row
           $("#total-hotelPrice").text(totalHotelPrice.toFixed(2) + " €");
           $("#total-sellingPrice").text(totalSellingPrice.toFixed(2) + " €");
           $("#total-deposit").text(totalDeposit.toFixed(2) + " €");
+          $("#total-secondPayment").text(totalSecondPayment.toFixed(2) + " €");
           $("#total-remaining").text(totalRemaining.toFixed(2) + " €");
         }
 
@@ -1858,18 +1873,19 @@
       }
 
       function buildReservationRow(customer) {
-        // حساب عدد الليالي
+        // حساب عدد الليالي والغرف
         var nights = customer.nights || 1;
+        var rooms = customer.roomCount || 1;
         
-        // حساب السعر الإجمالي للفندق
+        // حساب السعر الإجمالي للفندق (سعر × ليالي × غرف)
         var hotelPricePerNight = parseFloat(customer.hotelPriceEuro || 0);
-        var hotelPriceTotal = hotelPricePerNight * nights;
+        var hotelPriceTotal = hotelPricePerNight * nights * rooms;
         var hotelPriceInfo = `<div style="font-size: 0.8rem; font-weight: bold;">${hotelPriceTotal.toFixed(2)} €</div>`;
         hotelPriceInfo += `<div style="font-size: 0.65rem; color: #666; margin-top: 2px;">${hotelPricePerNight.toFixed(2)} €/ليلة</div>`;
         
-        // حساب السعر الإجمالي للمبيع
+        // حساب السعر الإجمالي للمبيع (سعر × ليالي × غرف)
         var sellingPricePerNight = parseFloat(customer.sellinEuroPrice || 0);
-        var sellingPriceTotal = sellingPricePerNight * nights;
+        var sellingPriceTotal = sellingPricePerNight * nights * rooms;
         var sellingPriceInfo = `<div style="font-size: 0.8rem; font-weight: bold;">${sellingPriceTotal.toFixed(2)} €</div>`;
         sellingPriceInfo += `<div style="font-size: 0.65rem; color: #666; margin-top: 2px;">${sellingPricePerNight.toFixed(2)} €/ليلة</div>`;
         
@@ -1879,16 +1895,33 @@
           depositInfo += `<div style="font-size: 0.65rem; color: #666; margin-top: 2px;">${customer.depositMethod}</div>`;
         }
         
-        // حساب المبلغ المتبقي: (سعر المبيع × عدد الليالي) - العربون
-        var remainingCalc = sellingPriceTotal - (customer.arrivedEuroAmount || 0);
-        var remainingInfo = `<div style="font-size: 0.75rem; font-weight: bold;">${remainingCalc.toFixed(2)} €</div>`;
-        if (customer.remainingMethod) {
-          remainingInfo += `<div style="font-size: 0.65rem; color: #666; margin-top: 2px;">${customer.remainingMethod}</div>`;
+        // معلومات الدفعة الثانية
+        var secondPaymentAmount = parseFloat(customer.secondPayment || 0);
+        var secondPaymentInfo = `<div style="font-size: 0.75rem; font-weight: bold;">${secondPaymentAmount.toFixed(2)} €</div>`;
+        if (customer.secondPaymentMethod) {
+          secondPaymentInfo += `<div style="font-size: 0.65rem; color: #666; margin-top: 2px;">${customer.secondPaymentMethod}</div>`;
         }
+        
+        // حساب المبلغ المتبقي: (سعر المبيع × عدد الليالي × عدد الغرف) - العربون - الدفعة الثانية
+        var remainingCalc = sellingPriceTotal - (customer.arrivedEuroAmount || 0) - secondPaymentAmount;
+        var remainingInfo = `<div style="font-size: 0.75rem; font-weight: bold;">${remainingCalc.toFixed(2)} €</div>`;
         
         // أول حرفين من المورد والبائع
         var supplierShort = customer.supplier ? customer.supplier.substring(0, 2) : '-';
         var sellerShort = customer.seller ? customer.seller.substring(0, 2) : '-';
+        
+        // تقسيم اسم العميل والفندق إلى سطرين إذا كان أكثر من كلمتين
+        var customerName = safeValue(customer.name);
+        var customerNameWords = customerName.split(' ');
+        var customerNameDisplay = customerNameWords.length > 2 
+          ? `<div style="font-size: 0.7rem; line-height: 1.2;">${customerNameWords.slice(0, Math.ceil(customerNameWords.length/2)).join(' ')}<br>${customerNameWords.slice(Math.ceil(customerNameWords.length/2)).join(' ')}</div>`
+          : `<div style="font-size: 0.75rem;">${customerName}</div>`;
+        
+        var hotelName = safeValue(customer.hotel);
+        var hotelNameWords = hotelName.split(' ');
+        var hotelNameDisplay = hotelNameWords.length > 2 
+          ? `<div style="font-size: 0.7rem; line-height: 1.2;">${hotelNameWords.slice(0, Math.ceil(hotelNameWords.length/2)).join(' ')}<br>${hotelNameWords.slice(Math.ceil(hotelNameWords.length/2)).join(' ')}</div>`
+          : `<div style="font-size: 0.75rem;">${hotelName}</div>`;
         
         var paymentStatusValue = customer.paymentStatus || '';
         var reservationStatusValue = customer.reservationStatus || '';
@@ -1903,9 +1936,9 @@
             
             <td class="text-center align-middle" style="padding: 6px 4px; font-size: 0.75rem; font-weight: 600;" title="${safeValue(customer.seller)}">${sellerShort}</td>
             
-            <td class="text-center align-middle" style="padding: 6px 4px; font-size: 0.75rem; font-weight: 600;">${safeValue(customer.name)}</td>
+            <td class="text-center align-middle" style="padding: 6px 4px;">${customerNameDisplay}</td>
             
-            <td class="text-center align-middle" style="padding: 6px 4px; font-size: 0.75rem;">${safeValue(customer.hotel)}</td>
+            <td class="text-center align-middle" style="padding: 6px 4px;">${hotelNameDisplay}</td>
             
             <td class="text-center align-middle" style="padding: 6px 4px; font-size: 0.75rem;">${safeValue(customer.checkinDate)}</td>
             
@@ -1916,6 +1949,8 @@
             <td class="text-center align-middle" style="padding: 6px 1px; font-size: 0.7rem;">${sellingPriceInfo}</td>
             
             <td class="text-center align-middle" style="padding: 6px 1px; font-size: 0.7rem;">${depositInfo}</td>
+            
+            <td class="text-center align-middle" style="padding: 6px 1px; font-size: 0.7rem;">${secondPaymentInfo}</td>
             
             <td class="text-center align-middle" style="padding: 6px 1px; font-size: 0.7rem;">${remainingInfo}</td>
             
@@ -1956,11 +1991,13 @@
 
       function buildReservationCard(customer) {
         var nights = customer.nights || 1;
+        var rooms = customer.roomCount || 1;
         var sellingPricePerNight = parseFloat(customer.sellinEuroPrice || 0);
-        var sellingPriceTotal = sellingPricePerNight * nights;
+        var sellingPriceTotal = sellingPricePerNight * nights * rooms;
         var priceDisplay = `${sellingPriceTotal.toFixed(2)} € (${sellingPricePerNight.toFixed(2)} €/ليلة)`;
         
-        var remainingCalc = sellingPriceTotal - (customer.arrivedEuroAmount || 0);
+        var secondPaymentAmount = parseFloat(customer.secondPayment || 0);
+        var remainingCalc = sellingPriceTotal - (customer.arrivedEuroAmount || 0) - secondPaymentAmount;
         var remainingAmount = `${remainingCalc.toFixed(2)} €`;
         
         var supplierShort = customer.supplier ? customer.supplier.substring(0, 2) : '-';
@@ -2131,20 +2168,28 @@
             $("#modalCustomerNights").text(dayCount || '—');
             
             // التفاصيل المالية
+            var roomCount = parseInt(customerMapData.roomCount || 1);
             var hotelPricePerNight = parseFloat(customerMapData.hotelPriceEuro || 0);
-            var hotelPriceTotal = hotelPricePerNight * dayCount;
-            $("#modalCustomerHotelPrice").text(hotelPriceTotal.toFixed(2) + ' € (إجمالي) - ' + hotelPricePerNight.toFixed(2) + ' €/ليلة');
+            var hotelPriceTotal = hotelPricePerNight * dayCount * roomCount;
+            var hotelPriceOriginal = customerMapData.hotelPriceOriginal || 0;
+            var currency = customerMapData.currency || '';
+            
+            $("#modalCustomerHotelPriceOriginal").text(hotelPriceOriginal + (currency ? ' ' + currency : ''));
+            $("#modalCustomerHotelPrice").text(hotelPriceTotal.toFixed(2) + ' € (إجمالي) - ' + hotelPricePerNight.toFixed(2) + ' €/ليلة/غرفة');
             
             var sellingPricePerNight = parseFloat(customerMapData.sellinEuroPrice || 0);
-            var sellingPriceTotal = sellingPricePerNight * dayCount;
-            $("#modalCustomerSellingPrice").text(sellingPriceTotal.toFixed(2) + ' € (إجمالي) - ' + sellingPricePerNight.toFixed(2) + ' €/ليلة');
+            var sellingPriceTotal = sellingPricePerNight * dayCount * roomCount;
+            $("#modalCustomerSellingPrice").text(sellingPriceTotal.toFixed(2) + ' € (إجمالي) - ' + sellingPricePerNight.toFixed(2) + ' €/ليلة/غرفة');
             
             $("#modalCustomerArrivedAmount").text((customerMapData.arrivedEuroAmount || 0) + ' €');
             $("#modalCustomerDepositMethod").text(customerMapData.depositMethod || '—');
             
-            var remaining = sellingPriceTotal - (customerMapData.arrivedEuroAmount || 0);
+            var secondPayment = parseFloat(customerMapData.secondPayment || 0);
+            $("#modalCustomerSecondPayment").text(secondPayment.toFixed(2) + ' €');
+            $("#modalCustomerSecondPaymentMethod").text(customerMapData.secondPaymentMethod || '—');
+            
+            var remaining = sellingPriceTotal - (customerMapData.arrivedEuroAmount || 0) - secondPayment;
             $("#modalCustomerRemainingAmount").text(remaining.toFixed(2) + ' €');
-            $("#modalCustomerRemainingMethod").text(customerMapData.remainingMethod || '—');
             
             // الحالات
             $("#modalCustomerPaymentStatus").text(customerMapData.paymentStatus || '—');
