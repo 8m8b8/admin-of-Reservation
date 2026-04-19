@@ -331,19 +331,61 @@
             }
           })();
       const currentPage = document.body.dataset.page || 'index';
+      
+      // الصفحات العادية (لا تحتاج كلمة مرور للوصول إليها)
+      const publicPages = ['index', 'Add-client', 'add-tour', 'add-hotel', 'manage-reservations', 'edit-reservation'];
+      // الصفحات المحمية (تحتاج كلمة مرور)
+      const protectedPages = ['SUPPLIER', 'manage-statistics', 'mediator', 'payments'];
+      // كلمة المرور
+      const PASSWORD = 'admin966';
+      // مفتاح التخزين للجلسة
+      const AUTH_KEY = 'ghada_admin_auth';
+      
+      function isAuthenticated() {
+        try { return sessionStorage.getItem(AUTH_KEY) === 'true'; } catch (e) { return false; }
+      }
+      
+      function setAuthenticated(value) {
+        try { if (value) { sessionStorage.setItem(AUTH_KEY, 'true'); } else { sessionStorage.removeItem(AUTH_KEY); } } catch (e) {}
+      }
+      
+      function isCurrentPagePublic() { return publicPages.includes(currentPage); }
+      function isTargetPageProtected(targetPage) { return protectedPages.includes(targetPage); }
+      
+      function showPasswordPrompt(targetUrl) {
+        Swal.fire({
+          title: 'صفحة محمية',
+          text: 'أدخل كلمة المرور للوصول إلى هذه الصفحة',
+          input: 'password',
+          inputPlaceholder: 'كلمة المرور',
+          showCancelButton: true,
+          confirmButtonText: 'دخول',
+          cancelButtonText: 'إلغاء',
+          confirmButtonColor: '#008891',
+          inputAttributes: { autocapitalize: 'off', autocorrect: 'off' },
+          preConfirm: (password) => {
+            if (password === PASSWORD) { return true; }
+            else { Swal.showValidationMessage('كلمة المرور غير صحيحة'); return false; }
+          }
+        }).then((result) => {
+          if (result.isConfirmed) { setAuthenticated(true); window.top.location.href = targetUrl; }
+        });
+      }
+      
       navBar.querySelectorAll('.ghada-nav-item').forEach((button) => {
         const targetPage = button.dataset.page;
         if (targetPage === currentPage) {
           button.classList.add('active');
           button.setAttribute('aria-current', 'page');
         }
-        button.addEventListener('click', () => {
-          if (!targetPage || !baseUrl || targetPage === currentPage) {
+        button.addEventListener('click', (event) => {
+          if (!targetPage || !baseUrl || targetPage === currentPage) { return; }
+          const targetUrl = targetPage === 'index' ? baseUrl : `${baseUrl}?page=${targetPage}`;
+          if (isTargetPageProtected(targetPage) && isCurrentPagePublic() && !isAuthenticated()) {
+            event.preventDefault();
+            showPasswordPrompt(targetUrl);
             return;
           }
-          const targetUrl = targetPage === 'index'
-            ? baseUrl
-            : `${baseUrl}?page=${targetPage}`;
           window.top.location.href = targetUrl;
         });
       });
