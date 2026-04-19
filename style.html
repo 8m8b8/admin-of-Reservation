@@ -1,28 +1,41 @@
 <script>
-  // Show loader
+  // Show loader - only if element exists
   function showLoader() {
-    document.getElementById("loader").style.display = "block";
+    var loader = document.getElementById("loader");
+    if (loader) {
+      loader.style.display = "block";
+    }
   }
 
-  // Hide loader
+  // Hide loader - only if element exists
   function hideLoader() {
-    document.getElementById("loader").style.display = "none";
+    var loader = document.getElementById("loader");
+    if (loader) {
+      loader.style.display = "none";
+    }
   }
 
-  // Populate select
+  // Populate select - only if element exists
   function populateSelect(selectId, data) {
     var select = document.getElementById(selectId);
+    if (!select) return; // Exit if element doesn't exist
+    
     select.innerHTML = '<option value="">اختر...</option>';
-    data.forEach(function(item) {
-      select.innerHTML += '<option value="' + item[0] + '">' + item[0] + '</option>';
-    });
+    if (data && Array.isArray(data)) {
+      data.forEach(function(item) {
+        select.innerHTML += '<option value="' + item[0] + '">' + item[0] + '</option>';
+      });
+    }
   }
 
-  // Populate hotels based on city
+  // Populate hotels based on city - only if elements exist
   function populateHotels(city) {
+    var hotelSelect = document.getElementById("hotel");
+    if (!hotelSelect) return; // Exit if element doesn't exist
+    
     showLoader();
     google.script.run.withSuccessHandler(function(hotels) {
-      populateSelect("hotel", hotels.map(function(hotelName) { return [hotelName]; })); // Adapt to populateSelect format
+      populateSelect("hotel", hotels.map(function(hotelName) { return [hotelName]; }));
       hideLoader();
     }).withFailureHandler(function(error) {
       Swal.fire('Error', error.message, 'error');
@@ -30,132 +43,131 @@
     }).getHotelsByCity(city);
   }
 
-  // Event Listeners
+  // Event Listeners - Only run if necessary elements exist
   document.addEventListener("DOMContentLoaded", function() {
-    showLoader();
-    google.script.run.withSuccessHandler(function(data) {
-      populateSelect("supplier", data);
+    // Check if we're on a page that needs these initializations
+    var supplierSelect = document.getElementById("supplier");
+    var clientNameSelect = document.getElementById("client_name");
+    var citySelect = document.getElementById("city");
+    var saveBookingBtn = document.getElementById("saveBooking");
+    
+    // Only run initialization if the required elements exist
+    if (supplierSelect && clientNameSelect && citySelect) {
+      showLoader();
       google.script.run.withSuccessHandler(function(data) {
-        populateSelect("client_name", data); // Assuming client name is first column
+        populateSelect("supplier", data);
         google.script.run.withSuccessHandler(function(data) {
-          populateSelect("city", data);
-          hideLoader();
-        }).getCity();
-      }).getClients();
-    }).getSuppliers();
+          populateSelect("client_name", data);
+          google.script.run.withSuccessHandler(function(data) {
+            populateSelect("city", data);
+            hideLoader();
+          }).getCity();
+        }).getClients();
+      }).getSuppliers();
+    }
 
-    // City change listener
-    $("#city").change(function() {
-      var selectedCity = $(this).val();
-      if (selectedCity) {
-        populateHotels(selectedCity);
-      } else {
-        populateSelect("hotel", []); // Clear hotels
-      }
-    });
-
-    // Date change listener for nights calculation
-    $("#check_in, #check_out").change(function() {
-      var checkIn = new Date($("#check_in").val());
-      var checkOut = new Date($("#check_out").val());
-      if (checkIn && checkOut && checkOut > checkIn) {
-        var diffTime = Math.abs(checkOut - checkIn);
-        var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        $("#nights").val(diffDays);
-      } else {
-        $("#nights").val(0);
-      }
-    });
-
-    // ----------------------------------------------------
-    // *** !! هذا هو الكود الذي تم تعديله بالكامل !! ***
-    // ----------------------------------------------------
-    $("#saveBooking").click(function() {
-      
-      // 1. جمع البيانات من النموذج (كما في الكود الأصلي)
-      var bookingDetails = {
-        supplier: $("#supplier").val(),
-        supplierName: $("#supplier_name").val(), // يفترض أن هذا ID موجود
-        supplierType: $("#supplier_type").val(), // يفترض أن هذا ID موجود
-        supplierRef: $("#ref_supp").val(),
-        clientName: $("#client_name").val(),
-        clientPhone: $("#client_phone").val(), // يفترض أن هذا ID موجود
-        clientNationality: $("#nationality").val(),
-        adults: $("#adults").val(),
-        children: $("#children").val(),
-        city: $("#city").val(),
-        hotel: $("#hotel").val(),
-        hotelRef: $("#ref_hotel").val(),
-        roomType: $("#room_type").val(), // يفترض أن هذا ID موجود
-        mealPlan: $("#meal_plan").val(), // يفترض أن هذا ID موجود
-        checkIn: $("#check_in").val(),
-        checkOut: $("#check_out").val(),
-        nights: $("#nights").val(),
-        notes: $("#notes").val()
-      };
-      
-      // (تحقق بسيط)
-      if (!bookingDetails.clientName || !bookingDetails.hotel || !bookingDetails.checkIn) {
-         Swal.fire('خطأ', 'الرجاء ملء الحقول الأساسية (العميل، الفندق، تاريخ الوصول)', 'warning');
-         return;
-      }
-
-      // 2. إظهار نافذة منبثقة لطلب الإيميل والملاحظات
-      Swal.fire({
-        title: 'إرسال تأكيد عبر الإيميل',
-        html:
-          '<p>الحجز سيتم حفظه. هل تريد إرسال إيميل تأكيد؟</p>' +
-          
-          // *** !! هام جداً !! ***
-          // أنت طلبت أن تكون هذه "قائمة منسدلة".
-          // يجب عليك تعديل هذه القائمة لجلب الإيميلات من Google Sheet
-          // بنفس الطريقة التي تجلب بها "العملاء" أو "الموردين".
-          // هذا مجرد مثال ثابت للتوضيح:
-          '<select id="swal-email" class="form-select">' +
-            '<option value="">-- عدم الإرسال --</option>' +
-            '<option value="info@hotel-example.com">إيميل المورد 1</option>' +
-            '<option value="manager@hotel-example.com">إيميل المورد 2</option>' +
-            '<option value="accounts@your-tourism-company.com">قسم الحسابات</option>' +
-          '</select>' +
-          
-          '<textarea id="swal-notes" class="form-control mt-2" placeholder="ملاحظات إضافية (ستظهر في نص الإيميل)..."></textarea>',
-          
-        showCancelButton: true,
-        confirmButtonText: 'حفظ وإرسال',
-        cancelButtonText: 'إلغاء',
-        showLoaderOnConfirm: true,
-        
-        preConfirm: () => {
-          // 3. جمع البيانات من النافذة المنبثقة
-          var email = document.getElementById('swal-email').value;
-          var notes = document.getElementById('swal-notes').value;
-          
-          showLoader(); // إظهار المؤشر الرئيسي
-
-          // 4. استدعاء دالة الخادم (مع الإيميل والملاحظات)
-          return google.script.run
-            .withSuccessHandler(function(response) {
-              hideLoader();
-              Swal.fire('تم!', response, 'success');
-              
-              // إعادة تعيين النموذج (افترض أن لديك <form id="bookingForm">)
-              if(document.getElementById("bookingForm")) {
-                document.getElementById("bookingForm").reset();
-              }
-              populateSelect("hotel", []); // مسح الفنادق
-            })
-            .withFailureHandler(function(error) {
-              hideLoader();
-              Swal.fire('خطأ!', error.message, 'error');
-            })
-            .addNewBooking(bookingDetails, email, notes); // !! إرسال البيانات كاملة
-        },
-        allowOutsideClick: () => !Swal.isLoading()
+    // City change listener - only if city element exists
+    if (citySelect) {
+      $(citySelect).change(function() {
+        var selectedCity = $(this).val();
+        if (selectedCity) {
+          populateHotels(selectedCity);
+        } else {
+          populateSelect("hotel", []);
+        }
       });
-    });
-    // ----------------------------------------------------
-    // *** !! نهاية الكود المُعدل !! ***
-    // ----------------------------------------------------
+    }
 
+    // Date change listener for nights calculation - only if elements exist
+    var checkInInput = document.getElementById("check_in");
+    var checkOutInput = document.getElementById("check_out");
+    var nightsInput = document.getElementById("nights");
+    
+    if (checkInInput && checkOutInput && nightsInput) {
+      $("#check_in, #check_out").change(function() {
+        var checkIn = new Date($("#check_in").val());
+        var checkOut = new Date($("#check_out").val());
+        if (checkIn && checkOut && checkOut > checkIn) {
+          var diffTime = Math.abs(checkOut - checkIn);
+          var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          $("#nights").val(diffDays);
+        } else {
+          $("#nights").val(0);
+        }
+      });
+    }
+
+    // Save booking button - only if element exists
+    if (saveBookingBtn) {
+      $("#saveBooking").click(function() {
+        var bookingDetails = {
+          supplier: $("#supplier").val(),
+          supplierName: $("#supplier_name").val(),
+          supplierType: $("#supplier_type").val(),
+          supplierRef: $("#ref_supp").val(),
+          clientName: $("#client_name").val(),
+          clientPhone: $("#client_phone").val(),
+          clientNationality: $("#nationality").val(),
+          adults: $("#adults").val(),
+          children: $("#children").val(),
+          city: $("#city").val(),
+          hotel: $("#hotel").val(),
+          hotelRef: $("#ref_hotel").val(),
+          roomType: $("#room_type").val(),
+          mealPlan: $("#meal_plan").val(),
+          checkIn: $("#check_in").val(),
+          checkOut: $("#check_out").val(),
+          nights: $("#nights").val(),
+          notes: $("#notes").val()
+        };
+        
+        if (!bookingDetails.clientName || !bookingDetails.hotel || !bookingDetails.checkIn) {
+          Swal.fire('خطأ', 'الرجاء ملء الحقول الأساسية (العميل، الفندق، تاريخ الوصول)', 'warning');
+          return;
+        }
+
+        Swal.fire({
+          title: 'إرسال تأكيد عبر الإيميل',
+          html:
+            '<p>الحجز سيتم حفظه. هل تريد إرسال إيميل تأكيد؟</p>' +
+            '<select id="swal-email" class="form-select">' +
+              '<option value="">-- عدم الإرسال --</option>' +
+              '<option value="info@hotel-example.com">إيميل المورد 1</option>' +
+              '<option value="manager@hotel-example.com">إيميل المورد 2</option>' +
+              '<option value="accounts@your-tourism-company.com">قسم الحسابات</option>' +
+            '</select>' +
+            '<textarea id="swal-notes" class="form-control mt-2" placeholder="ملاحظات إضافية (ستظهر في نص الإيميل)..."></textarea>',
+            
+          showCancelButton: true,
+          confirmButtonText: 'حفظ وإرسال',
+          cancelButtonText: 'إلغاء',
+          showLoaderOnConfirm: true,
+          
+          preConfirm: () => {
+            var email = document.getElementById('swal-email').value;
+            var notes = document.getElementById('swal-notes').value;
+            
+            showLoader();
+
+            return google.script.run
+              .withSuccessHandler(function(response) {
+                hideLoader();
+                Swal.fire('تم!', response, 'success');
+                
+                if(document.getElementById("bookingForm")) {
+                  document.getElementById("bookingForm").reset();
+                }
+                populateSelect("hotel", []);
+              })
+              .withFailureHandler(function(error) {
+                hideLoader();
+                Swal.fire('خطأ!', error.message, 'error');
+              })
+              .addNewBooking(bookingDetails, email, notes);
+          },
+          allowOutsideClick: () => !Swal.isLoading()
+        });
+      });
+    }
   });
 </script>
