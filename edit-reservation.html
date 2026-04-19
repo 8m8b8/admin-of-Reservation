@@ -9,21 +9,38 @@
   <? var appUrl = getUrl(); var url = appUrl; ?>
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
-
-  <?!= include("29lt_bukrabold"); ?>
-  <?!= include("style"); ?>
-
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
   <style>
     :root {
+      --primary-color: #008891;
+      --primary-dark: #006d75;
+      --primary-light: #00a0a9;
+      --secondary-color: #ffb3d1;
+      --accent-color: #ff69b4;
+      --text-dark: #2c3f3f;
+      --text-light: #6c757d;
+      --bg-light: #f8f9fa;
+      --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.1);
+      --shadow-medium: 0 4px 15px rgba(0, 0, 0, 0.15);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       --nav-primary: #008891;
       --nav-primary-dark: #006d75;
-      --nav-shadow: 0 25px 45px rgba(0, 0, 0, 0.12);
+      --nav-accent: rgba(255, 255, 255, 0.18);
+      --nav-shadow: 0 25px 45px rgba(0, 0, 0, 0.18);
+      --nav-highlight: #fef6f0;
+    }
+
+    * {
+      font-family: 'Cairo', sans-serif;
     }
 
     body {
+      background: #f8f9fa;
+      min-height: 100vh;
       margin: 0;
-      background-color: #f7f9fb;
+      padding: 0;
     }
 
     .ghada-hero {
@@ -193,6 +210,494 @@
         align-items: flex-start;
       }
     }
+
+    .form-control, .form-select {
+      text-align: right;
+    }
+    
+    .btn {
+      font-family: "Cairo", sans-serif;
+    }
+    
+    p {
+      font-family: "Cairo", sans-serif;
+      font-size: 18px;
+      color: rgb(44 63 63);
+    }
+    
+    .navbar-nav {
+      padding-right: 0;
+    }
+    
+    .offset-md-1 {
+      margin-right: 8.33333%;
+      margin-left: 0;
+    }
+    
+    /* تنسيقات إضافية للبحث في القائمة المنسدلة */
+    #hotelDropdownContainer {
+      position: relative;
+    }
+    
+    #hotelSearchInput {
+      border-radius: 0.375rem;
+    }
+    
+    .dropdown-item {
+      cursor: pointer;
+      text-align: right;
+    }
+    
+    .dropdown-item:hover, .dropdown-item:focus {
+      background-color: #f8f9fa;
+    }
+    
+    .dropdown-menu {
+      padding: 0;
+    }
+    
+    .dropdown-items-container .dropdown-item.active {
+      background-color: #0d6efd;
+      color: white;
+    }
+    
+    /* تنسيقات إضافية للأطر */
+    .border.rounded {
+      border-color: #dee2e6 !important;
+    }
+    
+    .form-check {
+      margin-bottom: 0.5rem;
+    }
+    
+    .form-check-input {
+      margin-left: 0.5rem;
+    }
+    
+    /* تنسيقات نص اليورو */
+    .input-group-text {
+      background-color: #f8f9fa;
+      border: 1px solid #ced4da;
+      font-size: 12px;
+      color: #6c757d;
+    }
+    
+    /* تنسيقات جديدة للصفوف المدمجة */
+    .three-col-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 1rem;
+    }
+    
+    .three-col-row > div {
+      flex: 1;
+      min-width: 200px;
+    }
+    
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .checkbox-container input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      margin-left: 10px;
+    }
+    
+    .checkbox-container label {
+      margin-bottom: 0;
+    }
+    
+    /* تنسيقات الأزرار الجديدة */
+    .button-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    
+    .button-row .btn {
+      flex: 1;
+      max-width: 200px;
+    }
+    
+    /* محول العملات العائم */
+    #oanda_ecc {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 1000;
+    }
+    
+    #floatingButtonContainer {
+      position: relative;
+    }
+    
+    #toggleWidgetButton {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      transition: transform 0.2s, background-color 0.2s;
+    }
+    
+    #toggleWidgetButton:hover {
+      transform: scale(1.1);
+      background-color: #0056b3;
+    }
+    
+    #floatingWidgetPanel {
+      position: absolute;
+      bottom: 60px;
+      left: 0;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      border: 1px solid #ddd;
+      display: none;
+      width: 300px;
+    }
+    
+    /* تحسينات إضافية */
+    .loading-spinner {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    .loading-spinner.active {
+      display: block;
+    }
+    
+    .spinner-border {
+      width: 3rem;
+      height: 3rem;
+      border-width: 0.3em;
+    }
+    
+    .form-control:invalid, .form-select:invalid {
+      border-color: #dc3545;
+    }
+    
+    .form-control:valid, .form-select:valid {
+      border-color: #28a745;
+    }
+    
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    
+    /* تحسينات للبحث */
+    .hotel-loading {
+      text-align: center;
+      padding: 10px;
+      color: #6c757d;
+    }
+    
+    /* تحسينات للتواريخ */
+    .date-error {
+      border-color: #dc3545 !important;
+    }
+    
+    .error-message {
+      color: #dc3545;
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+      display: none;
+    }
+    
+    .error-message.show {
+      display: block;
+    }
+    
+    /* تحسينات للتحميل */
+    select[disabled] {
+      background-color: #e9ecef;
+      cursor: not-allowed;
+    }
+    
+    /* ========== تصميم هدية الورود الإبداعي ========== */
+    .flower-gift-card {
+      position: relative;
+      background: linear-gradient(135deg, #fff5f5 0%, #ffe5e8 50%, #fff0f5 100%);
+      border: 2px solid #ffb3d1;
+      border-radius: 20px;
+      padding: 25px 30px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(255, 182, 193, 0.2);
+    }
+    
+    .flower-gift-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255, 182, 193, 0.1) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    
+    .flower-gift-card:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 8px 25px rgba(255, 105, 180, 0.3);
+      border-color: #ff69b4;
+    }
+    
+    .flower-gift-card:hover::before {
+      opacity: 1;
+    }
+    
+    .flower-gift-card.active {
+      background: linear-gradient(135deg, #ffe5e8 0%, #ffb3d1 50%, #ff91c4 100%);
+      border-color: #ff1493;
+      box-shadow: 0 8px 30px rgba(255, 20, 147, 0.4);
+      animation: flowerPulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes flowerPulse {
+      0%, 100% {
+        box-shadow: 0 8px 30px rgba(255, 20, 147, 0.4);
+      }
+      50% {
+        box-shadow: 0 8px 40px rgba(255, 20, 147, 0.6);
+      }
+    }
+    
+    .flower-gift-content {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .flower-icon-wrapper {
+      flex-shrink: 0;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #ff69b4 0%, #ff1493 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(255, 20, 147, 0.3);
+      transition: all 0.4s ease;
+      animation: flowerRotate 3s ease-in-out infinite;
+    }
+    
+    @keyframes flowerRotate {
+      0%, 100% {
+        transform: rotate(0deg) scale(1);
+      }
+      25% {
+        transform: rotate(-5deg) scale(1.05);
+      }
+      75% {
+        transform: rotate(5deg) scale(1.05);
+      }
+    }
+    
+    .flower-gift-card.active .flower-icon-wrapper {
+      animation: flowerRotate 1s ease-in-out infinite, flowerBounce 0.6s ease;
+      box-shadow: 0 6px 20px rgba(255, 20, 147, 0.5);
+    }
+    
+    @keyframes flowerBounce {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+    }
+    
+    .flower-icon {
+      width: 35px;
+      height: 35px;
+      color: white;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    }
+    
+    .flower-gift-text {
+      flex: 1;
+    }
+    
+    .flower-label {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      user-select: none;
+    }
+    
+    .flower-checkbox {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .flower-checkmark {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 28px;
+      height: 28px;
+      border: 3px solid #ff69b4;
+      border-radius: 8px;
+      background: white;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .flower-label {
+      position: relative;
+      padding-right: 40px;
+    }
+    
+    .flower-checkbox:checked ~ .flower-checkmark {
+      background: linear-gradient(135deg, #ff69b4 0%, #ff1493 100%);
+      border-color: #ff1493;
+      transform: scale(1.1);
+    }
+    
+    .flower-checkbox:checked ~ .flower-checkmark::after {
+      content: '✓';
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      animation: checkmarkAppear 0.3s ease;
+    }
+    
+    @keyframes checkmarkAppear {
+      0% {
+        transform: scale(0) rotate(-180deg);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+      }
+    }
+    
+    .flower-title {
+      font-size: 22px;
+      font-weight: bold;
+      color: #d63384;
+      transition: all 0.3s ease;
+      font-family: "Cairo", sans-serif;
+    }
+    
+    .flower-gift-card:hover .flower-title {
+      color: #ff1493;
+    }
+    
+    .flower-gift-card.active .flower-title {
+      color: #fff;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    .flower-subtitle {
+      font-size: 14px;
+      color: #999;
+      transition: all 0.3s ease;
+      font-family: "Cairo", sans-serif;
+    }
+    
+    .flower-gift-card.active .flower-subtitle {
+      color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .flower-particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      border-radius: 20px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .flower-gift-card.active .flower-particles {
+      opacity: 1;
+    }
+    
+    .particle {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: radial-gradient(circle, #ff69b4 0%, transparent 70%);
+      border-radius: 50%;
+      animation: particleFloat 3s ease-in-out infinite;
+    }
+    
+    @keyframes particleFloat {
+      0% {
+        transform: translateY(100%) translateX(0) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100%) translateX(20px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+    
+    /* تحسينات للشاشات الصغيرة */
+    @media (max-width: 768px) {
+      .flower-gift-card {
+        padding: 20px;
+      }
+      
+      .flower-icon-wrapper {
+        width: 50px;
+        height: 50px;
+      }
+      
+      .flower-icon {
+        width: 28px;
+        height: 28px;
+      }
+      
+      .flower-title {
+        font-size: 18px;
+      }
+      
+      .flower-subtitle {
+        font-size: 12px;
+      }
+    }
   </style>
 
 </head>
@@ -267,19 +772,89 @@
             }
           })();
       const currentPage = document.body.dataset.page || 'index';
+      
+      const publicPages = ['index', 'Add-client', 'add-tour', 'add-hotel', 'manage-reservations', 'edit-reservation'];
+      const protectedPages = ['SUPPLIER', 'manage-statistics', 'mediator', 'payments'];
+      const PASSWORD = 'admin966';
+      const AUTH_KEY = 'ghada_admin_auth';
+      
+      function isAuthenticated() {
+        try {
+          return sessionStorage.getItem(AUTH_KEY) === 'true';
+        } catch (e) {
+          return false;
+        }
+      }
+      
+      function setAuthenticated(value) {
+        try {
+          if (value) {
+            sessionStorage.setItem(AUTH_KEY, 'true');
+          } else {
+            sessionStorage.removeItem(AUTH_KEY);
+          }
+        } catch (e) {}
+      }
+      
+      function isCurrentPagePublic() {
+        return publicPages.includes(currentPage);
+      }
+      
+      function isTargetPageProtected(targetPage) {
+        return protectedPages.includes(targetPage);
+      }
+      
+      function showPasswordPrompt(targetUrl) {
+        Swal.fire({
+          title: 'صفحة محمية',
+          text: 'أدخل كلمة المرور للوصول إلى هذه الصفحة',
+          input: 'password',
+          inputPlaceholder: 'كلمة المرور',
+          showCancelButton: true,
+          confirmButtonText: 'دخول',
+          cancelButtonText: 'إلغاء',
+          confirmButtonColor: '#008891',
+          inputAttributes: {
+            autocapitalize: 'off',
+            autocorrect: 'off'
+          },
+          preConfirm: (password) => {
+            if (password === PASSWORD) {
+              return true;
+            } else {
+              Swal.showValidationMessage('كلمة المرور غير صحيحة');
+              return false;
+            }
+          }
+        }).then((result) => {
+          if (result.isConfirmed) {
+            setAuthenticated(true);
+            window.top.location.href = targetUrl;
+          }
+        });
+      }
+      
       navBar.querySelectorAll('.ghada-nav-item').forEach((button) => {
         const targetPage = button.dataset.page;
         if (targetPage === currentPage) {
           button.classList.add('active');
           button.setAttribute('aria-current', 'page');
         }
-        button.addEventListener('click', () => {
+        button.addEventListener('click', (event) => {
           if (!targetPage || !baseUrl || targetPage === currentPage) {
             return;
           }
+          
           const targetUrl = targetPage === 'index'
             ? baseUrl
             : `${baseUrl}?page=${targetPage}`;
+          
+          if (isTargetPageProtected(targetPage) && isCurrentPagePublic() && !isAuthenticated()) {
+            event.preventDefault();
+            showPasswordPrompt(targetUrl);
+            return;
+          }
+          
           window.top.location.href = targetUrl;
         });
       });
@@ -289,9 +864,12 @@
   <div class="container-lg px-0" id="content">
     <div>
       <form id="registration-form">
+        <input type="hidden" id="paymentStatus" name="paymentStatus" value="">
+        <input type="hidden" id="regDate" name="regDate" value="">
+        <input type="hidden" id="sellerEmail" name="sellerEmail" value="">
+
         <div class="form-group mb-3 bg-white">
           <div id="formdiv" class="mx-0">
-            <!-- معلومات البائع -->
             <div class="row pt-4">
               <div class="col-md-12">
                 <h1 class="text-center fw-bold" style="color: rgb(0,136,145);font-size: 20px;line-height: 50px;">
@@ -301,15 +879,20 @@
             </div>
 
             <div class="row mx-0 px-2 py-3">
-              <div class="col-12 col-md-9 mx-auto">
-                <p class="mb-2"><strong>اسم البائع</strong></p>
-                <select class="form-select mb-4" name="seller" id="sellerSelect" required></select>
-
-                <p class="mb-2"><strong>المورد</strong></p>
-                <select class="form-select mb-4" name="supplier" id="supplierSelect" required></select>
+              <div class="col-12 col-md-9 mb-3 mx-auto">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong>اسم البائع</strong></p>
+                        <select class="form-select" name="seller" id="sellerSelect" required></select>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong>المورد</strong></p>
+                        <select class="form-select" name="supplier" id="supplierSelect" required></select>
+                    </div>
+                  
+                </div>
               </div>
             </div>
-            <!-- معلومات العميل -->
             <div class="row pt-4">
               <div class="col-md-12">
                 <h1 class="text-center fw-bold" style="color: rgb(0,136,145);font-size: 20px;line-height: 50px;">
@@ -320,21 +903,29 @@
 
             <div class="row mx-0 px-2 py-3">
               <div class="col-12 col-md-9 mx-auto">
-                <p class="mb-2"><strong>اسم العميل</strong></p>
-                <input class="form-control mb-4" type="text" name="name" required placeholder="أدخل اسم العميل">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong>اسم العميل</strong></p>
+                        <input class="form-control mb-4" type="text" name="name" required placeholder="أدخل اسم العميل" />
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong>رقم الهاتف</strong></p>
+                        <input class="form-control mb-4" type="text" name="phone" placeholder="أدخل رقم الهاتف"   />
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong>الجنسية</strong></p>
+                        <select class="form-select mb-4" name="nationality" id="nationalitySelect" required></select>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong>عدد الأشخاص</strong></p>
+                        <select class="form-select mb-4" name="personCount" id="personSelect" required></select>
+                    </div>
+                </div>
 
-                <p class="mb-2"><strong>رقم الهاتف</strong></p>
-                <input class="form-control mb-4" type="text" name="phone" placeholder="أدخل رقم الهاتف">
-
-                <p class="mb-2"><strong>الجنسية</strong></p>
-                <select class="form-select mb-4" name="nationality" id="nationalitySelect" required></select>
-
-                <p class="mb-2"><strong>عدد الأشخاص</strong></p>
-                <select class="form-select mb-4" name="personCount" id="personSelect" required></select>
+            
               </div>
             </div>
 
-            <!-- معلومات الفندق -->
             <div class="row pt-4">
               <div class="col-md-12">
                 <h1 class="text-center fw-bold" style="color: rgb(0,136,145);font-size: 20px;line-height: 50px;">
@@ -345,39 +936,89 @@
 
             <div class="row mx-0 px-2 py-3">
               <div class="col-12 col-md-9 mx-auto gy-3">
-                <p class="mb-2"><strong>المدينة</strong></p>
-                <select class="form-select mb-4" name="city" id="citySelect" onchange="onCityChange()"
-                  required></select>
+                <div class="row">
+                    <div class="col-md-4">
+                        <p class="mb-2"><strong>المدينة</strong></p>
+                        <select class="form-select mb-4" name="city" id="citySelect" onchange="onCityChange()" required></select>
 
-                <p class="mb-2"><strong>الفندق</strong></p>
-                <select class="form-select mb-4" name="hotel" id="hotelSelect" required></select>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="mb-2"><strong>الفندق</strong></p>
+                        <div class="dropdown mb-4" id="hotelDropdownContainer">
+                          <select class="form-select" name="hotel" id="hotelSelect" required style="display: none;"></select>
+                          <button class="form-select text-start" type="button" id="hotelDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span id="hotelSelectedText">اختر فندق</span>
+                          </button>
+                          <div class="dropdown-menu w-100" aria-labelledby="hotelDropdownButton" id="hotelDropdownMenu">
+                            <div class="px-3 py-2 border-bottom">
+                              <input type="text" class="form-control" id="hotelSearchInput" placeholder="ابحث عن فندق..." autocomplete="off">
+                            </div>
+                            <div class="dropdown-items-container" id="hotelDropdownItems" style="max-height: 200px; overflow-y: auto;">
+                              </div>
+                          </div>
+                        </div>
 
-                <p class="mb-2"><strong>ايدي تأكيد حجز الفندق</strong></p>
-                <input class="form-control mb-4" name="HotelConformation" type="text" required placeholder="رقم الحجز" inputmode="decimal"/>
+                    </div>
+                    <div class="col-md-4">
 
-                <p class="mb-2"><strong>تاريخ الوصول</strong></p>
-                <input class="form-control mb-4" type="date" name="chekInDate">
+                        <p class="mb-2"><strong>ايدي تأكيد حجز الفندق</strong></p>
+                        <input class="form-control mb-4" name="HotelConformation" type="text" required placeholder="رقم الحجز" inputmode="decimal"/>
 
-                <p class="mb-2"><strong>تاريخ المغادرة</strong></p>
-                <input class="form-control mb-4" type="date" name="chekOutDate">
+                    </div>
+                    
+                </div>
 
-                <p class="mb-2"><strong>عدد الغرف</strong></p>
-                <select class="form-select mb-4" name="roomCount" id="numberSelect" required></select>
 
-                <p class="mb-2"><strong>نوع الغرفة</strong></p>
-                <select class="form-select mb-4" name="roomType" id="roomSelect" required></select>
 
-                <p class="mb-2"><strong>نوع الإطلالة</strong></p>
-                <select class="form-select mb-4" name="viewType" id="viewSelect" required></select>
+                <div class="row">
+                  <div class="col-md-6">
+                    <p class="mb-2"><strong>تاريخ الوصول</strong></p>
+                    <input class="form-control mb-4" type="date" name="chekInDate" id="chekInDate" required />
+                    <div class="error-message" id="checkInDateError"></div>
+                  </div>
+                  <div class="col-md-6">
+                    <p class="mb-2"><strong>تاريخ المغادرة</strong></p>
+                    <input class="form-control mb-4" type="date" name="chekOutDate" id="chekOutDate" required />
+                    <div class="error-message" id="checkOutDateError"></div>
+                  </div>
+                </div>
 
-                <p class="mb-2"><strong>الوجبات</strong></p>
-                <select class="form-select mb-4" name="meal" id="mealSelect" required></select>
+                <div class="row">
+                    <div class="col-md-3">
+                        <p class="mb-2"><strong>عدد الغرف</strong></p>
+                        <select class="form-select mb-4" name="roomCount" id="numberSelect" required>
+                          <option value="1" selected>1</option>
+                        </select>
+                  
+                    </div>
+                    <div class="col-md-3">
+                 
+                        <p class="mb-2"><strong>نوع الغرفة</strong></p>
+                        <select class="form-select mb-4" name="roomType" id="roomSelect" required></select>
+                    </div>
+                    <div class="col-md-3">
+
+                        
+                        
+                        
+                        <p class="mb-2"><strong>نوع الإطلالة</strong></p>
+                        <select class="form-select mb-4" name="viewType" id="viewSelect" required></select>
+                        
+                    </div>
+                    <div class="col-md-3">
+
+                        <p class="mb-2"><strong>الوجبات</strong></p>
+                        <select class="form-select mb-4" name="meal" id="mealSelect" required></select>
+                        
+                    </div>
+                    
+                </div>
+
               </div>
             </div>
 
 
 
-            <!-- المعلومات المالية -->
             <div class="row pt-4">
               <div class="col-md-12">
                 <h1 class="text-center fw-bold" style="color: rgb(0,136,145);font-size: 20px;line-height: 50px;">
@@ -388,104 +1029,235 @@
 
             <div class="row mx-0 px-2 py-3">
               <div class="col-12 col-md-9 mx-auto">
-                <p class="mb-2"><strong>سعر الفندق</strong></p>
-                <input class="form-control mb-4" name="hotelPrice" type="text" required placeholder="سعر الفندق"
-                  inputmode="decimal">
-                <input class="form-control mb-4" name="hotelEuroPrice" type="text" required
-                  placeholder="سعر الفندق باليورو €" inputmode="decimal">
+                <div class="border rounded p-3 mb-4 bg-light">
+                  <p class="mb-2"><strong>سعر الفندق</strong></p>
+                  <div class="row align-items-center">
+                    <div class="col-md-8">
+                      <input class="form-control mb-3 price-input" name="hotelPrice" type="text" required placeholder="سعر الفندق" inputmode="decimal" value="0" />
+                      <div class="input-group">
+                        <span class="input-group-text" style="font-size: 12px; min-width: 100px;">القيمة باليورو</span>
+                        <input class="form-control euro-input" name="hotelEuroPrice" type="text" required inputmode="decimal" value="0" />
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="d-flex flex-wrap gap-2">
+                        <div class="form-check">
+                          <input class="form-check-input currency-radio" type="radio" name="hotelCurrency" id="hotelCurrencySAR" value="SAR" checked>
+                          <label class="form-check-label" for="hotelCurrencySAR">SAR</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input currency-radio" type="radio" name="hotelCurrency" id="hotelCurrencyEUR" value="EUR">
+                          <label class="form-check-label" for="hotelCurrencyEUR">EUR</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input currency-radio" type="radio" name="hotelCurrency" id="hotelCurrencyUSD" value="USD">
+                          <label class="form-check-label" for="hotelCurrencyUSD">USD</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input currency-radio" type="radio" name="hotelCurrency" id="hotelCurrencyTRY" value="TRY">
+                          <label class="form-check-label" for="hotelCurrencyTRY">TRY</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-                <p class="mb-2"><strong>سعر البيع</strong></p>
-                <input class="form-control mb-4" name="sellingPrice" type="text" required placeholder="سعر البيع"
-                  inputmode="decimal">
-                <input class="form-control mb-4" name="sellingEuroPrice" type="text" required
-                  placeholder="سعر البيع باليورو €" inputmode="decimal">
+                <div class="border rounded p-3 mb-4 bg-light">
+                  <p class="mb-2"><strong>سعر البيع</strong></p>
+                  <div class="row align-items-center">
+                    <div class="col-md-8">
+                      <input class="form-control mb-3 price-input" name="sellingPrice" type="text" required placeholder="سعر البيع" inputmode="decimal" value="0" />
+                      <div class="input-group">
+                        <span class="input-group-text" style="font-size: 12px; min-width: 100px;">القيمة باليورو</span>
+                        <input class="form-control euro-input" name="sellingEuroPrice" type="text" required inputmode="decimal" value="0" />
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="d-flex flex-wrap gap-2">
+                        <div class="form-check">
+                          <input class="form-check-input currency-radio" type="radio" name="sellingCurrency" id="sellingCurrencySAR" value="SAR" checked>
+                          <label class="form-check-label" for="sellingCurrencySAR">SAR</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input currency-radio" type="radio" name="sellingCurrency" id="sellingCurrencyEUR" value="EUR">
+                          <label class="form-check-label" for="sellingCurrencyEUR">EUR</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input currency-radio" type="radio" name="sellingCurrency" id="sellingCurrencyUSD" value="USD">
+                          <label class="form-check-label" for="sellingCurrencyUSD">USD</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input currency-radio" type="radio" name="sellingCurrency" id="sellingCurrencyTRY" value="TRY">
+                          <label class="form-check-label" for="sellingCurrencyTRY">TRY</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-                <p class="mb-2"><strong>نوع العملة</strong></p>
-                <select class="form-select mb-4" name="hotelCurrency" id="currencySelect1" required></select>
-
-                <p class="mb-2"><strong>الضريبة</strong></p>
-                <select class="form-select mb-4" name="kdv" id="kdvSelect" required></select>
-
-                <p class="mb-2"><strong>عمولة الفندق</strong></p>
-                <input class="form-control mb-4" name="hotelComm" type="text" placeholder="أدخل عمولة الفندق"
-                  inputmode="decimal">
-
-                <p class="mb-2"><strong>نسبة عمولة الفندق %</strong></p>
-                <input class="form-control mb-4" name="hotelCommPrc" type="text" placeholder="أدخل عمولة الفندق %"
-                  inputmode="decimal">
-
-                <p class="mb-2"><strong>المبلغ المرسل</strong></p>
-                <input class="form-control mb-4" name="amountSent" required type="text" placeholder="المبلغ المرسل"
-                  inputmode="decimal">
-                <input class="form-control mb-4" name="amountEuroSent" required type="text"
-                  placeholder="المبلغ المرسل باليورو €" inputmode="decimal">
-
+                <div class="border rounded p-3 mb-4 bg-light">
+                  <p class="mb-2"><strong>العربون</strong></p>
+                  <div class="row align-items-center">
+                    <div class="col-md-8">
+                      <input class="form-control mb-3 price-input" name="amountSent" required type="text" placeholder="العربون" inputmode="decimal" value="0" />
+                      <div class="input-group">
+                        <span class="input-group-text" style="font-size: 12px; min-width: 100px;">القيمة باليورو</span>
+                        <input class="form-control euro-input" name="amountEuroSent" required type="text" inputmode="decimal" value="0" />
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="d-flex flex-wrap gap-2">
+                        <div class="form-check">
+                          <input class="form-check-input currency-radio" type="radio" name="amountSentCurrency" id="amountSentCurrencySAR" value="SAR" checked>
+                          <label class="form-check-label" for="amountSentCurrencySAR">SAR</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input currency-radio" type="radio" name="amountSentCurrency" id="amountSentCurrencyEUR" value="EUR">
+                          <label class="form-check-label" for="amountSentCurrencyEUR">EUR</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input currency-radio" type="radio" name="amountSentCurrency" id="amountSentCurrencyUSD" value="USD">
+                          <label class="form-check-label" for="amountSentCurrencyUSD">USD</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input currency-radio" type="radio" name="amountSentCurrency" id="amountSentCurrencyTRY" value="TRY">
+                          <label class="form-check-label" for="amountSentCurrencyTRY">TRY</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   
-                <p class="mb-2"><strong>طريقة استلام العربون</strong></p>
-                <select class="form-select mb-4" name="ra3bon" id="ra3bonSelect" required></select>
+                  <div class="mt-3">
+                    <p class="mb-2"><strong>طريقة استلام العربون</strong></p>
+                    <select class="form-select" name="ra3bon" id="ra3bonSelect" required></select>
+                  </div>
+                </div>
 
-                <p class="mb-2"><strong>تكاليف الإرسال</strong></p>
-                <input class="form-control mb-4" name="arrivedAmount" type="text" placeholder="تكاليف الإرسال"
-                  inputmode="decimal">
-                <input class="form-control mb-4" name="arrivedEuroAmount" type="text"
-                  placeholder="تكاليف الإرسال باليورو €" inputmode="decimal">
+                <div class="border rounded p-3 mb-4 bg-light">
+                  <p class="mb-2"><strong>تكاليف الإرسال</strong></p>
+                  <div class="row align-items-center">
+                    <div class="col-md-8">
+                      <input class="form-control mb-3 price-input" name="arrivedAmount" type="text" placeholder="تكاليف الإرسال" inputmode="decimal" value="0" />
+                      <div class="input-group">
+                        <span class="input-group-text" style="font-size: 12px; min-width: 100px;">القيمة باليورو</span>
+                        <input class="form-control euro-input" name="arrivedEuroAmount" type="text" inputmode="decimal" value="0" />
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="d-flex flex-wrap gap-2">
+                        <div class="form-check">
+                          <input class="form-check-input currency-radio" type="radio" name="arrivedCurrency" id="arrivedCurrencySAR" value="SAR" checked>
+                          <label class="form-check-label" for="arrivedCurrencySAR">SAR</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input currency-radio" type="radio" name="arrivedCurrency" id="arrivedCurrencyEUR" value="EUR">
+                          <label class="form-check-label" for="arrivedCurrencyEUR">EUR</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input currency-radio" type="radio" name="arrivedCurrency" id="arrivedCurrencyUSD" value="USD">
+                          <label class="form-check-label" for="arrivedCurrencyUSD">USD</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input currency-radio" type="radio" name="arrivedCurrency" id="arrivedCurrencyTRY" value="TRY">
+                          <label class="form-check-label" for="arrivedCurrencyTRY">TRY</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-                <p class="mb-2"><strong>نوع العملة</strong></p>
-                <select class="form-select mb-4" name="amountSentCurrency" id="currencySelect2" required></select>
+                <div class="border rounded p-3 mb-4 bg-light">
+                  <p class="mb-2"><strong>الدفعة الثاني</strong></p>
+                  <div class="row align-items-center">
+                    <div class="col-md-8">
+                      <input class="form-control mb-3 price-input" name="remainingAmount" type="text" placeholder="الدفعة الثاني" inputmode="decimal" value="0" />
+                      <div class="input-group">
+                        <span class="input-group-text" style="font-size: 12px; min-width: 100px;">القيمة باليورو</span>
+                        <input class="form-control euro-input" name="remainingEuroAmount" type="text" inputmode="decimal" value="0" />
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="d-flex flex-wrap gap-2">
+                        <div class="form-check">
+                          <input class="form-check-input currency-radio" type="radio" name="amountRemainingCurrency" id="amountRemainingCurrencySAR" value="SAR" checked>
+                          <label class="form-check-label" for="amountRemainingCurrencySAR">SAR</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input currency-radio" type="radio" name="amountRemainingCurrency" id="amountRemainingCurrencyEUR" value="EUR">
+                          <label class="form-check-label" for="amountRemainingCurrencyEUR">EUR</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input currency-radio" type="radio" name="amountRemainingCurrency" id="amountRemainingCurrencyUSD" value="USD">
+                          <label class="form-check-label" for="amountRemainingCurrencyUSD">USD</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input currency-radio" type="radio" name="amountRemainingCurrency" id="amountRemainingCurrencyTRY" value="TRY">
+                          <label class="form-check-label" for="amountRemainingCurrencyTRY">TRY</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="mt-3">
+                    <p class="mb-2"><strong>طريقة التحصيل</strong></p>
+                    <select class="form-select" name="collectionMethod" id="collectionSelect" required></select>
+                  </div>
+                </div>
 
-                <p class="mb-2"><strong>المبلغ المتبقي</strong></p>
-                <input class="form-control mb-4" name="remainingAmount" type="text" placeholder="المبلغ المتبقي"
-                  inputmode="decimal">
-                <input class="form-control mb-4" name="remainingEuroAmount" type="text"
-                  placeholder="المبلغ المتبقي باليورو €" inputmode="decimal">
-
-                <p class="mb-2"><strong>نوع العملة</strong></p>
-                <select class="form-select mb-4" name="amountRemainingCurrency" id="currencySelect3" required></select>
+                <div class="three-col-row">
+                  <div>
+                    <p class="mb-2"><strong>الضريبة</strong></p>
+                    <select class="form-select" name="kdv" id="kdvSelect" required>
+                      </select>
+                  </div>
+                  <div>
+                    <p class="mb-2"><strong>عمولة الفندق</strong></p>
+                    <input class="form-control price-input" name="hotelComm" type="text" placeholder="أدخل عمولة الفندق" inputmode="decimal" value="0" />
+                  </div>
+                  <div>
+                    <p class="mb-2"><strong>نسبة عمولة الفندق %</strong></p>
+                    <input class="form-control price-input" name="hotelCommPrc" type="text" placeholder="أدخل عمولة الفندق %" inputmode="decimal" value="0" />
+                  </div>
+                </div>
 
                 <p class="mb-2"><strong>حالة الحجز</strong></p>
                 <select class="form-select mb-4" name="reservationState" id="reservationSelect" required></select>
 
-                <p class="mb-2"><strong>طريقة التحصيل</strong></p>
-                <select class="form-select mb-4" name="collectionMethod" id="collectionSelect" required></select>
-
                 <p class="mb-2"><strong>ملاحظات</strong></p>
-                <textarea class="form-control mb-4" style="font-size:14px;" placeholder="أدخل ملاحظاتك هنا"
-                  name="note"></textarea>
-
-              </div>
-            </div>
-            <!-- الخدمات الإضافية -->
-            <div class="row pt-4">
-              <div class="col-md-12">
-                <h1 class="text-center fw-bold" style="color: rgb(0,136,145);font-size: 20px;line-height: 50px;">
-                  <strong><span>الخدمات الإضافية</span></strong>
-                </h1>
-              </div>
-            </div>
-            <div class="row mx-0 px-2 py-3">
-              <div class="col-12 col-md-9 mx-auto">
-
-                <p class="mb-2"><strong>الخدمة المجانية</strong></p>
-                <select class="form-select mb-4" name="service" id="serviceSelect"></select>
-
-                <p class="mb-2"><strong>سعر الخدمة</strong></p>
-                <input class="form-control mb-4" name="servicePrice" type="text" placeholder="سعر الخدمة علينا"
-                  inputmode="decimal">
-                <input class="form-control mb-4" name="serviceEuroPrice" type="text"
-                  placeholder="€ سعر الخدمة علينا باليورو" inputmode="decimal">
-                <input class="form-control mb-4" name="serviceRemainingPrice" type="text" placeholder="سعر مبيع الخدمة"
-                  inputmode="decimal">
-                <input class="form-control mb-4" name="serviceRemainingEuroPrice" type="text"
-                  placeholder="€ سعر مبيع الخدمة باليورو" inputmode="decimal">
-
-                <p class="mb-2"><strong>هدية الورود</strong></p>
-                <select class="form-select mb-4" name="freeFlower" id="flowerSelect"></select>
-
+                <textarea class="form-control mb-4" style="font-size: 14px" placeholder="أدخل ملاحظاتك هنا" name="note"></textarea>
               </div>
             </div>
 
+            <div class="row justify-content-center align-items-center py-4">
+              <div class="col-12 col-md-8">
+                <div class="flower-gift-card" id="flowerGiftCard">
+                  <div class="flower-gift-content">
+                    <div class="flower-icon-wrapper">
+                      <svg class="flower-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg ">
+                        <path d="M12 3C11 3 10 3.5 9.5 4.5C9 5.5 9.5 6.5 10.5 7C11.5 7.5 12.5 7.5 13.5 7C14.5 6.5 15 5.5 14.5 4.5C14 3.5 13 3 12 3Z" fill="currentColor" opacity="0.9"/>
+                        <path d="M8 7C7 7 6 7.5 5.5 8.5C5 9.5 5.5 10.5 6.5 11C7.5 11.5 8.5 11.5 9.5 11C10.5 10.5 11 9.5 10.5 8.5C10 7.5 9 7 8 7Z" fill="currentColor" opacity="0.8"/>
+                        <path d="M16 7C15 7 14 7.5 13.5 8.5C13 9.5 13.5 10.5 14.5 11C15.5 11.5 16.5 11.5 17.5 11C18.5 10.5 19 9.5 18.5 8.5C18 7.5 17 7 16 7Z" fill="currentColor" opacity="0.8"/>
+                        <path d="M12 9C11 9 10 9.5 9.5 10.5C9 11.5 9.5 12.5 10.5 13C11.5 13.5 12.5 13.5 13.5 13C14.5 12.5 15 11.5 14.5 10.5C14 9.5 13 9 12 9Z" fill="currentColor" opacity="0.85"/>
+                        <circle cx="12" cy="11" r="2.5" fill="currentColor" opacity="0.7"/>
+                        <circle cx="12" cy="11" r="1.5" fill="#FFD700"/>
+                        <rect x="11.5" y="13.5" width="1" height="4.5" fill="#228B22" opacity="0.6" rx="0.5"/>
+                        <path d="M11 18L12 19L13 18Z" fill="#228B22" opacity="0.6"/>
+                      </svg>
+                    </div>
+                    <div class="flower-gift-text">
+                      <label for="flowerCheckbox" class="flower-label">
+                        <input type="checkbox" id="flowerCheckbox" name="freeFlower" value="نعم" class="flower-checkbox">
+                        <span class="flower-checkmark"></span>
+                        <span class="flower-title">هدية الورود</span>
+                        <span class="flower-subtitle"></span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="flower-particles" id="flowerParticles"></div>
+                </div>
+              </div>
+            </div>
 
-            <!-- معلومات الوسيط -->
             <div class="row pt-4">
               <div class="col-md-12">
                 <h1 class="text-center fw-bold" style="color: rgb(0,136,145);font-size: 20px;line-height: 50px;">
@@ -495,17 +1267,21 @@
             </div>
             <div class="row mx-0 px-2 py-3">
               <div class="col-12 col-md-9 mx-auto">
+                <div class="row">
 
-                <p class="mb-2"><strong>اسم الوسيط</strong></p>
-                <select class="form-select mb-4" name="mediator" id="mediatorSelect"></select>
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong>اسم الوسيط</strong></p>
+                        <select class="form-select mb-4" name="mediator" id="mediatorSelect"></select>
+                    </div>
 
-                <p class="mb-2"><strong>العمولة</strong></p>
-                <input class="form-control mb-4" name="commission" type="text" placeholder="أدخل قيمة العمولة"
-                  inputmode="decimal">
-
-              </div>
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong>العمولة</strong></p>
+                        <input class="form-control mb-4 price-input" name="commission" type="text" placeholder="أدخل قيمة العمولة" inputmode="decimal" value="0" />
+                    </div>
+              
+                </div>
             </div>
-            <!-- أزرار التحكم -->
+            
             <div class="row d-flex justify-content-center" style="margin-right:0px;margin-left:0px;padding-top:24px;">
               <div class="col col-5 text-start">
                 <button class="btn btn-danger btn-lg" id="reset" type="reset">مسح</button>
@@ -521,7 +1297,6 @@
   </div>
   <input type="hidden" value="<?= url ?>" id="url" />
 
-  <!-- محول العملات -->
   <div id="oanda_ecc">
     <div id="floatingButtonContainer">
       <button id="toggleWidgetButton">💱</button>
@@ -546,37 +1321,13 @@
 
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
-
-    body {
-      font-family: 'Cairo', sans-serif;
-      direction: rtl;
-    }
-
-    .form-control,
-    .form-select {
-      text-align: right;
-    }
-
-    .btn {
-      font-family: 'Cairo', sans-serif;
-    }
-
-    p {
-      font-family: 'Cairo', sans-serif;
-      font-size: 18px;
-      color: rgb(44 63 63);
-    }
-
-    .navbar-nav {
-      padding-right: 0;
-    }
-
-    .offset-md-1 {
-      margin-right: 8.33333%;
-      margin-left: 0;
-    }
+    body { font-family: 'Cairo', sans-serif; direction: rtl; }
+    .form-control, .form-select { text-align: right; }
+    .btn { font-family: 'Cairo', sans-serif; }
+    p { font-family: 'Cairo', sans-serif; font-size: 18px; color: rgb(44 63 63); }
+    .navbar-nav { padding-right: 0; }
+    .offset-md-1 { margin-right: 8.33333%; margin-left: 0; }
   </style>
-</body>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
   integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
@@ -590,24 +1341,17 @@
       { selectId: 'viewSelect', columnName: 'VIEW TYPE', placeholder: 'الاطلالة' },
       { selectId: 'mealSelect', columnName: 'MEALS', placeholder: 'نوع الوجبات' },
       { selectId: "ra3bonSelect", columnName: "RA3BON", placeholder: "طريقة تحصيل العربون"},
-      { selectId: 'currencySelect1', columnName: 'CURRENCY TYPE', placeholder: 'العملة' },
-      { selectId: 'currencySelect2', columnName: 'CURRENCY TYPE', placeholder: 'العملة' },
-      { selectId: 'currencySelect3', columnName: 'CURRENCY TYPE', placeholder: 'العملة' },
       { selectId: 'flowerSelect', columnName: 'FLOWER', placeholder: 'هل تم اعطاء العميل ورود؟' },
       { selectId: 'kdvSelect', columnName: 'KDV', placeholder: 'الضريبة' },
       { selectId: 'reservationSelect', columnName: 'RESERVATION STATE', placeholder: 'حالة الحجز' },
       { selectId: 'collectionSelect', columnName: 'COLLECTION METHOD', placeholder: 'طريقة التحصيل' },
-      { selectId: 'mediatorSelect', columnName: 'MEDIATOR', placeholder: 'اسم الوسيط' },
-      { selectId: 'serviceSelect', columnName: 'SERVICE', placeholder: 'اسم الخدمة' },
-
+      { selectId: 'mediatorSelect', columnName: 'MEDIATOR', placeholder: 'اسم الوسيط' }
     ];
 
 document.getElementById("reset").addEventListener("click", async function () {
-    // Wait for all columns to clear
     await Promise.all(selectList.map(({ selectId, columnName, placeholder }) =>
         clearColumn(selectId, columnName, placeholder)
     ));
-
     await onCityChange();
     await getColumns();
     document.getElementById('citySelect').value = '';
@@ -618,15 +1362,41 @@ document.getElementById("toggleWidgetButton").addEventListener("click", function
     widgetPanel.style.display = (widgetPanel.style.display === "none" || widgetPanel.style.display === "") ? "block" : "none";
 });
 
-// Close widget when clicking outside
 document.addEventListener("click", function (event) {
     const widgetPanel = document.getElementById("floatingWidgetPanel");
     const toggleButton = document.getElementById("toggleWidgetButton");
-
     if (!widgetPanel.contains(event.target) && !toggleButton.contains(event.target)) {
         widgetPanel.style.display = "none";
     }
 });
+
+const flowerCheckbox = document.getElementById('flowerCheckbox');
+const flowerCard = document.getElementById('flowerGiftCard');
+
+if (flowerCheckbox && flowerCard) {
+    flowerCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+            flowerCard.classList.add('active');
+            createParticles();
+        } else {
+            flowerCard.classList.remove('active');
+        }
+    });
+}
+
+function createParticles() {
+    const container = document.getElementById('flowerParticles');
+    if (!container) return;
+    container.innerHTML = '';
+    for (let i = 0; i < 10; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 2 + 's';
+        particle.style.backgroundColor = `hsl(${330 + Math.random() * 30}, 100%, 70%)`;
+        container.appendChild(particle);
+    }
+}
 
 async function populateCities() {
     return new Promise((resolve, reject) => {
@@ -634,8 +1404,6 @@ async function populateCities() {
             console.log("Cities received:", cities);
             const citySelect = document.getElementById('citySelect');
             citySelect.innerHTML = '';
-
-            // Placeholder
             const placeholderOption = document.createElement('option');
             placeholderOption.value = '';
             placeholderOption.textContent = 'اسم المدينة';
@@ -649,8 +1417,7 @@ async function populateCities() {
                 option.textContent = city;
                 citySelect.appendChild(option);
             });
-
-            resolve(); // Resolve after completion
+            resolve();
         }).withFailureHandler(reject).getCities();
     });
 }
@@ -658,7 +1425,6 @@ async function populateCities() {
 function clearColumn(selectId, columnName, placeholder) {
     const selectElement = document.getElementById(selectId);
     selectElement.innerHTML = ""; 
-
     const placeholderOption = document.createElement("option");
     placeholderOption.value = "";
     placeholderOption.textContent = placeholder;
@@ -670,7 +1436,6 @@ function clearColumn(selectId, columnName, placeholder) {
 async function getColumns() {
     await populateCities();
     generateRoomCount();
-
     await Promise.all(selectList.map(({ selectId, columnName, placeholder }) =>
         getColumn(selectId, columnName, placeholder)
     ));
@@ -682,7 +1447,6 @@ async function getColumn(selectId, columnName, placeholder) {
             google.script.run.withSuccessHandler(resolve).withFailureHandler(reject).getColumnByName(columnName);
         });
 
-        console.log(`${columnName} received:`, column);
         const selectElement = document.getElementById(selectId);
         selectElement.innerHTML = '';
 
@@ -692,6 +1456,14 @@ async function getColumn(selectId, columnName, placeholder) {
         placeholderOption.disabled = true;
         placeholderOption.selected = true;
         selectElement.appendChild(placeholderOption);
+        
+        // إضافة خيار "لا يوجد" للقوائم التي تحتاجه
+        if (selectId === 'kdvSelect' || selectId === 'mediatorSelect') {
+            const noneOption = document.createElement('option');
+            noneOption.value = "لا يوجد";
+            noneOption.textContent = "لا يوجد";
+            selectElement.appendChild(noneOption);
+        }
 
         column.forEach(item => {
             const option = document.createElement('option');
@@ -708,23 +1480,20 @@ async function getColumn(selectId, columnName, placeholder) {
 async function onCityChange() {
     const city = document.getElementById('citySelect').value;
     console.log("Selected City:", city);
-
     return new Promise((resolve, reject) => {
         google.script.run
             .withSuccessHandler((hotels) => {
                 updateHotelDropdown(hotels);
-                resolve(hotels); // Now the promise resolves with the hotel list
+                resolve(hotels);
             })
             .withFailureHandler(reject)
             .getHotelsByCity(city);
     });
 }
 
-
 function generateRoomCount() {
     const select = document.getElementById('numberSelect');
     select.innerHTML = ''; 
-
     for (let i = 1; i <= 30; i++) {
         const option = document.createElement('option');
         option.value = i;
@@ -736,7 +1505,6 @@ function generateRoomCount() {
 function updateHotelDropdown(hotels) {
     const hotelSelect = document.getElementById('hotelSelect');
     hotelSelect.innerHTML = '';
-
     if (hotels && hotels.length) {
         console.log("Hotels received:", hotels);
         hotels.forEach(hotel => {
@@ -760,29 +1528,284 @@ window.onload = async function () {
     console.log("Your email is: " + "<?= userEmail ?>");
 
     await getColumns();
-    await new Promise((resolve, reject) => {
-        google.script.run.withSuccessHandler(populateFormFields).withFailureHandler(reject).getCustomerDataById(customerId);
-    });
+    
+    if (customerId && customerId.trim() !== '') {
+        await new Promise((resolve, reject) => {
+            google.script.run
+                .withSuccessHandler(function(data) {
+                    if (data && data.length > 0) {
+                        populateFormFields(data);
+                        resolve();
+                    } else {
+                        console.error("No data found for customer ID:", customerId);
+                        Swal.fire({
+                            title: "خطأ",
+                            text: "لم يتم العثور على بيانات الحجز",
+                            icon: "error"
+                        });
+                        reject("No data found");
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    console.error("Error loading customer data:", error);
+                    Swal.fire({
+                        title: "خطأ",
+                        text: "فشل تحميل بيانات الحجز: " + error,
+                        icon: "error"
+                    });
+                    reject(error);
+                })
+                .getCustomerDataById(customerId);
+        });
+    } else {
+        console.warn("No customer ID provided");
+    }
 };
 
+function formatDateForInput(dateString) {
+    if (!dateString) return '';
+    try {
+        var date = new Date(dateString);
+        if (isNaN(date.getTime())) return '';
+        const offset = date.getTimezoneOffset();
+        date = new Date(date.getTime() - (offset*60*1000));
+        return date.toISOString().split('T')[0];
+    } catch (e) {
+        console.error("Error formatting date:", e);
+        return '';
+    }
+}
+
+function setRadioValue(name, value) {
+    if (!value) return;
+    const radios = document.getElementsByName(name);
+    for (const radio of radios) {
+        if (radio.value === value.toString()) {
+            radio.checked = true;
+            break;
+        }
+    }
+}
+
+function getRadioValue(name) {
+    const radios = document.getElementsByName(name);
+    for (const radio of radios) {
+        if (radio.checked) {
+            return radio.value;
+        }
+    }
+    return "";
+}
+
+function setSelectValue(selectElement, value) {
+    if (!selectElement || !value) return;
+    const cleanValue = value.toString().trim();
+    selectElement.value = cleanValue;
+    if (selectElement.value !== cleanValue) {
+        for (let i = 0; i < selectElement.options.length; i++) {
+            if (selectElement.options[i].text.trim() === cleanValue || 
+                selectElement.options[i].value.trim() === cleanValue) {
+                selectElement.selectedIndex = i;
+                break;
+            }
+        }
+    }
+}
+
+// دالة لجلب القيمة بشكل آمن حتى لو كانت 0
+function safelyGetValue(value) {
+    if (value === null || value === undefined) return "";
+    return value;
+}
+
 async function populateFormFields(data) {
-    const form = document.getElementById('registration-form');
-    const formFields = form.elements;
     console.log("---------------------------------");
     console.log("Data From Sheet:", data);
-    console.log("Data From Form:", formFields);
+    
+    // ملاحظة: الأرقام هنا تمثل (رقم العمود - 1)
+    
+    // 1: البائع
+    const sellerSelect = document.getElementById('sellerSelect');
+    setSelectValue(sellerSelect, data[1]);
 
-    data.slice(1).forEach((value, index) => {
-        const field = formFields[index];
-        if (field) {
-            field.value = value;
+    // 2: المورد
+    const supplierSelect = document.getElementById('supplierSelect');
+    setSelectValue(supplierSelect, data[2]);
+
+    // 3: اسم العميل
+    const nameInput = document.querySelector('input[name="name"]');
+    if (nameInput) nameInput.value = data[3] || '';
+
+    // 4: رقم الهاتف
+    const phoneInput = document.querySelector('input[name="phone"]');
+    if (phoneInput) phoneInput.value = data[4] || '';
+
+    // 5: الجنسية
+    const nationalitySelect = document.getElementById('nationalitySelect');
+    setSelectValue(nationalitySelect, data[5]);
+
+    // 6: عدد الأشخاص
+    const personSelect = document.getElementById('personSelect');
+    setSelectValue(personSelect, data[6]);
+
+    // 7: المدينة
+    const citySelect = document.getElementById('citySelect');
+    setSelectValue(citySelect, data[7]);
+    
+    if (data[7]) {
+        await onCityChange();
+        await new Promise(resolve => setTimeout(resolve, 500));
+    }
+    
+    // 8: الفندق
+    const hotelSelect = document.getElementById('hotelSelect');
+    if (hotelSelect) {
+        setSelectValue(hotelSelect, data[8]);
+        const hotelSelectedText = document.getElementById('hotelSelectedText');
+        if (hotelSelectedText && data[8]) {
+            hotelSelectedText.textContent = data[8];
         }
-    });
+    }
+    
+    // 9: ايدي تأكيد حجز الفندق (تم استخدام safelyGetValue لحل مشكلة الصفر)
+    const confirmInput = document.querySelector('input[name="HotelConformation"]');
+    if (confirmInput) confirmInput.value = safelyGetValue(data[9]);
 
-    await onCityChange();
+    // 10: CheckIn
+    const checkinInput = document.getElementById('chekInDate');
+    if (checkinInput) checkinInput.value = formatDateForInput(data[10]);
+
+    // 11: CheckOut
+    const checkoutInput = document.getElementById('chekOutDate');
+    if (checkoutInput) checkoutInput.value = formatDateForInput(data[11]);
+
+    // 12: عدد الغرف
+    const numberSelect = document.getElementById('numberSelect');
+    if (numberSelect) numberSelect.value = data[12] || '1';
+
+    // 13: نوع الغرفة
+    const roomSelect = document.getElementById('roomSelect');
+    setSelectValue(roomSelect, data[13]);
+
+    // 14: الاطلالة
+    const viewSelect = document.getElementById('viewSelect');
+    setSelectValue(viewSelect, data[14]);
+
+    // 15: الوجبات
+    const mealSelect = document.getElementById('mealSelect');
+    setSelectValue(mealSelect, data[15]);
+
+    // 16: السعر بالعملة
+    const hotelPriceInput = document.querySelector('input[name="hotelPrice"]');
+    if (hotelPriceInput) hotelPriceInput.value = safelyGetValue(data[16]);
+
+    // 17: السعر يورو
+    const hotelEuroPriceInput = document.querySelector('input[name="hotelEuroPrice"]');
+    if (hotelEuroPriceInput) hotelEuroPriceInput.value = safelyGetValue(data[17]);
+
+    // 18: نوع العملة (فندق)
+    setRadioValue('hotelCurrency', data[18]);
+
+    // 19: سعر البيع
+    const sellingPriceInput = document.querySelector('input[name="sellingPrice"]');
+    if (sellingPriceInput) sellingPriceInput.value = safelyGetValue(data[19]);
+
+    // 20: سعر البيع يورو
+    const sellingEuroPriceInput = document.querySelector('input[name="sellingEuroPrice"]');
+    if (sellingEuroPriceInput) sellingEuroPriceInput.value = safelyGetValue(data[20]);
+
+    // 21: نوع عملة البيع
+    setRadioValue('sellingCurrency', data[21]);
+
+    // 22: KDV (تم استخدام safelyGetValue لحل مشكلة الصفر)
+    const kdvSelect = document.getElementById('kdvSelect');
+    setSelectValue(kdvSelect, safelyGetValue(data[22]) || 'لا يوجد');
+
+    // 23: عمولة الفندق
+    const hotelCommInput = document.querySelector('input[name="hotelComm"]');
+    if (hotelCommInput) hotelCommInput.value = safelyGetValue(data[23]);
+
+    // 24: نسبة عمولة الفندق
+    const hotelCommPrcInput = document.querySelector('input[name="hotelCommPrc"]');
+    if (hotelCommPrcInput) hotelCommPrcInput.value = safelyGetValue(data[24]);
+
+    // 25: العربون
+    const amountSentInput = document.querySelector('input[name="amountSent"]');
+    if (amountSentInput) amountSentInput.value = safelyGetValue(data[25]);
+
+    // 26: العربون يورو
+    const amountEuroSentInput = document.querySelector('input[name="amountEuroSent"]');
+    if (amountEuroSentInput) amountEuroSentInput.value = safelyGetValue(data[26]);
+
+    // 27: نوع عملة العربون
+    setRadioValue('amountSentCurrency', data[27]);
+
+    // 28: طريقة تحصيل العربون
+    const ra3bonSelect = document.getElementById('ra3bonSelect');
+    setSelectValue(ra3bonSelect, data[28]);
+
+    // 29: تكاليف الإرسال
+    const arrivedAmountInput = document.querySelector('input[name="arrivedAmount"]');
+    if (arrivedAmountInput) arrivedAmountInput.value = safelyGetValue(data[29]);
+
+    // 30: تكاليف الإرسال يورو
+    const arrivedEuroAmountInput = document.querySelector('input[name="arrivedEuroAmount"]');
+    if (arrivedEuroAmountInput) arrivedEuroAmountInput.value = safelyGetValue(data[30]);
+    
+    // 31: نوع عملة الإرسال
+    setRadioValue('arrivedCurrency', data[31]);
+
+    // 32: الدفعة الثانية
+    const remainingAmountInput = document.querySelector('input[name="remainingAmount"]');
+    if (remainingAmountInput) remainingAmountInput.value = safelyGetValue(data[32]);
+
+    // 33: الدفعة الثانية يورو
+    const remainingEuroAmountInput = document.querySelector('input[name="remainingEuroAmount"]');
+    if (remainingEuroAmountInput) remainingEuroAmountInput.value = safelyGetValue(data[33]);
+    
+    // 34: نوع عملة الدفعة الثانية
+    setRadioValue('amountRemainingCurrency', data[34]);
+
+    // 35: حالة الدفع (تخزينها في حقل مخفي)
+    document.getElementById("paymentStatus").value = data[35] || "";
+
+    // 36: طريقة التحصيل
+    const collectionSelect = document.getElementById('collectionSelect');
+    setSelectValue(collectionSelect, data[36]);
+
+    // 37: ملاحظات
+    const noteInput = document.querySelector('textarea[name="note"]');
+    if (noteInput) noteInput.value = data[37] || '';
+
+    // 38: الورد
+    const hasFlower = data[38] == "نعم" || data[38] === true;
+    if (flowerCheckbox) {
+        flowerCheckbox.checked = hasFlower;
+        if(hasFlower && flowerCard) {
+            flowerCard.classList.add('active');
+        }
+    }
+
+    // 39: اسم الوسيط
+    const mediatorSelect = document.getElementById('mediatorSelect');
+    setSelectValue(mediatorSelect, data[39]);
+
+    // 40: العمولة
+    const commissionInput = document.querySelector('input[name="commission"]');
+    if (commissionInput) commissionInput.value = safelyGetValue(data[40]);
+    
+    // 41: تاريخ التسجيل (حفظ في حقل مخفي)
+    document.getElementById("regDate").value = data[41] || "";
+    
+    // 42: ايميل البائع (حفظ في حقل مخفي)
+    document.getElementById("sellerEmail").value = data[42] || "";
+
+    // 45: حالة الحجز (تم تعديل الاندكس ليطابق العمود 45 بدقة - index 44)
+    const reservationSelect = document.getElementById('reservationSelect');
+    setSelectValue(reservationSelect, data[44]);
+
+    console.log("Form fields populated successfully");
     console.log("---------------------------------");
-    formFields[7].value = data[8];
-    console.log("Setting hotelSelect to:", data[8]);
 }
 
 document.getElementById("registration-form").addEventListener("submit", async function (event) {
@@ -792,12 +1815,103 @@ document.getElementById("registration-form").addEventListener("submit", async fu
     const form = document.getElementById("registration-form");
     const formData = new FormData(form);
 
-    // Extract values based on actual form field order
-    const orderedValues = Array.from(form.elements)
-        .filter(el => el.name) // Ensure only named fields are included
-        .map(el => formData.get(el.name));
+    // بناء المصفوفة يدوياً حسب الترتيب الدقيق لقاعدة البيانات
+    const orderedValues = [];
+    
+    // 1: البائع
+    orderedValues.push(document.getElementById('sellerSelect').value);
+    // 2: المورد
+    orderedValues.push(document.getElementById('supplierSelect').value);
+    // 3: اسم العميل
+    orderedValues.push(document.querySelector('input[name="name"]').value);
+    // 4: رقم الهاتف
+    orderedValues.push(document.querySelector('input[name="phone"]').value);
+    // 5: الجنسية
+    orderedValues.push(document.getElementById('nationalitySelect').value);
+    // 6: عدد الأشخاص
+    orderedValues.push(document.getElementById('personSelect').value);
+    // 7: المدينة
+    orderedValues.push(document.getElementById('citySelect').value);
+    // 8: الاوتيل
+    orderedValues.push(document.getElementById('hotelSelect').value);
+    // 9: ايدي تاكيد حجز الاوتيل
+    orderedValues.push(document.querySelector('input[name="HotelConformation"]').value);
+    // 10: CHECK-IN
+    orderedValues.push(document.getElementById('chekInDate').value);
+    // 11: CHECK-OUT
+    orderedValues.push(document.getElementById('chekOutDate').value);
+    // 12: ROOM (Count)
+    orderedValues.push(document.getElementById('numberSelect').value);
+    // 13: ROOM TYPE
+    orderedValues.push(document.getElementById('roomSelect').value);
+    // 14: VIEW TYPE
+    orderedValues.push(document.getElementById('viewSelect').value);
+    // 15: MEALS
+    orderedValues.push(document.getElementById('mealSelect').value);
+    // 16: السعر بالعملة
+    orderedValues.push(document.querySelector('input[name="hotelPrice"]').value);
+    // 17: السعر يورو
+    orderedValues.push(document.querySelector('input[name="hotelEuroPrice"]').value);
+    // 18: نوع العملة (فندق)
+    orderedValues.push(getRadioValue('hotelCurrency'));
+    // 19: سعر البيع
+    orderedValues.push(document.querySelector('input[name="sellingPrice"]').value);
+    // 20: سعر البيع يورو
+    orderedValues.push(document.querySelector('input[name="sellingEuroPrice"]').value);
+    // 21: نوع العملة (بيع)
+    orderedValues.push(getRadioValue('sellingCurrency'));
+    // 22: KDV
+    orderedValues.push(document.getElementById('kdvSelect').value);
+    // 23: عمولة الفندق
+    orderedValues.push(document.querySelector('input[name="hotelComm"]').value);
+    // 24: نسبة عمولة الفندق
+    orderedValues.push(document.querySelector('input[name="hotelCommPrc"]').value);
+    // 25: العربون
+    orderedValues.push(document.querySelector('input[name="amountSent"]').value);
+    // 26: العربون يورو
+    orderedValues.push(document.querySelector('input[name="amountEuroSent"]').value);
+    // 27: نوع العملة (عربون)
+    orderedValues.push(getRadioValue('amountSentCurrency'));
+    // 28: طريقة تحصيل العربون
+    orderedValues.push(document.getElementById('ra3bonSelect').value);
+    // 29: تكاليف الإرسال
+    orderedValues.push(document.querySelector('input[name="arrivedAmount"]').value);
+    // 30: تكاليف الإرسال يورو
+    orderedValues.push(document.querySelector('input[name="arrivedEuroAmount"]').value);
+    // 31: نوع العملة (إرسال)
+    orderedValues.push(getRadioValue('arrivedCurrency'));
+    // 32: الدفعة الثانية
+    orderedValues.push(document.querySelector('input[name="remainingAmount"]').value);
+    // 33: الدفعة الثانية يورو
+    orderedValues.push(document.querySelector('input[name="remainingEuroAmount"]').value);
+    // 34: نوع العملة (دفعة ثانية)
+    orderedValues.push(getRadioValue('amountRemainingCurrency'));
+    // 35: حالة الدفع (استعادة القيمة المخزنة)
+    orderedValues.push(document.getElementById('paymentStatus').value);
+    // 36: طريقة التحصيل
+    orderedValues.push(document.getElementById('collectionSelect').value);
+    // 37: ملاحظات
+    orderedValues.push(document.querySelector('textarea[name="note"]').value);
+    // 38: الورد
+    orderedValues.push(document.getElementById('flowerCheckbox').checked ? "نعم" : "");
+    // 39: اسم الوسيط
+    orderedValues.push(document.getElementById('mediatorSelect').value);
+    // 40: العمولة
+    orderedValues.push(document.querySelector('input[name="commission"]').value);
+    // 41: تاريخ التسجيل (استعادة)
+    orderedValues.push(document.getElementById('regDate').value);
+    // 42: ايميل البائع (استعادة)
+    orderedValues.push(document.getElementById('sellerEmail').value);
+    // 43: تاريخ اخر تعديل (يترك فارغ ليقوم السيرفر بتحديثه)
+    orderedValues.push("");
+    // 44: ايميل المعدل (يترك فارغ ليقوم السيرفر بتحديثه)
+    orderedValues.push("");
+    // 45: حالة الحجز
+    orderedValues.push(document.getElementById('reservationSelect').value);
+    // 46: نوع الخدمة (ثابت)
+    orderedValues.push("فندق");
 
-    console.log("Ordered values:", orderedValues);
+    console.log("Ordered values (Manual Construction):", orderedValues);
 
     await new Promise((resolve, reject) => {
         google.script.run
@@ -814,12 +1928,7 @@ document.getElementById("registration-form").addEventListener("submit", async fu
                 setTimeout(() => {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 }, 2000);
-
-                form.reset();
-                document.getElementById('citySelect').value = '';
-                onCityChange();
-                getColumns();
-
+                
                 resolve();
             })
             .withFailureHandler(reject)
@@ -827,19 +1936,14 @@ document.getElementById("registration-form").addEventListener("submit", async fu
     });
 });
 
-
-
   function navigateTo(pageName) {
-
     var url = document.getElementById("url").value;
     var link = document.createElement('a');
     link.href = url + "?page=" + pageName;
     link.id = 'linkURL';
     document.body.appendChild(link);
     document.getElementById("linkURL").click();
-
   }
-
 </script>
-
+</body>
 </html>
