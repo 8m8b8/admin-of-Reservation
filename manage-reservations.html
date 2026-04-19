@@ -468,6 +468,162 @@
         box-shadow: 0 0 0 4px rgba(0, 136, 145, 0.1);
       }
       
+      /* Multi-select dropdown styles */
+      .multi-select-container {
+        position: relative;
+        width: 100%;
+      }
+      
+      .multi-select-button {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        background: white;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: right;
+        transition: all 0.3s ease;
+        font-family: '29LT Bukra Bold', sans-serif;
+        min-height: 48px;
+      }
+      
+      .multi-select-button:hover,
+      .multi-select-button.active {
+        border-color: #008891;
+        box-shadow: 0 0 0 4px rgba(0, 136, 145, 0.1);
+      }
+      
+      .multi-select-button .selected-text {
+        flex: 1;
+        text-align: right;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #333;
+      }
+      
+      .multi-select-button .selected-text.placeholder {
+        color: #999;
+      }
+      
+      .multi-select-button .arrow {
+        margin-right: 10px;
+        transition: transform 0.3s ease;
+      }
+      
+      .multi-select-button.active .arrow {
+        transform: rotate(180deg);
+      }
+      
+      .multi-select-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+        display: none;
+        margin-top: 5px;
+        max-height: 300px;
+        overflow: hidden;
+      }
+      
+      .multi-select-dropdown.show {
+        display: block;
+      }
+      
+      .multi-select-search {
+        padding: 10px;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      
+      .multi-select-search input {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-family: '29LT Bukra Bold', sans-serif;
+      }
+      
+      .multi-select-options {
+        max-height: 200px;
+        overflow-y: auto;
+        padding: 5px 0;
+      }
+      
+      .multi-select-option {
+        padding: 10px 15px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: background 0.2s ease;
+        font-family: '29LT Bukra Bold', sans-serif;
+      }
+      
+      .multi-select-option:hover {
+        background: #f0f8ff;
+      }
+      
+      .multi-select-option input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: #008891;
+      }
+      
+      .multi-select-option label {
+        flex: 1;
+        margin: 0;
+        cursor: pointer;
+        font-weight: normal;
+      }
+      
+      .multi-select-actions {
+        padding: 10px;
+        border-top: 1px solid #e0e0e0;
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        background: #f8f9fa;
+      }
+      
+      .multi-select-actions button {
+        padding: 6px 12px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-family: '29LT Bukra Bold', sans-serif;
+        transition: all 0.2s ease;
+      }
+      
+      .multi-select-actions .select-all {
+        background: #008891;
+        color: white;
+      }
+      
+      .multi-select-actions .select-all:hover {
+        background: #006d75;
+      }
+      
+      .multi-select-actions .clear-all {
+        background: #dc3545;
+        color: white;
+      }
+      
+      .multi-select-actions .clear-all:hover {
+        background: #c82333;
+      }
+      
       .filter-group {
         margin-bottom: 10px;
       }
@@ -516,6 +672,101 @@
       .modern-btn:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+      
+      /* Year Filter Styles */
+      .year-filter-container {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        margin-bottom: 20px;
+      }
+      
+      .year-filter-label {
+        display: block;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #008891;
+        margin-bottom: 15px;
+        text-align: center;
+        font-family: '29LT Bukra Bold', sans-serif;
+      }
+      
+      .year-filter-label i {
+        margin-left: 8px;
+      }
+      
+      .year-buttons {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      
+      .year-btn {
+        padding: 10px 20px;
+        border: 2px solid #008891;
+        border-radius: 25px;
+        background: white;
+        color: #008891;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: '29LT Bukra Bold', sans-serif;
+        min-width: 140px;
+      }
+      
+      .year-btn:hover {
+        background: #008891;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 136, 145, 0.3);
+      }
+      
+      .year-btn.active {
+        background: linear-gradient(135deg, #008891, #006d75);
+        color: white;
+        border-color: #006d75;
+        box-shadow: 0 4px 15px rgba(0, 136, 145, 0.4);
+      }
+      
+      @media (max-width: 768px) {
+        .year-buttons {
+          gap: 8px;
+        }
+        
+        .year-btn {
+          min-width: 120px;
+          padding: 8px 16px;
+          font-size: 0.85rem;
+        }
+      }
+      
+      /* Tour Icon Styles */
+      .reservation-type-icon {
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 24px;
+        font-size: 12px;
+        margin-left: 5px;
+        vertical-align: middle;
+      }
+      
+      .reservation-type-icon.tour {
+        background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+        color: white;
+        box-shadow: 0 2px 8px rgba(255, 107, 107, 0.4);
+      }
+      
+      .reservation-type-icon.hotel {
+        background: linear-gradient(135deg, #4ecdc4, #44a08d);
+        color: white;
+        box-shadow: 0 2px 8px rgba(78, 205, 196, 0.4);
       }
       
       /* Modern Modal Styles */
@@ -727,6 +978,16 @@
        font-weight: bold;  /* اختياري: لجعل الخط عريض */
        color: #008891;     /* اختياري: لتلوين النص بلون الثيم */
        }
+       
+      /* تنسيقات الدفعة الثانية */
+      .editable-payment {
+        transition: all 0.3s ease;
+      }
+      
+      .editable-payment:hover {
+        background-color: #fff3cd !important;
+        transform: scale(1.05);
+      }
   </style>
 </head>
 
@@ -744,39 +1005,39 @@
       </div>
     </div>
   <nav class="ghada-nav" id="ghada-nav-bar" aria-label="القائمة العلوية">
-    <button class="ghada-nav-item" data-page="index" type="button">
+    <button class="ghada-nav-item" data-page="index" type="button" tabindex="-1">
       <span class="emoji" aria-hidden="true">📝</span>
       <span class="label">إضافة حجز</span>
     </button>
-    <button class="ghada-nav-item" data-page="Add-client" type="button">
+    <button class="ghada-nav-item" data-page="Add-client" type="button" tabindex="-1">
       <span class="emoji" aria-hidden="true">👤</span>
       <span class="label">إضافة عميل</span>
     </button>
-    <button class="ghada-nav-item" data-page="add-tour" type="button">
+    <button class="ghada-nav-item" data-page="add-tour" type="button" tabindex="-1">
       <span class="emoji" aria-hidden="true">🧭</span>
       <span class="label">إضافة رحلة</span>
     </button>
-    <button class="ghada-nav-item" data-page="add-hotel" type="button">
+    <button class="ghada-nav-item" data-page="add-hotel" type="button" tabindex="-1">
       <span class="emoji" aria-hidden="true">🏨</span>
       <span class="label">إضافة فندق</span>
     </button>
-    <button class="ghada-nav-item" data-page="manage-reservations" type="button">
+    <button class="ghada-nav-item" data-page="manage-reservations" type="button" tabindex="-1">
       <span class="emoji" aria-hidden="true">📂</span>
       <span class="label">إدارة الحجوزات</span>
     </button>
-    <button class="ghada-nav-item" data-page="SUPPLIER" type="button">
+    <button class="ghada-nav-item" data-page="SUPPLIER" type="button" tabindex="-1">
       <span class="emoji" aria-hidden="true">🤝</span>
       <span class="label">الموردين</span>
     </button>
-    <button class="ghada-nav-item" data-page="manage-statistics" type="button">
+    <button class="ghada-nav-item" data-page="manage-statistics" type="button" tabindex="-1">
       <span class="emoji" aria-hidden="true">📊</span>
       <span class="label">الإحصائيات</span>
     </button>
-    <button class="ghada-nav-item" data-page="mediator" type="button">
+    <button class="ghada-nav-item" data-page="mediator" type="button" tabindex="-1">
       <span class="emoji" aria-hidden="true">🕴️</span>
       <span class="label">الوسطاء</span>
     </button>
-    <button class="ghada-nav-item" data-page="payments" type="button">
+    <button class="ghada-nav-item" data-page="payments" type="button" tabindex="-1">
       <span class="emoji" aria-hidden="true">💳</span>
       <span class="label">الدفعات</span>
     </button>
@@ -799,19 +1060,105 @@
             }
           })();
       const currentPage = document.body.dataset.page || 'index';
+      
+      // الصفحات العادية (لا تحتاج كلمة مرور للوصول إليها)
+      const publicPages = ['index', 'Add-client', 'add-tour', 'add-hotel', 'manage-reservations', 'edit-reservation'];
+      // الصفحات المحمية (تحتاج كلمة مرور)
+      const protectedPages = ['SUPPLIER', 'manage-statistics', 'mediator', 'payments'];
+      // كلمة المرور
+      const PASSWORD = 'admin966';
+      // مفتاح التخزين للجلسة
+      const AUTH_KEY = 'ghada_admin_auth';
+      
+      // التحقق من حالة المصادقة
+      function isAuthenticated() {
+        try {
+          return sessionStorage.getItem(AUTH_KEY) === 'true';
+        } catch (e) {
+          return false;
+        }
+      }
+      
+      // تعيين حالة المصادقة
+      function setAuthenticated(value) {
+        try {
+          if (value) {
+            sessionStorage.setItem(AUTH_KEY, 'true');
+          } else {
+            sessionStorage.removeItem(AUTH_KEY);
+          }
+        } catch (e) {}
+      }
+      
+      // التحقق مما إذا كانت الصفحة الحالية عادية
+      function isCurrentPagePublic() {
+        return publicPages.includes(currentPage);
+      }
+      
+      // التحقق مما إذا كانت الصفحة المستهدفة محمية
+      function isTargetPageProtected(targetPage) {
+        return protectedPages.includes(targetPage);
+      }
+      
+      // عرض نافذة كلمة المرور
+      function showPasswordPrompt(targetUrl) {
+        Swal.fire({
+          title: 'صفحة محمية',
+          text: 'أدخل كلمة المرور للوصول إلى هذه الصفحة',
+          input: 'password',
+          inputPlaceholder: 'كلمة المرور',
+          showCancelButton: true,
+          confirmButtonText: 'دخول',
+          cancelButtonText: 'إلغاء',
+          confirmButtonColor: '#008891',
+          inputAttributes: {
+            autocapitalize: 'off',
+            autocorrect: 'off'
+          },
+          preConfirm: (password) => {
+            if (password === PASSWORD) {
+              return true;
+            } else {
+              Swal.showValidationMessage('كلمة المرور غير صحيحة');
+              return false;
+            }
+          }
+        }).then((result) => {
+          if (result.isConfirmed) {
+            setAuthenticated(true);
+            window.top.location.href = targetUrl;
+          }
+        });
+      }
+      
       navBar.querySelectorAll('.ghada-nav-item').forEach((button) => {
         const targetPage = button.dataset.page;
         if (targetPage === currentPage) {
           button.classList.add('active');
           button.setAttribute('aria-current', 'page');
         }
-        button.addEventListener('click', () => {
+        button.addEventListener('click', (event) => {
+          // IMPORTANT: Only allow real user clicks, not programmatic ones
+          if (!event.isTrusted) {
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+          }
           if (!targetPage || !baseUrl || targetPage === currentPage) {
             return;
           }
+          
           const targetUrl = targetPage === 'index'
             ? baseUrl
             : `${baseUrl}?page=${targetPage}`;
+          
+          // التحقق مما إذا كانت الصفحة المستهدفة محمية والصفحة الحالية عادية
+          if (isTargetPageProtected(targetPage) && isCurrentPagePublic() && !isAuthenticated()) {
+            event.preventDefault();
+            showPasswordPrompt(targetUrl);
+            return;
+          }
+          
           window.top.location.href = targetUrl;
         });
       });
@@ -825,17 +1172,43 @@
       </div>
       <div class="col-md-12 search-table-col" style="padding-left: 5px; padding-right: 5px;">
         <div class="row mb-3 justify-content-center">
+          <!-- فلتر السنة -->
+          <div class="col-12 mb-3">
+            <div class="year-filter-container">
+              <label class="year-filter-label">
+                <i class="fa fa-calendar-alt"></i> فلترة حسب السنة:
+              </label>
+              <div class="year-buttons">
+                <button type="button" class="year-btn" data-year="all">كل الحجوزات</button>
+                <button type="button" class="year-btn" data-year="2024">2024</button>
+                <button type="button" class="year-btn" data-year="2025">2025</button>
+                <button type="button" class="year-btn active" data-year="2026">2026</button>
+                <button type="button" class="year-btn" data-year="2027">2027</button>
+              </div>
+            </div>
+          </div>
+          
           <div class="row justify-content-center mb-4">
             <div class="col-12 d-flex justify-content-center gap-2 mb-3 flex-wrap">
-              <button id="manualVoucherButton" class="btn btn-info modern-btn" type="button">
+              <button id="manualVoucherButton" class="btn btn-info modern-btn" type="button" tabindex="-1">
                 <i class="fa fa-file-text"></i> إصدار تأكيد حجز يدوي
               </button>
-              <button id="manualInvoiceButton" class="btn btn-secondary modern-btn" type="button">
+              <button id="manualInvoiceButton" class="btn btn-secondary modern-btn" type="button" tabindex="-1">
                 <i class="fa fa-file-invoice"></i> إصدار فاتورة يدوي
               </button>
-              <button id="invoiceButton" class="btn btn-warning modern-btn invoice-button" type="button">
+              <button id="invoiceButton" class="btn btn-warning modern-btn invoice-button" type="button" tabindex="-1">
                 <i class="fa fa-file-invoice-dollar"></i> إصدار فاتورة
               </button>
+            </div>
+            
+            <!-- خيار إظهار/إخفاء الجولات -->
+            <div class="col-12 mb-3 d-flex justify-content-center">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="showToursToggle" style="width: 50px; height: 25px;">
+                <label class="form-check-label" for="showToursToggle" style="font-size: 1.1rem; font-weight: 600; margin-right: 10px;">
+                  <i class="fa fa-route"></i> إظهار حجوزات الجولات
+                </label>
+              </div>
             </div>
             <div class="col-12">
               <div class="search-container">
@@ -878,42 +1251,94 @@
           <div class="row justify-content-center mb-3 desktop-filters">
             <div class="col-md-3">
               <div class="filter-group">
-                <label for="filterSupplier" class="filter-label">
+                <label class="filter-label">
                   <i class="fa fa-building"></i> المورد
                 </label>
-                <select class="modern-select" id="filterSupplier">
-                  <option value="">الكل</option>
-                </select>
+                <div class="multi-select-container" id="supplierMultiSelect">
+                  <button type="button" class="multi-select-button" onclick="toggleMultiSelect(event, 'supplierMultiSelect');">
+                    <span class="selected-text placeholder">الكل</span>
+                    <i class="fa fa-chevron-down arrow"></i>
+                  </button>
+                  <div class="multi-select-dropdown" onclick="stopMultiSelectEvent(event);">
+                    <div class="multi-select-search">
+                      <input type="text" placeholder="ابحث..." oninput="filterMultiSelectOptions('supplierMultiSelect', this.value)">
+                    </div>
+                    <div class="multi-select-options"></div>
+                    <div class="multi-select-actions">
+                      <button type="button" class="select-all" onclick="selectAllMulti(event, 'supplierMultiSelect');">تحديد الكل</button>
+                      <button type="button" class="clear-all" onclick="clearAllMulti(event, 'supplierMultiSelect');">إلغاء الكل</button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="col-md-3">
               <div class="filter-group">
-                <label for="filterSeller" class="filter-label">
+                <label class="filter-label">
                   <i class="fa fa-user-tie"></i> البائع
                 </label>
-                <select class="modern-select" id="filterSeller">
-                  <option value="">الكل</option>
-                </select>
+                <div class="multi-select-container" id="sellerMultiSelect">
+                  <button type="button" class="multi-select-button" onclick="toggleMultiSelect(event, 'sellerMultiSelect');">
+                    <span class="selected-text placeholder">الكل</span>
+                    <i class="fa fa-chevron-down arrow"></i>
+                  </button>
+                  <div class="multi-select-dropdown" onclick="stopMultiSelectEvent(event);">
+                    <div class="multi-select-search">
+                      <input type="text" placeholder="ابحث..." oninput="filterMultiSelectOptions('sellerMultiSelect', this.value)">
+                    </div>
+                    <div class="multi-select-options"></div>
+                    <div class="multi-select-actions">
+                      <button type="button" class="select-all" onclick="selectAllMulti(event, 'sellerMultiSelect');">تحديد الكل</button>
+                      <button type="button" class="clear-all" onclick="clearAllMulti(event, 'sellerMultiSelect');">إلغاء الكل</button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="col-md-3">
               <div class="filter-group">
-                <label for="filterDepositMethod" class="filter-label">
+                <label class="filter-label">
                   <i class="fa fa-money-bill-wave"></i> طريقة تحصيل العربون
                 </label>
-                <select class="modern-select" id="filterDepositMethod">
-                  <option value="">الكل</option>
-                </select>
+                <div class="multi-select-container" id="depositMethodMultiSelect">
+                  <button type="button" class="multi-select-button" onclick="toggleMultiSelect(event, 'depositMethodMultiSelect');">
+                    <span class="selected-text placeholder">الكل</span>
+                    <i class="fa fa-chevron-down arrow"></i>
+                  </button>
+                  <div class="multi-select-dropdown" onclick="stopMultiSelectEvent(event);">
+                    <div class="multi-select-search">
+                      <input type="text" placeholder="ابحث..." oninput="filterMultiSelectOptions('depositMethodMultiSelect', this.value)">
+                    </div>
+                    <div class="multi-select-options"></div>
+                    <div class="multi-select-actions">
+                      <button type="button" class="select-all" onclick="selectAllMulti(event, 'depositMethodMultiSelect');">تحديد الكل</button>
+                      <button type="button" class="clear-all" onclick="clearAllMulti(event, 'depositMethodMultiSelect');">إلغاء الكل</button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="col-md-3">
               <div class="filter-group">
-                <label for="filterRemainingMethod" class="filter-label">
+                <label class="filter-label">
                   <i class="fa fa-money-check-alt"></i> طريقة تحصيل المتبقي
                 </label>
-                <select class="modern-select" id="filterRemainingMethod">
-                  <option value="">الكل</option>
-                </select>
+                <div class="multi-select-container" id="remainingMethodMultiSelect">
+                  <button type="button" class="multi-select-button" onclick="toggleMultiSelect(event, 'remainingMethodMultiSelect');">
+                    <span class="selected-text placeholder">الكل</span>
+                    <i class="fa fa-chevron-down arrow"></i>
+                  </button>
+                  <div class="multi-select-dropdown" onclick="stopMultiSelectEvent(event);">
+                    <div class="multi-select-search">
+                      <input type="text" placeholder="ابحث..." oninput="filterMultiSelectOptions('remainingMethodMultiSelect', this.value)">
+                    </div>
+                    <div class="multi-select-options"></div>
+                    <div class="multi-select-actions">
+                      <button type="button" class="select-all" onclick="selectAllMulti(event, 'remainingMethodMultiSelect');">تحديد الكل</button>
+                      <button type="button" class="clear-all" onclick="clearAllMulti(event, 'remainingMethodMultiSelect');">إلغاء الكل</button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1106,10 +1531,196 @@
   </div>
   <input type="hidden" value="<?= url ?>" id="url" />
 
-</body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
   integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script>
+  // ===== Global Multi-Select Functions =====
+  // These must be global so they can be called from onclick handlers in HTML
+  
+  // Multi-select state storage (global)
+  window.multiSelectState = {
+    supplierMultiSelect: { options: [], selected: [] },
+    sellerMultiSelect: { options: [], selected: [] },
+    depositMethodMultiSelect: { options: [], selected: [] },
+    remainingMethodMultiSelect: { options: [], selected: [] }
+  };
+  
+  function stopMultiSelectEvent(evt) {
+    if (evt && typeof evt.stopPropagation === 'function') {
+      evt.stopPropagation();
+    }
+  }
+
+  // Toggle multi-select dropdown (global)
+  function toggleMultiSelect(evt, containerId) {
+    stopMultiSelectEvent(evt);
+    var container = document.getElementById(containerId);
+    if (!container) return;
+    
+    var button = container.querySelector('.multi-select-button');
+    var dropdown = container.querySelector('.multi-select-dropdown');
+    
+    if (!button || !dropdown) return;
+    
+    // Close all other dropdowns
+    document.querySelectorAll('.multi-select-container').forEach(function(c) {
+      if (c.id !== containerId) {
+        var btn = c.querySelector('.multi-select-button');
+        var dd = c.querySelector('.multi-select-dropdown');
+        if (btn) btn.classList.remove('active');
+        if (dd) dd.classList.remove('show');
+      }
+    });
+    
+    button.classList.toggle('active');
+    dropdown.classList.toggle('show');
+    
+    if (dropdown.classList.contains('show')) {
+      var searchInput = dropdown.querySelector('.multi-select-search input');
+      if (searchInput) {
+        searchInput.value = '';
+        filterMultiSelectOptions(containerId, '');
+        setTimeout(function() { searchInput.focus(); }, 100);
+      }
+    }
+  }
+  
+  // Filter multi-select options (global)
+  function filterMultiSelectOptions(containerId, searchTerm) {
+    var container = document.getElementById(containerId);
+    if (!container) return;
+    
+    var state = window.multiSelectState[containerId];
+    if (!state) return;
+    
+    var term = (searchTerm || '').toLowerCase().trim();
+    
+    var filteredOptions = state.options.filter(function(opt) {
+      return term === '' || opt.toLowerCase().includes(term);
+    });
+    
+    renderMultiSelectOptions(containerId, filteredOptions);
+  }
+  
+  // Render multi-select options (global)
+  window.renderMultiSelectOptions = function(containerId, options) {
+    var container = document.getElementById(containerId);
+    if (!container) return;
+    
+    var optionsContainer = container.querySelector('.multi-select-options');
+    if (!optionsContainer) return;
+    
+    var state = window.multiSelectState[containerId];
+    if (!state) return;
+    
+    optionsContainer.innerHTML = '';
+    
+    if (options.length === 0) {
+      optionsContainer.innerHTML = '<div class="multi-select-option" style="justify-content: center; color: #999;">لا توجد نتائج</div>';
+      return;
+    }
+    
+    options.forEach(function(option) {
+      var isChecked = state.selected.includes(option);
+      var safeId = containerId + '_' + option.replace(/[^a-zA-Z0-9\u0600-\u06FF]/g, '_');
+      
+      var optionDiv = document.createElement('div');
+      optionDiv.className = 'multi-select-option';
+      optionDiv.innerHTML = 
+        '<input type="checkbox" id="' + safeId + '" value="' + option + '" ' + (isChecked ? 'checked' : '') + '>' +
+        '<label for="' + safeId + '">' + option + '</label>';
+      
+      var checkbox = optionDiv.querySelector('input');
+      checkbox.addEventListener('change', function() {
+        handleMultiSelectChange(containerId, option, this.checked);
+      });
+      
+      optionDiv.addEventListener('click', function(e) {
+        if (e.target.tagName !== 'INPUT') {
+          checkbox.checked = !checkbox.checked;
+          handleMultiSelectChange(containerId, option, checkbox.checked);
+        }
+      });
+      
+      optionsContainer.appendChild(optionDiv);
+    });
+  };
+  
+  // Handle multi-select change (global)
+  function handleMultiSelectChange(containerId, option, isChecked) {
+    var state = window.multiSelectState[containerId];
+    if (!state) return;
+    
+    if (isChecked) {
+      if (!state.selected.includes(option)) {
+        state.selected.push(option);
+      }
+    } else {
+      state.selected = state.selected.filter(function(s) { return s !== option; });
+    }
+    
+    updateMultiSelectButtonText(containerId);
+    
+    // Trigger applyFilters if it's available (will be defined in jQuery ready)
+    if (typeof window.applyFiltersCallback === 'function') {
+      window.applyFiltersCallback();
+    }
+  }
+  
+  // Update multi-select button text (global)
+  window.updateMultiSelectButtonText = function(containerId) {
+    var container = document.getElementById(containerId);
+    if (!container) return;
+    
+    var textSpan = container.querySelector('.selected-text');
+    if (!textSpan) return;
+    
+    var state = window.multiSelectState[containerId];
+    if (!state) return;
+    
+    if (state.selected.length === 0) {
+      textSpan.textContent = 'الكل';
+      textSpan.classList.add('placeholder');
+    } else if (state.selected.length === 1) {
+      textSpan.textContent = state.selected[0];
+      textSpan.classList.remove('placeholder');
+    } else {
+      textSpan.textContent = 'تم اختيار ' + state.selected.length + ' خيارات';
+      textSpan.classList.remove('placeholder');
+    }
+  };
+  
+  // Select all options in multi-select (global)
+  function selectAllMulti(evt, containerId) {
+    stopMultiSelectEvent(evt);
+    var state = window.multiSelectState[containerId];
+    if (!state) return;
+    
+    state.selected = [...state.options];
+    window.renderMultiSelectOptions(containerId, state.options);
+    window.updateMultiSelectButtonText(containerId);
+    
+    if (typeof window.applyFiltersCallback === 'function') {
+      window.applyFiltersCallback();
+    }
+  }
+  
+  // Clear all options in multi-select (global)
+  function clearAllMulti(evt, containerId) {
+    stopMultiSelectEvent(evt);
+    var state = window.multiSelectState[containerId];
+    if (!state) return;
+    
+    state.selected = [];
+    window.renderMultiSelectOptions(containerId, state.options);
+    window.updateMultiSelectButtonText(containerId);
+    
+    if (typeof window.applyFiltersCallback === 'function') {
+      window.applyFiltersCallback();
+    }
+  }
+  
+  // ===== End Global Multi-Select Functions =====
 
     $(document).ready(function () {
       var allCustomers = [];
@@ -1117,6 +1728,10 @@
       var userEmail = "<?= userEmail ?>";
       var debounceHandle = null;
       var DEBOUNCE_DELAY = 400;
+      
+      // تعريف متغيرات الفلترة مبكراً
+      var currentYearFilter = '2026';
+      var showTours = false;
 
       // Sorting functionality (client-side for the current page)
       $(".sortable").click(function () {
@@ -1196,9 +1811,7 @@
         getCustomerInfo(userEmail, 1);
       });
       
-      $("#filterSupplier, #filterSeller, #filterDepositMethod, #filterRemainingMethod").on("change", function () {
-        applyFilters();
-      });
+      // Multi-select filters are handled via the multi-select functions
 
       $("#customerId").on("input", function () {
         clearTimeout(debounceHandle);
@@ -1218,6 +1831,21 @@
           getCustomerInfo(userEmail, currentPagination.page + 1);
         }
       });
+      
+      // Year filter buttons
+      $(".year-btn").on("click", function () {
+        $(".year-btn").removeClass("active");
+        $(this).addClass("active");
+        currentYearFilter = $(this).data("year");
+        getCustomerInfo(userEmail, 1);
+      });
+      
+      // Show tours toggle
+      $("#showToursToggle").on("change", function () {
+        showTours = $(this).is(":checked");
+        getCustomerInfo(userEmail, 1);
+      });
+      
     $(document).on("click", ".edit-button", function () {
       // Get the customer ID from the data-id attribute of the clicked button
       var customerId = $(this).data("id");
@@ -1226,10 +1854,121 @@
       navigateTo('edit-reservation', customerId);
     });
 
-    // Manual Voucher Button
-    $(document).on("click", "#manualVoucherButton", async function () {
+    // Helper functions for dropdowns in SweetAlert
+    function populateSelectFromArray(selectId, data, placeholder) {
+      const select = document.getElementById(selectId);
+      if (!select) return;
+      select.innerHTML = '';
+      if (placeholder) {
+        const placeholderOption = document.createElement('option');
+        placeholderOption.value = '';
+        placeholderOption.textContent = placeholder;
+        placeholderOption.disabled = true;
+        placeholderOption.selected = true;
+        select.appendChild(placeholderOption);
+      }
+      data.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item;
+        option.textContent = item;
+        select.appendChild(option);
+      });
+    }
+
+    // حساب عدد الليالي تلقائياً
+    function calculateNights(checkinDate, checkoutDate) {
+      if (!checkinDate || !checkoutDate) return 0;
+      const checkin = new Date(checkinDate);
+      const checkout = new Date(checkoutDate);
+      if (isNaN(checkin.getTime()) || isNaN(checkout.getTime())) return 0;
+      const diffTime = checkout.getTime() - checkin.getTime();
+      if (diffTime <= 0) return 0;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays > 0 ? diffDays : 0;
+    }
+    
+    async function loadVoucherDropdowns() {
       try {
-        var emailArray = await getEmailsFromServer();
+        // Load cities
+        const cities = await new Promise((resolve, reject) => {
+          google.script.run
+            .withSuccessHandler(resolve)
+            .withFailureHandler(reject)
+            .getCities();
+        });
+        populateSelectFromArray('swal-voucher-city', cities || [], 'اختر المدينة');
+
+        // Load room types, view types, meals, and persons
+        const [roomTypes, viewTypes, meals, persons] = await Promise.all([
+          new Promise((resolve, reject) => {
+            google.script.run.withSuccessHandler(resolve).withFailureHandler(reject).getColumnByName('ROOM TYPE');
+          }),
+          new Promise((resolve, reject) => {
+            google.script.run.withSuccessHandler(resolve).withFailureHandler(reject).getColumnByName('VIEW TYPE');
+          }),
+          new Promise((resolve, reject) => {
+            google.script.run.withSuccessHandler(resolve).withFailureHandler(reject).getColumnByName('MEALS');
+          }),
+          new Promise((resolve, reject) => {
+            google.script.run.withSuccessHandler(resolve).withFailureHandler(reject).getColumnByName('PERSONS');
+          })
+        ]);
+        
+        populateSelectFromArray('swal-voucher-roomType', roomTypes || [], 'اختر نوع الغرفة');
+        populateSelectFromArray('swal-voucher-viewType', viewTypes || [], 'اختر نوع الإطلالة');
+        populateSelectFromArray('swal-voucher-mealType', meals || [], 'اختر نوع الوجبة');
+        populateSelectFromArray('swal-voucher-guests', persons || [], 'اختر عدد الأشخاص');
+      } catch (error) {
+        console.error('Error loading dropdowns:', error);
+      }
+    }
+
+    function onVoucherCityChange() {
+      const city = document.getElementById('swal-voucher-city').value;
+      const hotelSelect = document.getElementById('swal-voucher-hotelName');
+      if (!city || !hotelSelect) return;
+      
+      hotelSelect.innerHTML = '<option value="">جاري التحميل...</option>';
+      hotelSelect.disabled = true;
+      
+      google.script.run
+        .withSuccessHandler(function(hotels) {
+          populateSelectFromArray('swal-voucher-hotelName', hotels || [], 'اختر الفندق');
+          hotelSelect.disabled = false;
+        })
+        .withFailureHandler(function(error) {
+          console.error('Error loading hotels:', error);
+          hotelSelect.innerHTML = '<option value="">فشل تحميل الفنادق</option>';
+          hotelSelect.disabled = false;
+        })
+        .getHotelsByCity(city);
+    }
+    
+    function setupVoucherNightsCalculation() {
+      const checkinInput = document.getElementById('swal-voucher-checkin');
+      const checkoutInput = document.getElementById('swal-voucher-checkout');
+      const nightsInput = document.getElementById('swal-voucher-nights');
+      
+      function updateNights() {
+        if (checkinInput && checkoutInput && nightsInput) {
+          const nights = calculateNights(checkinInput.value, checkoutInput.value);
+          nightsInput.value = nights > 0 ? nights : '';
+        }
+      }
+      
+      if (checkinInput) checkinInput.addEventListener('change', updateNights);
+      if (checkoutInput) checkoutInput.addEventListener('change', updateNights);
+    }
+
+    // Manual Voucher Button - Direct binding to element
+    var manualVoucherBtn = document.getElementById('manualVoucherButton');
+    if (manualVoucherBtn) {
+      manualVoucherBtn.onclick = async function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        try {
+          var emailArray = await getEmailsFromServer();
 
         // Build options for email dropdown
         let emailOptionsHTML = `<option value="">اختر بريد إلكتروني</option>`;
@@ -1250,12 +1989,16 @@
                 <input type="text" id="swal-voucher-confirmationId" placeholder="ID تأكيد الحجز">
               </div>
               <div class="field">
-                <label>اسم الفندق</label>
-                <input type="text" id="swal-voucher-hotelName" placeholder="اسم الفندق">
+                <label>المدينة</label>
+                <select id="swal-voucher-city" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                  <option value="">جاري التحميل...</option>
+                </select>
               </div>
               <div class="field">
-                <label>المدينة</label>
-                <input type="text" id="swal-voucher-city" placeholder="المدينة">
+                <label>اسم الفندق</label>
+                <select id="swal-voucher-hotelName" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" disabled>
+                  <option value="">اختر المدينة أولاً</option>
+                </select>
               </div>
               <div class="field">
                 <label>رقم العميل</label>
@@ -1271,15 +2014,19 @@
               </div>
               <div class="field">
                 <label>عدد الليالي</label>
-                <input type="number" id="swal-voucher-nights" placeholder="عدد الليالي">
+                <input type="number" id="swal-voucher-nights" placeholder="يحسب تلقائياً" readonly style="background-color: #f5f5f5;">
               </div>
               <div class="field">
                 <label>عدد الأشخاص</label>
-                <input type="number" id="swal-voucher-guests" placeholder="عدد الأشخاص">
+                <select id="swal-voucher-guests" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                  <option value="">جاري التحميل...</option>
+                </select>
               </div>
               <div class="field">
                 <label>نوع الغرفة</label>
-                <input type="text" id="swal-voucher-roomType" placeholder="نوع الغرفة">
+                <select id="swal-voucher-roomType" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                  <option value="">جاري التحميل...</option>
+                </select>
               </div>
               <div class="field">
                 <label>عدد الغرف</label>
@@ -1287,11 +2034,15 @@
               </div>
               <div class="field">
                 <label>نوع الإطلالة</label>
-                <input type="text" id="swal-voucher-viewType" placeholder="نوع الإطلالة">
+                <select id="swal-voucher-viewType" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                  <option value="">جاري التحميل...</option>
+                </select>
               </div>
               <div class="field">
                 <label>نوع الوجبة</label>
-                <input type="text" id="swal-voucher-mealType" placeholder="نوع الوجبة">
+                <select id="swal-voucher-mealType" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                  <option value="">جاري التحميل...</option>
+                </select>
               </div>
               <div class="field">
                 <label>الملاحظات</label>
@@ -1303,6 +2054,13 @@
                   ${emailOptionsHTML}
                 </select>
               </div>
+              <div class="field">
+                <label>نوع الحجز</label>
+                <select id="swal-voucher-refundType" required>
+                  <option value="REFUNDABLE">قابل للاسترداد</option>
+                  <option value="NON_REFUNDABLE">غير قابل للاسترداد</option>
+                </select>
+              </div>
             </div>
           `,
           focusConfirm: false,
@@ -1311,6 +2069,17 @@
           cancelButtonColor: "#d33",
           confirmButtonText: "إرسال",
           cancelButtonText: "إلغاء",
+          didOpen: () => {
+            loadVoucherDropdowns();
+            // Add event listener for city change and nights calculation
+            setTimeout(() => {
+              const citySelect = document.getElementById('swal-voucher-city');
+              if (citySelect) {
+                citySelect.addEventListener('change', onVoucherCityChange);
+              }
+              setupVoucherNightsCalculation();
+            }, 100);
+          },
           preConfirm: () => {
             const customerName = document.getElementById('swal-voucher-customerName').value;
             const confirmationId = document.getElementById('swal-voucher-confirmationId').value;
@@ -1319,7 +2088,7 @@
             const customerPhone = document.getElementById('swal-voucher-customerPhone').value;
             const checkin = document.getElementById('swal-voucher-checkin').value;
             const checkout = document.getElementById('swal-voucher-checkout').value;
-            const nights = document.getElementById('swal-voucher-nights').value;
+            let nights = document.getElementById('swal-voucher-nights').value;
             const guests = document.getElementById('swal-voucher-guests').value;
             const roomType = document.getElementById('swal-voucher-roomType').value;
             const rooms = document.getElementById('swal-voucher-rooms').value;
@@ -1327,15 +2096,25 @@
             const mealType = document.getElementById('swal-voucher-mealType').value;
             const notes = document.getElementById('swal-voucher-notes').value;
             const email = document.getElementById('swal-voucher-email').value;
+            const refundType = document.getElementById('swal-voucher-refundType').value;
 
-            if (!customerName || !confirmationId || !hotelName || !city || !customerPhone || !checkin || !checkout || !nights || !guests || !roomType || !rooms || !viewType || !mealType || !email) {
+            // حساب الليالي تلقائياً إذا لم يتم إدخالها
+            if (!nights && checkin && checkout) {
+              nights = calculateNights(checkin, checkout);
+              if (nights <= 0) {
+                Swal.showValidationMessage('يرجى التحقق من تاريخ الدخول والخروج');
+                return false;
+              }
+            }
+
+            if (!customerName || !confirmationId || !hotelName || !city || !customerPhone || !checkin || !checkout || !nights || !guests || !roomType || !rooms || !viewType || !mealType || !email || !refundType) {
               Swal.showValidationMessage('يرجى ملء جميع الحقول المطلوبة');
               return false;
             }
 
             return {
               customerName, confirmationId, hotelName, city, customerPhone, checkin, checkout, 
-              nights, guests, roomType, rooms, viewType, mealType, notes, email
+              nights, guests, roomType, rooms, viewType, mealType, notes, email, refundType
             };
           }
         }).then((result) => {
@@ -1344,7 +2123,7 @@
             google.script.run.withSuccessHandler(() => {
               Swal.fire({
                 title: "تم الإرسال!",
-                text: "تم إصدار الفاتورة اليدوية بنجاح",
+                text: "تم إصدار تأكيد الحجز اليدوي بنجاح",
                 icon: "success",
                 timer: 1500,
                 showConfirmButton: false
@@ -1355,12 +2134,70 @@
       } catch (error) {
         console.error('Error fetching email options:', error);
       }
-    });
+    };
+    }
 
-    // Manual Invoice Button
-    $(document).on("click", "#manualInvoiceButton", async function () {
+    async function loadInvoiceDropdowns() {
       try {
-        var emailArray = await getEmailsFromServer();
+        // Load cities
+        const cities = await new Promise((resolve, reject) => {
+          google.script.run
+            .withSuccessHandler(resolve)
+            .withFailureHandler(reject)
+            .getCities();
+        });
+        populateSelectFromArray('swal-invoice-city', cities || [], 'اختر المدينة');
+      } catch (error) {
+        console.error('Error loading dropdowns:', error);
+      }
+    }
+
+    function onInvoiceCityChange() {
+      const city = document.getElementById('swal-invoice-city').value;
+      const hotelSelect = document.getElementById('swal-invoice-hotelName');
+      if (!city || !hotelSelect) return;
+      
+      hotelSelect.innerHTML = '<option value="">جاري التحميل...</option>';
+      hotelSelect.disabled = true;
+      
+      google.script.run
+        .withSuccessHandler(function(hotels) {
+          populateSelectFromArray('swal-invoice-hotelName', hotels || [], 'اختر الفندق');
+          hotelSelect.disabled = false;
+        })
+        .withFailureHandler(function(error) {
+          console.error('Error loading hotels:', error);
+          hotelSelect.innerHTML = '<option value="">فشل تحميل الفنادق</option>';
+          hotelSelect.disabled = false;
+        })
+        .getHotelsByCity(city);
+    }
+    
+    function setupInvoiceNightsDisplay() {
+      const checkinInput = document.getElementById('swal-invoice-checkin');
+      const checkoutInput = document.getElementById('swal-invoice-checkout');
+      const nightsDisplay = document.getElementById('swal-invoice-nights-display');
+      
+      function updateNightsDisplay() {
+        if (checkinInput && checkoutInput && nightsDisplay) {
+          const nights = calculateNights(checkinInput.value, checkoutInput.value);
+          nightsDisplay.textContent = nights > 0 ? nights + ' ليالي' : '-';
+        }
+      }
+      
+      if (checkinInput) checkinInput.addEventListener('change', updateNightsDisplay);
+      if (checkoutInput) checkoutInput.addEventListener('change', updateNightsDisplay);
+    }
+
+    // Manual Invoice Button - Direct binding to element
+    var manualInvoiceBtn = document.getElementById('manualInvoiceButton');
+    if (manualInvoiceBtn) {
+      manualInvoiceBtn.onclick = async function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        try {
+          var emailArray = await getEmailsFromServer();
 
         // Build options for email dropdown
         let emailOptionsHTML = `<option value="">اختر بريد إلكتروني</option>`;
@@ -1381,8 +2218,16 @@
                 <input type="text" id="swal-invoice-customerPhone" placeholder="رقم العميل">
               </div>
               <div class="field">
+                <label>المدينة</label>
+                <select id="swal-invoice-city" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                  <option value="">جاري التحميل...</option>
+                </select>
+              </div>
+              <div class="field">
                 <label>اسم الفندق</label>
-                <input type="text" id="swal-invoice-hotelName" placeholder="اسم الفندق">
+                <select id="swal-invoice-hotelName" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" disabled>
+                  <option value="">اختر المدينة أولاً</option>
+                </select>
               </div>
               <div class="field">
                 <label>النوع</label>
@@ -1395,6 +2240,10 @@
               <div class="field">
                 <label>تاريخ الخروج</label>
                 <input type="date" id="swal-invoice-checkout">
+              </div>
+              <div class="field">
+                <label>عدد الليالي (تلقائي)</label>
+                <div id="swal-invoice-nights-display" style="padding: 10px; background: #f5f5f5; border-radius: 4px; text-align: center; font-weight: bold; color: #008891;">-</div>
               </div>
               <div class="field">
                 <label>عدد الغرف</label>
@@ -1426,10 +2275,22 @@
           cancelButtonColor: "#d33",
           confirmButtonText: "إرسال",
           cancelButtonText: "إلغاء",
+          didOpen: () => {
+            loadInvoiceDropdowns();
+            // Add event listener for city change and nights calculation
+            setTimeout(() => {
+              const citySelect = document.getElementById('swal-invoice-city');
+              if (citySelect) {
+                citySelect.addEventListener('change', onInvoiceCityChange);
+              }
+              setupInvoiceNightsDisplay();
+            }, 100);
+          },
           preConfirm: () => {
             const customerName = document.getElementById('swal-invoice-customerName').value;
             const customerPhone = document.getElementById('swal-invoice-customerPhone').value;
             const hotelName = document.getElementById('swal-invoice-hotelName').value;
+            const city = document.getElementById('swal-invoice-city').value;
             const type = document.getElementById('swal-invoice-type').value;
             const checkin = document.getElementById('swal-invoice-checkin').value;
             const checkout = document.getElementById('swal-invoice-checkout').value;
@@ -1439,14 +2300,21 @@
             const notes = document.getElementById('swal-invoice-notes').value;
             const email = document.getElementById('swal-invoice-email').value;
 
-            if (!customerName || !customerPhone || !hotelName || !type || !checkin || !checkout || !rooms || !nightPrice || !prepay || !email) {
+            // التحقق من التواريخ
+            const nights = calculateNights(checkin, checkout);
+            if (nights <= 0 && checkin && checkout) {
+              Swal.showValidationMessage('يرجى التحقق من تاريخ الدخول والخروج');
+              return false;
+            }
+
+            if (!customerName || !customerPhone || !hotelName || !city || !type || !checkin || !checkout || !rooms || !nightPrice || !email) {
               Swal.showValidationMessage('يرجى ملء جميع الحقول المطلوبة');
               return false;
             }
 
             return {
-              customerName, customerPhone, hotelName, type, checkin, checkout, 
-              rooms, nightPrice, prepay, notes, email
+              customerName, customerPhone, hotelName, city, type, checkin, checkout, 
+              rooms, nightPrice, prepay: prepay || 0, notes, email
             };
           }
         }).then((result) => {
@@ -1466,12 +2334,18 @@
       } catch (error) {
         console.error('Error fetching email options:', error);
       }
-    });
+    };
+    }
 
-    // Invoice Button with Checkboxes
-    $(document).on("click", "#invoiceButton", async function () {
-      // Get all checked checkboxes
-      var selectedCheckboxes = $('.reservation-checkbox:checked');
+    // Invoice Button with Checkboxes - Direct binding to element
+    var invoiceBtn = document.getElementById('invoiceButton');
+    if (invoiceBtn) {
+      invoiceBtn.onclick = async function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        // Get all checked checkboxes
+        var selectedCheckboxes = $('.reservation-checkbox:checked');
       if (selectedCheckboxes.length === 0) {
         Swal.fire('خطأ!', 'لم يتم اختيار أي حجز', 'error');
         return;
@@ -1535,7 +2409,8 @@
       } catch (error) {
         console.error('Error fetching email options:', error);
       }
-    });
+    };
+    }
 
     $(document).on("click", ".voucher-button", async function () {
       const rowId = $(this).data("id");
@@ -1621,6 +2496,120 @@
         google.script.run.withSuccessHandler(resolve).withFailureHandler(reject).getColumnByName('EMAILS');
       });
     }
+
+    // Function to retrieve collection methods using a promise
+    function getCollectionMethodsFromServer() {
+      return new Promise((resolve, reject) => {
+        google.script.run.withSuccessHandler(resolve).withFailureHandler(reject).getCollectionMethods();
+      });
+    }
+
+    // Handle editable payment cell click
+    $(document).on("click", ".editable-payment", async function (event) {
+      event.stopPropagation();
+      var reservationId = $(this).data("id");
+      var currentPayment = $(this).data("payment");
+      
+      // Only allow edit if value is 0 or empty
+      if (currentPayment && parseFloat(currentPayment) !== 0) {
+        return;
+      }
+
+      try {
+        // جلب طرق التحصيل من صفحة information
+        var collectionMethods = await getCollectionMethodsFromServer();
+        
+        // بناء خيارات القائمة المنسدلة
+        let collectionOptionsHTML = `<option value="">اختر طريقة التحصيل</option>`;
+        collectionMethods.forEach(method => {
+          collectionOptionsHTML += `<option value="${method}">${method}</option>`;
+        });
+
+        Swal.fire({
+          title: "إضافة الدفعة الثانية",
+          html: `
+            <div style="text-align: right; direction: rtl;">
+              <div class="field mb-3">
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">الدفعة الثانية بالعملة المتعامل بها</label>
+                <input type="number" id="swal-secondPayment" class="form-control" placeholder="0" step="0.01">
+              </div>
+              <div class="field mb-3">
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">نوع العملة</label>
+                <select id="swal-currencyType" class="form-select">
+                  <option value="SAR">SAR</option>
+                  <option value="EUR">EUR</option>
+                  <option value="USD">USD</option>
+                  <option value="TRY">TRY</option>
+                </select>
+              </div>
+              <div class="field mb-3">
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">الدفعة الثانية باليورو €</label>
+                <input type="number" id="swal-secondPaymentEuro" class="form-control" placeholder="0" step="0.01">
+              </div>
+              <div class="field mb-3">
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">طريقة التحصيل</label>
+                <select id="swal-collectionMethod" class="form-select">
+                  ${collectionOptionsHTML}
+                </select>
+              </div>
+            </div>
+          `,
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "حفظ",
+          cancelButtonText: "إلغاء",
+          preConfirm: () => {
+            const secondPayment = document.getElementById('swal-secondPayment').value;
+            const currencyType = document.getElementById('swal-currencyType').value;
+            const secondPaymentEuro = document.getElementById('swal-secondPaymentEuro').value;
+            const collectionMethod = document.getElementById('swal-collectionMethod').value;
+
+            if (!secondPayment || !secondPaymentEuro) {
+              Swal.showValidationMessage('يرجى ملء جميع الحقول المطلوبة');
+              return false;
+            }
+
+            if (!collectionMethod) {
+              Swal.showValidationMessage('يرجى اختيار طريقة التحصيل');
+              return false;
+            }
+
+            return {
+              secondPayment: parseFloat(secondPayment),
+              currencyType: currencyType,
+              secondPaymentEuro: parseFloat(secondPaymentEuro),
+              collectionMethod: collectionMethod
+            };
+          }
+        }).then((result) => {
+          if (result.isConfirmed) {
+            const data = result.value;
+            
+            google.script.run
+              .withSuccessHandler(() => {
+                Swal.fire({
+                  title: "تم الحفظ!",
+                  text: "تم حفظ الدفعة الثانية بنجاح",
+                  icon: "success",
+                  timer: 1500,
+                  showConfirmButton: false
+                });
+                // Reload the data
+                getCustomerInfo(userEmail, currentPagination.page);
+              })
+              .withFailureHandler((error) => {
+                Swal.fire('خطأ', 'فشل حفظ الدفعة الثانية: ' + error, 'error');
+              })
+              .updateSecondPayment(reservationId, data.secondPayment, data.currencyType, data.secondPaymentEuro, data.collectionMethod);
+          }
+        });
+      } catch (error) {
+        console.error('Error fetching collection methods:', error);
+        Swal.fire('خطأ', 'فشل تحميل طرق التحصيل', 'error');
+      }
+    });
+
     $(document).on("click", ".delete-button", function () {
       var rowId = $(this).data("id");
 
@@ -1713,71 +2702,68 @@
 
 
 
+      // Reference to global multi-select functions and state
+      // The actual functions are defined globally before this block
+      
       function populateFilters() {
         // This will be populated from the actual data when loaded
-        // We'll populate them dynamically from customer data
       }
       
       function applyFilters() {
-        var filterSupplier = $("#filterSupplier").val();
-        var filterSeller = $("#filterSeller").val();
-        var filterDepositMethod = $("#filterDepositMethod").val();
-        var filterRemainingMethod = $("#filterRemainingMethod").val();
+        var supplierSelected = window.multiSelectState.supplierMultiSelect.selected;
+        var sellerSelected = window.multiSelectState.sellerMultiSelect.selected;
+        var depositSelected = window.multiSelectState.depositMethodMultiSelect.selected;
+        var remainingSelected = window.multiSelectState.remainingMethodMultiSelect.selected;
         
         var filtered = allCustomers.filter(function(customer) {
-          if (filterSupplier && customer.supplier !== filterSupplier) return false;
-          if (filterSeller && customer.seller !== filterSeller) return false;
-          if (filterDepositMethod && customer.depositMethod !== filterDepositMethod) return false;
-          if (filterRemainingMethod && customer.remainingMethod !== filterRemainingMethod) return false;
+          if (supplierSelected.length > 0 && !supplierSelected.includes(customer.supplier)) return false;
+          if (sellerSelected.length > 0 && !sellerSelected.includes(customer.seller)) return false;
+          if (depositSelected.length > 0 && !depositSelected.includes(customer.depositMethod)) return false;
+          if (remainingSelected.length > 0 && !remainingSelected.includes(customer.remainingMethod)) return false;
           return true;
         });
         
         renderReservations(filtered);
       }
       
+      // Set up global callback for multi-select changes
+      window.applyFiltersCallback = applyFilters;
+      
       function updateFilterOptions(customers) {
         // Get unique values for filters
-        var suppliers = [...new Set(customers.map(c => c.supplier).filter(Boolean))];
-        var sellers = [...new Set(customers.map(c => c.seller).filter(Boolean))];
-        var depositMethods = [...new Set(customers.map(c => c.depositMethod).filter(Boolean))];
-        var remainingMethods = [...new Set(customers.map(c => c.remainingMethod).filter(Boolean))];
+        var suppliers = [...new Set(customers.map(c => c.supplier).filter(Boolean))].sort();
+        var sellers = [...new Set(customers.map(c => c.seller).filter(Boolean))].sort();
+        var depositMethods = [...new Set(customers.map(c => c.depositMethod).filter(Boolean))].sort();
+        var remainingMethods = [...new Set(customers.map(c => c.remainingMethod).filter(Boolean))].sort();
         
-        // Update supplier dropdown
-        var supplierSelect = $("#filterSupplier");
-        var currentSupplier = supplierSelect.val();
-        supplierSelect.html('<option value="">الكل</option>');
-        suppliers.forEach(function(supplier) {
-          supplierSelect.append(`<option value="${supplier}">${supplier}</option>`);
-        });
-        if (currentSupplier) supplierSelect.val(currentSupplier);
+        // Update multi-select options
+        window.multiSelectState.supplierMultiSelect.options = suppliers;
+        window.multiSelectState.sellerMultiSelect.options = sellers;
+        window.multiSelectState.depositMethodMultiSelect.options = depositMethods;
+        window.multiSelectState.remainingMethodMultiSelect.options = remainingMethods;
         
-        // Update seller dropdown
-        var sellerSelect = $("#filterSeller");
-        var currentSeller = sellerSelect.val();
-        sellerSelect.html('<option value="">الكل</option>');
-        sellers.forEach(function(seller) {
-          sellerSelect.append(`<option value="${seller}">${seller}</option>`);
-        });
-        if (currentSeller) sellerSelect.val(currentSeller);
+        // Render options
+        window.renderMultiSelectOptions('supplierMultiSelect', suppliers);
+        window.renderMultiSelectOptions('sellerMultiSelect', sellers);
+        window.renderMultiSelectOptions('depositMethodMultiSelect', depositMethods);
+        window.renderMultiSelectOptions('remainingMethodMultiSelect', remainingMethods);
         
-        // Update deposit method dropdown
-        var depositSelect = $("#filterDepositMethod");
-        var currentDeposit = depositSelect.val();
-        depositSelect.html('<option value="">الكل</option>');
-        depositMethods.forEach(function(method) {
-          depositSelect.append(`<option value="${method}">${method}</option>`);
-        });
-        if (currentDeposit) depositSelect.val(currentDeposit);
-        
-        // Update remaining method dropdown
-        var remainingSelect = $("#filterRemainingMethod");
-        var currentRemaining = remainingSelect.val();
-        remainingSelect.html('<option value="">الكل</option>');
-        remainingMethods.forEach(function(method) {
-          remainingSelect.append(`<option value="${method}">${method}</option>`);
-        });
-        if (currentRemaining) remainingSelect.val(currentRemaining);
+        // Update button texts
+        window.updateMultiSelectButtonText('supplierMultiSelect');
+        window.updateMultiSelectButtonText('sellerMultiSelect');
+        window.updateMultiSelectButtonText('depositMethodMultiSelect');
+        window.updateMultiSelectButtonText('remainingMethodMultiSelect');
       }
+      
+      // Close multi-select when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!e.target.closest('.multi-select-container')) {
+          document.querySelectorAll('.multi-select-container').forEach(function(c) {
+            c.querySelector('.multi-select-button').classList.remove('active');
+            c.querySelector('.multi-select-dropdown').classList.remove('show');
+          });
+        }
+      });
 
       function getCustomerInfo(userEmail, pageOverride) {
         const targetPage = pageOverride || 1;
@@ -1787,15 +2773,45 @@
         const pageSize = parseInt($("#pageSizeSelect").val()) || -1;
 
         $("#pageIndicator").text("جارٍ التحميل...");
+        
+        // جلب حجوزات الفنادق
         google.script.run
           .withSuccessHandler(function (response) {
-            handleCustomersResponse(response, targetPage);
+            var hotelsData = response.data || [];
+            var hotelsPagination = response.pagination || {};
+            
+            // إذا كان showTours مفعل، جلب الجولات أيضاً
+            if (showTours) {
+              google.script.run
+                .withSuccessHandler(function (toursResponse) {
+                  var toursData = toursResponse.data || [];
+                  var toursPagination = toursResponse.pagination || {};
+                  
+                  // دمج النتائج
+                  var allData = hotelsData.concat(toursData);
+                  var combinedPagination = {
+                    page: hotelsPagination.page,
+                    totalPages: Math.max(hotelsPagination.totalPages, toursPagination.totalPages),
+                    totalCount: hotelsPagination.totalCount + toursPagination.totalCount,
+                    pageSize: hotelsPagination.pageSize
+                  };
+                  
+                  handleCustomersResponse({data: allData, pagination: combinedPagination}, targetPage);
+                })
+                .withFailureHandler(function (err) {
+                  console.error('Error fetching tours', err);
+                  handleCustomersResponse({data: hotelsData, pagination: hotelsPagination}, targetPage);
+                })
+                .getTours(searchTerm, targetPage, checkIn, checkOut, pageSize, currentYearFilter);
+            } else {
+              handleCustomersResponse({data: hotelsData, pagination: hotelsPagination}, targetPage);
+            }
           })
           .withFailureHandler(function (err) {
             console.error('Error fetching reservations', err);
             Swal.fire('خطأ', 'تعذر تحميل بيانات الحجوزات', 'error');
           })
-          .getCustomers(searchTerm, targetPage, checkIn, checkOut, pageSize);
+          .getCustomers(searchTerm, targetPage, checkIn, checkOut, pageSize, currentYearFilter);
       }
 
       function handleCustomersResponse(response, requestedPage) {
@@ -1896,7 +2912,13 @@
         }
         
         // معلومات الدفعة الثانية
-        var secondPaymentAmount = parseFloat(customer.secondPayment || 0);
+        var secondPaymentEuro = customer.secondPaymentEuro || customer.remainingEuroAmount || customer.secondPayment || 0;
+        var secondPaymentAmount = parseFloat(secondPaymentEuro);
+        // التحقق من أن القيمة صفر أو فارغة لتحديد إمكانية التعديل
+        const isEditable = !secondPaymentAmount || parseFloat(secondPaymentAmount) === 0;
+        const cellClass = isEditable ? 'editable-payment' : '';
+        const cellStyle = isEditable ? 'cursor: pointer; color: #dc3545; font-weight: bold;' : '';
+        
         var secondPaymentInfo = `<div style="font-size: 0.75rem; font-weight: bold;">${secondPaymentAmount.toFixed(2)} €</div>`;
         if (customer.secondPaymentMethod) {
           secondPaymentInfo += `<div style="font-size: 0.65rem; color: #666; margin-top: 2px;">${customer.secondPaymentMethod}</div>`;
@@ -1936,7 +2958,9 @@
             
             <td class="text-center align-middle" style="padding: 6px 4px; font-size: 0.75rem; font-weight: 600;" title="${safeValue(customer.seller)}">${sellerShort}</td>
             
-            <td class="text-center align-middle" style="padding: 6px 4px;">${customerNameDisplay}</td>
+            <td class="text-center align-middle" style="padding: 6px 4px;">
+              ${(customer.type === 'tour' ? '<span class="reservation-type-icon tour" title="حجز جولة">🚌</span> ' : (customer.type !== undefined ? '<span class="reservation-type-icon hotel" title="حجز فندقي">🏨</span> ' : '')) + customerNameDisplay}
+            </td>
             
             <td class="text-center align-middle" style="padding: 6px 4px;">${hotelNameDisplay}</td>
             
@@ -1950,17 +2974,17 @@
             
             <td class="text-center align-middle" style="padding: 6px 1px; font-size: 0.7rem;">${depositInfo}</td>
             
-            <td class="text-center align-middle" style="padding: 6px 1px; font-size: 0.7rem;">${secondPaymentInfo}</td>
+            <td class="text-center align-middle ${cellClass}" style="padding: 6px 1px; font-size: 0.7rem; ${cellStyle}" data-id="${customer.id}" data-payment="${secondPaymentAmount}">${secondPaymentInfo}</td>
             
             <td class="text-center align-middle" style="padding: 6px 1px; font-size: 0.7rem;">${remainingInfo}</td>
             
             <td class="text-center align-middle" style="padding: 4px 2px;">
               <select class="form-control form-control-sm payment-status-select" data-id="${customer.id}" style="${getPaymentStatusStyle(paymentStatusValue)}; font-size: 0.7rem; padding: 4px;">
                 <option value="" ${!paymentStatusValue ? 'selected' : ''}></option>
-                <option value="unpaid" ${paymentStatusValue === 'unpaid' ? 'selected' : ''}>unpaid</option>
-                <option value="partially paid" ${paymentStatusValue === 'partially paid' ? 'selected' : ''}>partially paid</option>
-                <option value="paid" ${paymentStatusValue === 'paid' ? 'selected' : ''}>paid</option>
-                <option value="waiting" ${paymentStatusValue === 'waiting' ? 'selected' : ''}>waiting</option>
+                <option value="UNPAID" ${paymentStatusValue === 'UNPAID' ? 'selected' : ''}>UNPAID</option>
+                <option value=" PARTIALLY PAID" ${paymentStatusValue === ' PARTIALLY PAID' ? 'selected' : ''}> PARTIALLY PAID</option>
+                <option value="PAID" ${paymentStatusValue === 'PAID' ? 'selected' : ''}>PAID</option>
+                <option value="WAITING" ${paymentStatusValue === 'WAITING' ? 'selected' : ''}>WAITING</option>
               </select>
             </td>
             
@@ -2117,10 +3141,10 @@
       
       function getPaymentStatusStyle(status) {
         var styles = {
-          'unpaid': 'background-color: #ff4444; color: white; font-weight: bold;',
-          'partially paid': 'background-color: #ffbb33; color: white; font-weight: bold;',
-          'paid': 'background-color: #00C851; color: white; font-weight: bold;',
-          'waiting': 'background-color: #33b5e5; color: white; font-weight: bold;'
+          'UNPAID': 'background-color: #ff4444; color: white; font-weight: bold;',
+          ' PARTIALLY PAID': 'background-color: #ffbb33; color: white; font-weight: bold;',
+          'PAID': 'background-color: #00C851; color: white; font-weight: bold;',
+          'WAITING': 'background-color: #33b5e5; color: white; font-weight: bold;'
         };
         return styles[status] || '';
       }
@@ -2235,4 +3259,5 @@
 
 </script>
 
+</body>
 </html>
