@@ -398,19 +398,61 @@
             }
           })();
       const currentPage = document.body.dataset.page || 'index';
+      
+      // الصفحات العادية (لا تحتاج كلمة مرور للوصول إليها)
+      const publicPages = ['index', 'Add-client', 'add-tour', 'add-hotel', 'manage-reservations', 'edit-reservation'];
+      // الصفحات المحمية (تحتاج كلمة مرور)
+      const protectedPages = ['SUPPLIER', 'manage-statistics', 'mediator', 'payments'];
+      // كلمة المرور
+      const PASSWORD = 'admin966';
+      // مفتاح التخزين للجلسة
+      const AUTH_KEY = 'ghada_admin_auth';
+      
+      function isAuthenticated() {
+        try { return sessionStorage.getItem(AUTH_KEY) === 'true'; } catch (e) { return false; }
+      }
+      
+      function setAuthenticated(value) {
+        try { if (value) { sessionStorage.setItem(AUTH_KEY, 'true'); } else { sessionStorage.removeItem(AUTH_KEY); } } catch (e) {}
+      }
+      
+      function isCurrentPagePublic() { return publicPages.includes(currentPage); }
+      function isTargetPageProtected(targetPage) { return protectedPages.includes(targetPage); }
+      
+      function showPasswordPrompt(targetUrl) {
+        Swal.fire({
+          title: 'صفحة محمية',
+          text: 'أدخل كلمة المرور للوصول إلى هذه الصفحة',
+          input: 'password',
+          inputPlaceholder: 'كلمة المرور',
+          showCancelButton: true,
+          confirmButtonText: 'دخول',
+          cancelButtonText: 'إلغاء',
+          confirmButtonColor: '#008891',
+          inputAttributes: { autocapitalize: 'off', autocorrect: 'off' },
+          preConfirm: (password) => {
+            if (password === PASSWORD) { return true; }
+            else { Swal.showValidationMessage('كلمة المرور غير صحيحة'); return false; }
+          }
+        }).then((result) => {
+          if (result.isConfirmed) { setAuthenticated(true); window.top.location.href = targetUrl; }
+        });
+      }
+      
       navBar.querySelectorAll('.ghada-nav-item').forEach((button) => {
         const targetPage = button.dataset.page;
         if (targetPage === currentPage) {
           button.classList.add('active');
           button.setAttribute('aria-current', 'page');
         }
-        button.addEventListener('click', () => {
-          if (!targetPage || !baseUrl || targetPage === currentPage) {
+        button.addEventListener('click', (event) => {
+          if (!targetPage || !baseUrl || targetPage === currentPage) { return; }
+          const targetUrl = targetPage === 'index' ? baseUrl : `${baseUrl}?page=${targetPage}`;
+          if (isTargetPageProtected(targetPage) && isCurrentPagePublic() && !isAuthenticated()) {
+            event.preventDefault();
+            showPasswordPrompt(targetUrl);
             return;
           }
-          const targetUrl = targetPage === 'index'
-            ? baseUrl
-            : `${baseUrl}?page=${targetPage}`;
           window.top.location.href = targetUrl;
         });
       });
@@ -672,26 +714,48 @@
 
     function submitData(event) {
       event.preventDefault();
+      
       const formData = new FormData(document.getElementById('registration-form'));
       const data = {};
       formData.forEach((value, key) => {
         data[key] = value;
       });
 
-      const valuesArray = Object.values(data);
+      // --- كود توليد الـ ID ---
+      // 1. جلب اسم البائع
+      const sellerSelect = document.getElementById('sellerSelect');
+      let sellerName = sellerSelect.options[sellerSelect.selectedIndex].text; 
+      
+      // 2. استخراج أول حرفين
+      let prefix = "XX";
+      if (sellerName && sellerName.trim() !== "" && sellerName !== "اسم البائع") {
+         prefix = sellerName.trim().substring(0, 2).toUpperCase();
+      }
 
+      // 3. تجهيز التاريخ YYMMDDHHMM
+      const now = new Date();
+      const year = String(now.getFullYear()).slice(-2);
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+
+      // 4. دمج الـ ID
+      const uniqueId = prefix + year + month + day + hours + minutes;
+      
+      // 5. إضافة الـ ID لأول المصفوفة
+      const valuesArray = Object.values(data);
+      valuesArray.unshift(uniqueId);
+
+      // 6. الإرسال
       google.script.run.withSuccessHandler(function () {
         Swal.fire({
           title: 'تم الحفظ',
-          text: 'تمت إضافة الرحلة بنجاح.',
+          text: 'رقم الرحلة: ' + uniqueId,
           icon: 'success',
-          heightAuto: false,
-          showConfirmButton: false,
-          timer: 1500,
+          confirmButtonText: 'حسناً',
+          heightAuto: false
         });
-        setTimeout(() => {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }, 2000);
         document.getElementById('registration-form').reset();
         getColumns();
       }).addTour(valuesArray);
