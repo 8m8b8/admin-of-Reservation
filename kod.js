@@ -75,6 +75,12 @@ function doGet(e) {
     template.userEmail = userEmail;
     template.userName = userName;
     
+    // تمرير customerId من معاملات URL إذا كان موجوداً
+    var customerId = (e && e.parameter && e.parameter.customerId) 
+                     ? e.parameter.customerId.toString() 
+                     : '';
+    template.customerId = customerId;
+    
     return template.evaluate()
       .setTitle("Reservation") // عنوان الصفحة في المتصفح
       .addMetaTag("viewport", "width=device-width, initial-scale=1")
@@ -215,11 +221,12 @@ function getHotelsCache_() {
 }
 
 /**
- * يجلب الفنادق بناءً على المدينة (باستخدام الكاش).
+ * يجلب الفنادق بناءً على المدينة من جدول HOTEL
+ * ملاحظة: الدالة الرئيسية getHotelsByCity موجودة في functions.js وتستخدم جدول CITIES
  * @param {string} city اسم المدينة للفلترة.
  * @returns {Array<string>} قائمة بأسماء الفنادق المفلترة.
  */
-function getHotelsByCity(city) {
+function getHotelsByCityFromHotelSheet(city) {
   var allHotels = getHotelsCache_(); // جلب كل الفنادق (سريع)
   
   // فلترة الفنادق باستخدام JavaScript
@@ -430,20 +437,63 @@ function addHotel(hotelData) {
 }
 
 /**
- * إضافة رحلة جديدة إلى شيت TOUR DATABASE.
- * @param {Object|Array} formPayload بيانات الرحلة كما أُرسلت من الواجهة.
- * @returns {string} رسالة نجاح.
+ * حفظ الرحلة في شيت TOUR DATABASE
+ * البيانات تأتي من HTML بترتيب محدد، والـ ID في الخانة الأولى [0]
  */
-function addTour(formPayload) {
-  var sheet = getSheetOrThrow(SHEET_TOURS);
-  var rowValues = normalizeTourRow_(formPayload);
-
-  if (!rowValues.length || !rowValues.some(hasMeaningfulValue_)) {
-    throw new Error('لم يتم توفير بيانات صالحة لإضافتها.');
+function addTour(dataArray) {
+  var sheetName = "TOUR DATABASE";
+  var sheet = ss.getSheetByName(sheetName);
+  
+  // إنشاء الشيت إذا لم يكن موجوداً
+  if (!sheet) {
+    sheet = ss.insertSheet(sheetName);
+    sheet.appendRow([
+      "ID", "Seller", "Supplier", "Name", "Phone", "Nationality", "Persons", 
+      "Tour Type", "Transport", "Driver", "From City", "Pickup Location", "Pickup Name", 
+      "Pickup Date", "To City", "Dropoff Location", "Dropoff Name", "Dropoff Date",
+      "Cost Price", "Selling Price", "Received", "Collection Method", "Currency", "Notes", 
+      "Registration Date", "Status", "Payment Status"
+    ]);
   }
 
-  sheet.appendRow(rowValues);
-  return "Tour added successfully";
+  // حساب المتبقي وحالة الدفع
+  var total = parseFloat(dataArray[19]) || 0; // Selling Price index based on form order
+  var received = parseFloat(dataArray[20]) || 0; // Received Amount index
+  var paymentStatus = (total - received <= 0) ? "مدفوع" : "متبقي";
+
+  // ترتيب البيانات في الصف
+  var newRow = [
+    dataArray[0],  // ID (GH2507292335)
+    dataArray[1],  // Seller
+    dataArray[2],  // Supplier
+    dataArray[3],  // Name
+    dataArray[4],  // Phone
+    dataArray[5],  // Nationality
+    dataArray[6],  // Persons
+    dataArray[7],  // Tour Type
+    dataArray[8],  // Transport
+    dataArray[9],  // Driver
+    dataArray[10], // From City
+    dataArray[11], // Pickup Location Type
+    dataArray[12], // Pickup Name
+    dataArray[13], // Pickup Date
+    dataArray[14], // To City
+    dataArray[15], // Dropoff Location Type
+    dataArray[16], // Dropoff Name
+    dataArray[17], // Dropoff Date
+    dataArray[18], // Cost Price
+    dataArray[19], // Selling Price
+    dataArray[20], // Received
+    dataArray[21], // Collection Method
+    dataArray[22], // Currency
+    dataArray[23], // Notes
+    new Date(),    // Registration Date
+    "مؤكد",        // Status
+    paymentStatus  // Payment Status
+  ];
+
+  sheet.appendRow(newRow);
+  return "تم الحفظ بنجاح";
 }
 
 /**
